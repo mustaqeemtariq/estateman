@@ -46,7 +46,7 @@ const Login = () => {
                             register={register}
                             name="username"
                             placeholder="Enter your username"
-                            errors={errors}
+                            error={errors}
                             labelText="Username"
                         />
                         <div className='relative h-[70px]'>
@@ -54,7 +54,7 @@ const Login = () => {
                                 name="password"
                                 labelText="Password"
                                 register={register}
-                                errors={errors}
+                                error={errors}
                                 placeholder="Enter your password"
                                 type={togglePassword ? 'text' : 'password'}
                                 autoCapitalize="false"
