@@ -7,4 +7,5 @@ type UserForm = {
 	password: string
     confirmPassword: string
 	address: string
+	rights: string[]
 }
