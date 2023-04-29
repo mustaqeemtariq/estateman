@@ -97,30 +97,3 @@ export const InputNumber = ({
 	)
 }
 
-
-export const Checkbox = ({
-	labelText,
-	name,
-	checked,
-	renderLabel = true,
-	...props
-}: InputProps) => {
-
-	return (
-		<div className="flex items-center">
-			<input
-				id={name}
-				name={name}
-				type="checkbox"
-				defaultChecked={checked}
-				className="h-4 w-4 text-indigo-600 focus:ring-indigo-600"
-				{...props}
-			/>
-			<label htmlFor={name} className="ml-3 block text-base leading-2 border-gray-300 text-gray-900">
-				{labelText}
-			</label>
-		</div>
-	)
-}
-
-
