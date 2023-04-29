@@ -51,21 +51,12 @@ const AddUser = () => {
 		formState: { errors }
 	} = useForm<UserForm>({
 		resolver: yupResolver(schema),
-		defaultValues: {
-			rights: [],
-		},
 		mode: 'all'
 	})
-
 
 	const handleFormSubmit = (data: any) => {
 		setUpdating(true)
 	}
-
-	const [userRights, setUserRights] = useState<string[]>([])
-
-	console.log(userRights);
-
 
 	return (
 		<AppLayout>
@@ -166,7 +157,6 @@ const AddUser = () => {
 								labelText="CNIC"
 								id="cnic"
 								autoComplete="cnic"
-								register={register}
 								name="cnic"
 								error={errors}
 								required={true}
@@ -179,7 +169,6 @@ const AddUser = () => {
 								labelText="Contact Number"
 								id="phone"
 								autoComplete="phone"
-								register={register}
 								name="phone"
 								error={errors}
 								required={true}
@@ -225,6 +214,7 @@ const AddUser = () => {
 										type='checkbox'
 										{...register('rights')}
 										value={UserRightsTypes.ADD}
+										className='appearance-none checked:bg-blue-600 checked:border-transparent'
 									/>
 									<label htmlFor='add' className='ml-3 block text-base leading-2 border-gray-300 text-gray-900'>Add Property</label>
 								</div>
