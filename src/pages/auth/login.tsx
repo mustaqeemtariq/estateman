@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import Logo from 'src/assets/logo/em-logo.png'
 import { Spinner } from 'src/components/animations/spinner'
 import { Button } from 'src/components/app/button'
-import { Checkbox, Input } from 'src/components/app/input'
+import { Input } from 'src/components/app/input'
 import { AppLayout } from 'src/components/app/layout'
 import { ShowHidePassword } from 'src/components/password'
 import * as yup from 'yup'
@@ -67,11 +67,13 @@ const Login = () => {
                         </div>
 
 
-                        <Checkbox
-                            name="remember"
-                            labelText='Remember Me'
-                        />
-
+                        <div className="flex items-center">
+                            <input
+                                name='remember'
+                                type='checkbox'
+                            />
+                            <label htmlFor='remember' className='ml-3 block text-base leading-2 border-gray-300 text-gray-900'>Remember Me</label>
+                        </div>
 
                         <div className="space-y-3">
                             <Button
