@@ -2,6 +2,7 @@ import clsx from 'clsx'
 import { useMemo, useState } from 'react'
 
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/20/solid'
+import Link from 'next/link'
 import { AppLayout } from 'src/components/app/layout'
 import { Search } from 'src/components/app/search-input'
 import { Table } from 'src/components/app/table'
@@ -90,11 +91,14 @@ const ListUsers = () => {
 			<tbody className="bg-white">
 				{users.map((user,index) => (
 					<tr key={user.username+index} className={clsx(index % 2 === 0 && 'bg-gray-100')}>
+						<td className='tw-table-td hidden'>{index + 1}</td>
 						<td className="tw-table-td">{user.username}</td>
 						<td className="tw-table-td text-blue-500 hover:underline">{user.email}</td>
 						<td className="tw-table-td">{user.phone}</td>
                         <td className='tw-table-td text-blue-500'>
+							<Link href={`/user/edit/${index + 1}`}>
                             <PencilSquareIcon className='h-6 w-6' aria-hidden='true'/>
+							</Link>
                         </td>
                         <td className='tw-table-td text-red-500'>
                             <TrashIcon className='h-6 w-6' aria-hidden='true'/>
@@ -106,10 +110,10 @@ const ListUsers = () => {
 	}
 	return (
 		<AppLayout>
-            <div className='flex justify-between'>
-			<div className="sm:flex sm:items-centertext-base mb-3">
-				<div className="sm:flex-auto mt-2">
-					<h1 className="leading-6 text-[#0038FF] text-2xl uppercase">All Users</h1>
+            <div className='px-4 sm:px-4 lg:px-4 flex justify-between items-center py-8'>
+			<div className="sm:flex sm:items-centertext-base">
+				<div className="sm:flex-auto">
+					<h1 className="font-semibold leading-6 text-[#0038FF] text-xl uppercase">All Users</h1>
 				</div>
 			</div>
 
@@ -121,7 +125,7 @@ const ListUsers = () => {
 				/>
 			</div>
             </div>
-			<div className="mt-6 flow-root border overflow-hidden rounded-lg">
+			<div className="mt-6 flow-root overflow-hidden rounded-lg">
 				<div className="-my-2 -mx-4 overflow-x-auto  sm:-mx-6 lg:-mx-8">
 					<div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
 						<div>
