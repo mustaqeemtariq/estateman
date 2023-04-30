@@ -1,4 +1,5 @@
 import React from 'react'
+import { Sidebar } from './sidebar'
 
 
 interface AppLayoutProps {
@@ -6,17 +7,17 @@ interface AppLayoutProps {
 	title?: string
 	renderHeader?: boolean
 	renderSidebar?: boolean
-	docTitle?: boolean
 }
 
 export const AppLayout: React.FC<AppLayoutProps> = ({
 	children,
 	renderHeader = false,
+	renderSidebar = true,
     ...props
 }) => {
 	return (
 		<div {...props}>
-            {children}
+            {renderSidebar ? <Sidebar>{children}</Sidebar> : <>{children}</>}
 		</div>
 	)
 }
