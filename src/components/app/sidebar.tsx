@@ -1,7 +1,4 @@
-import {
-    Bars3Icon,
-    XMarkIcon
-} from '@heroicons/react/24/outline'
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 
 import { Disclosure } from '@headlessui/react'
@@ -17,35 +14,34 @@ interface SidebarProps {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
-	
 	const navigation = [
 		{ name: 'Home', icon: HomeIcon, current: true, href: '/' },
 		{
 			name: 'User',
 			icon: UserIcon,
-            href: '/user',
+			href: '/user',
 			current: false,
 			children: [
 				{ name: 'All Users', href: '/user/list' },
 				{ name: 'Add User', href: '/user/new' }
 			]
 		},
-        {
+		{
 			name: 'Property Listing',
 			icon: BuildingOfficeIcon,
-            href: '/property',
+			href: '/property',
 			current: false,
 			children: [
 				{ name: 'View All Properties', href: '/property' },
 				{ name: 'Lease (Rental)', href: '/lease' },
-                { name: 'On Sale', href: '/sale' },
-                { name: 'Add Property', href: '/add' },
+				{ name: 'On Sale', href: '/sale' },
+				{ name: 'Add Property', href: '/add' }
 			]
 		},
-        {
+		{
 			name: 'Auctions',
 			icon: BuildingOfficeIcon,
-            href: '/auction',
+			href: '/auction',
 			current: false,
 			children: [
 				{ name: 'View All Auctions', href: '/auctions' },
@@ -66,18 +62,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 		}
 	]
 
-    const {pathname} = useRouter()
+	const { pathname } = useRouter()
 
-    console.log(pathname);
-    
+	console.log(pathname)
+
 	const [showSidebar, setShowSidebar] = useState(false)
-
 
 	return (
 		<div className="px-2">
 			<div className="md:hidden">
-				<div className="flex items-center justify-between bg-white py-3 px-4">
-					<Image src={Logo} className="rounded-md w-32" alt="logo" />
+				<div className="flex items-center justify-between bg-[#E4E4E4] py-3 px-4">
+					<Image src={Logo} className="rounded-md w-64" alt="logo" />
 					<button
 						type="button"
 						className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
@@ -92,38 +87,36 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 				</div>
 			</div>
 			<div className="hidden md:fixed md:inset-y-0 md:flex md:w-72 md:flex-col">
-				<div className="flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-white">
+				<div className="flex min-h-0 flex-1 flex-col border-r border-gray-200">
 					<div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
 						<div className="flex flex-shrink-0 items-center px-4 mb-4">
-                        <Image src={Logo} className="rounded-md w-32" alt="logo" />
+							<Image src={Logo} className="rounded-md w-64" alt="logo" />
 						</div>
-						<div>
-							<nav className="flex-1 space-y-1 bg-white px-2" aria-label="Sidebar">
+						<div className="mt-8">
+							<nav className="flex-1 space-y-1 px-2" aria-label="Sidebar">
 								{navigation.map(item =>
 									!item.children ? (
 										<div key={item.name}>
 											<Link
 												href={item.href}
-												className={
-													clsx(
-														'group flex items-center px-2 py-2 text-sm font-medium rounded-md',
-														pathname === item.href
-															? 'bg-gray-100 text-blue-600 font-medium hover:bg-[#E9ECFF]'
-															: 'text-gray-600 hover:bg-[#E9ECFF] hover:text-gray-900'
-													)
-												}>
-													<>
-														<item.icon
-															className={clsx(
-																'mr-3 h-6 w-6 flex-shrink-0',
-																pathname === item.href
-																	? 'text-blue-600'
-																	: 'text-gray-600 group-hover:text-gray-500'
-															)}
-															aria-hidden="true"
-														/>
-														{item.name}
-													</>
+												className={clsx(
+													'group flex items-center px-2 py-2 text-sm font-medium rounded-md',
+													pathname === item.href
+														? 'bg-gray-100 text-gray-600 font-medium hover:bg-[#E9ECFF]'
+														: 'text-[#717B9D] hover:bg-[#E9ECFF] hover:text-gray-900'
+												)}>
+												<>
+													<item.icon
+														className={clsx(
+															'mr-3 h-6 w-6 flex-shrink-0',
+															pathname === item.href
+																? 'text-gray-600'
+																: 'text-gray-600 group-hover:text-gray-500'
+														)}
+														aria-hidden="true"
+													/>
+													{item.name}
+												</>
 											</Link>
 										</div>
 									) : (
@@ -137,7 +130,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 													clsx(
 														'group flex w-full items-center rounded-md py-2 pl-2 pr-1 text-left text-sm font-medium focus:outline-none',
 														open
-															? 'bg-gray-100 text-blue-600 font-medium hover:bg-[#E9ECFF]'
+															? 'bg-gray-100 text-gray-600 font-medium hover:bg-[#E9ECFF]'
 															: 'text-gray-600 hover:bg-[#E9ECFF] hover:text-gray-900'
 													)
 												}>
@@ -147,7 +140,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 															className={clsx(
 																'mr-3 h-6 w-6 flex-shrink-0  ',
 																open
-																	? 'text-blue-600 group-hover:text-blue-500'
+																	? 'text-gray-600 group-hover:text-gray-500'
 																	: 'text-gray-600 group-hover:text-gray-500'
 															)}
 															aria-hidden="true"
@@ -172,18 +165,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 													<Link
 														key={subItem.name}
 														href={subItem.href}
-														className={
-															clsx(
-																'group flex w-full items-center rounded-md py-2 pl-11 pr-2 text-sm font-medium',
-																pathname === subItem.href
-																	? 'bg-gray-100 text-blue-600 font-medium hover:bg-[#E9ECFF]'
-																	: 'text-gray-600 hover:bg-[#E9ECFF] hover:text-gray-900'
-															)
-														}>
+														className={clsx(
+															'group flex w-full items-center rounded-md py-2 pl-11 pr-2 text-sm font-medium',
+															pathname === subItem.href
+																? 'bg-gray-100 text-gray-900 font-medium hover:bg-[#E9ECFF]'
+																: 'text-gray-900 hover:bg-[#E9ECFF] hover:text-gray-900'
+														)}>
 														{subItem.name}
 													</Link>
-												)
-                                                )}
+												))}
 											</Disclosure.Panel>
 										</Disclosure>
 									)
@@ -195,30 +185,30 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 			</div>
 			{showSidebar && (
 				<div className="md:hidden">
-					<nav className="bg-white px-2 pt-2 pb-3 space-y-1">
+					<nav className="px-2 pt-2 pb-3 space-y-1">
 						{navigation.map(item =>
 							!item.children ? (
 								<div key={item.name}>
 									<Link
 										href={item.href}
-										className={
-											clsx(
-												'group flex items-center px-2 py-2 text-sm font-medium rounded-md',
-												pathname === item.href
-													? 'bg-gray-100 text-blue-600 font-medium hover:bg-[#E9ECFF]'
-													: 'text-gray-600 hover:bg-[#E9ECFF] hover:text-gray-900'
-											)
-										}>
-											<>
-												<item.icon
-													className={clsx(
-														'mr-3 h-6 w-6 flex-shrink-0',
-														pathname === item.href ? 'text-blue-600' : 'text-gray-600 group-hover:text-gray-500'
-													)}
-													aria-hidden="true"
-												/>
-												{item.name}
-											</>
+										className={clsx(
+											'group flex items-center px-2 py-2 text-sm font-medium rounded-md',
+											pathname === item.href
+												? 'bg-gray-100 text-gray-600 font-medium hover:bg-[#E9ECFF]'
+												: 'text-gray-600 hover:bg-[#E9ECFF] hover:text-gray-900'
+										)}>
+										<>
+											<item.icon
+												className={clsx(
+													'mr-3 h-6 w-6 flex-shrink-0',
+													pathname === item.href
+														? 'text-blue-600'
+														: 'text-gray-600 group-hover:text-gray-500'
+												)}
+												aria-hidden="true"
+											/>
+											{item.name}
+										</>
 									</Link>
 								</div>
 							) : (
@@ -232,7 +222,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 											clsx(
 												'group flex w-full items-center rounded-md py-2 pl-2 pr-1 text-left text-sm font-medium focus:outline-none',
 												open
-													? 'bg-gray-100 text-blue-600 font-medium hover:bg-[#E9ECFF]'
+													? 'bg-gray-100 text-gray-600 font-medium hover:bg-[#E9ECFF]'
 													: 'text-gray-600 hover:bg-[#E9ECFF] hover:text-gray-900'
 											)
 										}>
@@ -242,7 +232,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 													className={clsx(
 														'mr-3 h-6 w-6 flex-shrink-0  ',
 														open
-															? 'text-blue-600 group-hover:text-blue-500'
+															? 'text-gray-600 group-hover:text-gray-500'
 															: 'text-gray-600 group-hover:text-gray-500'
 													)}
 													aria-hidden="true"
@@ -267,14 +257,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 											<Link
 												key={subItem.name}
 												href={subItem.href}
-												className={
-													clsx(
-														'group flex w-full items-center rounded-md py-2 pl-11 pr-2 text-sm font-medium',
-														pathname === subItem.href
-															? 'bg-gray-100 text-blue-600 font-medium hover:bg-[#E9ECFF]'
-															: 'text-gray-600 hover:bg-[#E9ECFF] hover:text-gray-900'
-													)
-												}>
+												className={clsx(
+													'group flex w-full items-center rounded-md py-2 pl-11 pr-2 text-sm font-medium',
+													pathname === subItem.href
+														? 'bg-gray-100 text-gray-600 font-medium hover:bg-[#E9ECFF]'
+														: 'text-gray-600 hover:bg-[#E9ECFF] hover:text-gray-900'
+												)}>
 												{subItem.name}
 											</Link>
 										))}
@@ -287,7 +275,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 			)}
 
 			<main>
-				<div className="py-6 px-6 sm:px-8 lg:px-10 md:ml-72">{children}</div>
+				<div className="py-6 px-6 sm:px-8 md:ml-72">{children}</div>
 			</main>
 		</div>
 	)
