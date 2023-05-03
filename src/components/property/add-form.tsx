@@ -312,7 +312,12 @@ const PropertyForm = () => {
 															onChange={e => onChange(e.target.value)}
 															value="shop"
 															checked={value === 'shop'}
-															disabled={property === PropertyTypes.RESIDENTIAL ? true : false}
+															disabled={
+																property !== PropertyTypes.COMMERCIAL &&
+																property !== PropertyTypes.SPECIAL
+																	? true
+																	: false
+															}
 														/>
 														<Checkbox
 															labelText="Plaza"
@@ -320,7 +325,12 @@ const PropertyForm = () => {
 															onChange={e => onChange(e.target.value)}
 															value="plaza"
 															checked={value === 'plaza'}
-															disabled={property === PropertyTypes.RESIDENTIAL ? true : false}
+															disabled={
+																property !== PropertyTypes.COMMERCIAL &&
+																property !== PropertyTypes.SPECIAL
+																	? true
+																	: false
+															}
 														/>
 														<Checkbox
 															labelText="Agriculture Land"
@@ -328,7 +338,12 @@ const PropertyForm = () => {
 															onChange={e => onChange(e.target.value)}
 															value="agriculture land"
 															checked={value === 'agriculture land'}
-															disabled={property === PropertyTypes.RESIDENTIAL ? true : false}
+															disabled={
+																property !== PropertyTypes.COMMERCIAL &&
+																property !== PropertyTypes.SPECIAL
+																	? true
+																	: false
+															}
 														/>
 													</div>
 												)}
