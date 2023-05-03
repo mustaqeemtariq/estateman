@@ -74,6 +74,17 @@ const UserForm = ({ isNew, title, userId }: UserFormProps) => {
 		setUpdating(true)
 	}
 
+	const [selectedRights, setSelectedRights] = useState<UserRightTypes[]>([])
+
+	const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { value, checked } = e.target
+		if (checked) {
+			setSelectedRights([...selectedRights, value as UserRightTypes])
+		} else {
+			setSelectedRights(selectedRights.filter(right => right !== value))
+		}
+	}
+
 	return (
 		<AppLayout>
 			<AppHeader />
@@ -262,31 +273,33 @@ const UserForm = ({ isNew, title, userId }: UserFormProps) => {
 									<Controller
 										name="rights"
 										control={control}
-										render={({ field: { onChange, value } }) => (
-											<div className="flex space-x-32 flex-wrap">
-												<Checkbox
-													labelText="Add Property"
-													name="add"
-													onChange={onChange}
-													value={UserRightTypes.ADD}
-													checked={value === UserRightTypes.ADD}
-												/>
-												<Checkbox
-													labelText="Edit Property"
-													name="edit"
-													onChange={onChange}
-													value={UserRightTypes.EDIT}
-													checked={value === UserRightTypes.EDIT}
-												/>
-												<Checkbox
-													labelText="View Property"
-													name="view"
-													onChange={onChange}
-													value={UserRightTypes.VIEW}
-													checked={value === UserRightTypes.VIEW}
-												/>
-											</div>
-										)}
+										render={({ field: { onChange, value } }) => {
+											return (
+												<div className="flex space-x-32 flex-wrap">
+													<Checkbox
+														labelText="Add Property"
+														name="add"
+														onChange={handleCheckboxChange}
+														value={UserRightTypes.ADD}
+														checked={selectedRights.includes(UserRightTypes.ADD)}
+													/>
+													<Checkbox
+														labelText="Edit Property"
+														name="edit"
+														onChange={handleCheckboxChange}
+														value={UserRightTypes.EDIT}
+														checked={selectedRights.includes(UserRightTypes.EDIT)}
+													/>
+													<Checkbox
+														labelText="View Property"
+														name="view"
+														onChange={handleCheckboxChange}
+														value={UserRightTypes.VIEW}
+														checked={selectedRights.includes(UserRightTypes.VIEW)}
+													/>
+												</div>
+											)
+										}}
 									/>
 								</div>
 								{errors.rights && <p className="text-xs text-red-600">{errors.rights?.message}</p>}
