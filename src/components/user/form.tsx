@@ -11,7 +11,9 @@ import { Button } from 'src/components/app/button'
 import { Input, InputNumber } from 'src/components/app/input'
 import { AppLayout } from 'src/components/app/layout'
 import { ShowHidePassword } from 'src/components/password'
-import { UserRightsTypes } from 'src/constants/constants'
+import { UserRightTypes } from 'src/constants/constants'
+import { UserForm } from 'src/types/typings'
+import { Checkbox } from '../app/checkbox'
 import { Container } from '../app/container'
 import { AppHeader } from '../app/header'
 
@@ -65,9 +67,6 @@ const UserForm = ({ isNew, title, userId }: UserFormProps) => {
 		formState: { errors }
 	} = useForm<UserForm>({
 		resolver: yupResolver(schema),
-		defaultValues: {
-			rights: []
-		},
 		mode: 'all'
 	})
 
@@ -189,32 +188,47 @@ const UserForm = ({ isNew, title, userId }: UserFormProps) => {
 								</div>
 							</div>
 							<div className="flex sm:space-x-8 max-sm:flex-col">
-								<InputNumber
-									labelText="CNIC"
-									id="cnic"
-									autoComplete="cnic"
-									name="cnic"
-									error={errors}
-									required={true}
-									maxLength={13}
-									autoCapitalize="false"
-									placeholder="Enter CNIC"
+								<Controller
+									name={'cnic'}
+									control={control}
+									render={({ field: { onChange, value } }) => (
+										<InputNumber
+											labelText="CNIC"
+											id="cnic"
+											autoComplete="cnic"
+											name="cnic"
+											onChange={onChange}
+											value={value}
+											error={errors}
+											required={true}
+											maxLength={13}
+											autoCapitalize="false"
+											placeholder="Enter CNIC"
+										/>
+									)}
 								/>
-
-								<InputNumber
-									labelText="Contact Number"
-									id="phone"
-									autoComplete="phone"
-									name="phone"
-									error={errors}
-									required={true}
-									maxLength={11}
-									autoCapitalize="false"
-									placeholder="Enter Contact Number"
+								<Controller
+									name={'phone'}
+									control={control}
+									render={({ field: { onChange, value } }) => (
+										<InputNumber
+											labelText="Contact Number"
+											id="phone"
+											onChange={onChange}
+											value={value}
+											autoComplete="phone"
+											name="phone"
+											error={errors}
+											required={true}
+											maxLength={11}
+											autoCapitalize="false"
+											placeholder="Enter Contact Number"
+										/>
+									)}
 								/>
 							</div>
 							<div className="col-span-full">
-								<label htmlFor="address" className="block text-sm font-small text-[#717B9D]">
+								<label htmlFor="address" className="block text-[#0D0C18]">
 									Address
 								</label>
 								<div className="mt-2">
@@ -240,37 +254,42 @@ const UserForm = ({ isNew, title, userId }: UserFormProps) => {
 								</div>
 							</div>
 							<div>
-								<div className="flex justify-between max-sm:flex-col">
-									<label htmlFor="rights" className="block text-sm font-small text-[#717B9D]">
+								<div className="flex justify-between items-center max-sm:flex-col">
+									<label htmlFor="rights" className="block text-[#0D0C18]">
 										User Rights
 										<span style={{ color: 'red' }}> *</span>
 									</label>
-									<div className="flex items-center">
-										<input type="checkbox" {...register('rights')} value={UserRightsTypes.ADD} />
-										<label
-											htmlFor="add"
-											className="ml-3 block text-base leading-2 border-gray-300 text-gray-900">
-											Add Property
-										</label>
-									</div>
-									<div className="flex items-center">
-										<input type="checkbox" {...register('rights')} value={UserRightsTypes.EDIT} />
-										<label
-											htmlFor="edit"
-											className="ml-3 block text-base leading-2 border-gray-300 text-gray-900">
-											Edit Property
-										</label>
-									</div>
-									<div className="flex items-center">
-										<input {...register('rights')} type="checkbox" value={UserRightsTypes.VIEW} />
-										<label
-											htmlFor="view"
-											className="ml-3 block text-base leading-2 border-gray-300 text-gray-900">
-											View Property
-										</label>
-									</div>
+									<Controller
+										name="rights"
+										control={control}
+										render={({ field: { onChange, value } }) => (
+											<div className="flex space-x-32 flex-wrap">
+												<Checkbox
+													labelText="Add Property"
+													name="add"
+													onChange={onChange}
+													value={UserRightTypes.ADD}
+													checked={value === UserRightTypes.ADD}
+												/>
+												<Checkbox
+													labelText="Edit Property"
+													name="edit"
+													onChange={onChange}
+													value={UserRightTypes.EDIT}
+													checked={value === UserRightTypes.EDIT}
+												/>
+												<Checkbox
+													labelText="View Property"
+													name="view"
+													onChange={onChange}
+													value={UserRightTypes.VIEW}
+													checked={value === UserRightTypes.VIEW}
+												/>
+											</div>
+										)}
+									/>
 								</div>
-								{errors.rights && <p className="text-xs text-red-600">{errors.rights.message}</p>}
+								{errors.rights && <p className="text-xs text-red-600">{errors.rights?.message}</p>}
 							</div>
 						</div>
 					</form>
