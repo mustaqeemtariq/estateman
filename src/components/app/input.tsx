@@ -28,10 +28,10 @@ export const Input = ({
 	const errorText = error?.[name]?.message as string
 
 	return (
-		<div className='w-full'>
+		<div className="w-full">
 			{renderLabel && labelText && (
-				<label htmlFor={name} className="block text-sm font-small text-[#717B9D]">
-					{labelText} {required && <span style={{ color: "red" }}>*</span>}
+				<label htmlFor={name} className="block text-[#0D0C18]">
+					{labelText} {required && <span className="text-[#FF0000]">*</span>}
 				</label>
 			)}
 			<div className="mt-1">
@@ -76,10 +76,10 @@ export const InputNumber = ({
 	}
 
 	return (
-		<div className='w-full'>
+		<div className="w-full">
 			{renderLabel && labelText && (
-				<label htmlFor={name} className="block text-sm font-small text-[#717B9D]">
-					{labelText} {required && <span style={{ color: "red" }}>*</span>}
+				<label htmlFor={name} className="block text-[#0D0C18]">
+					{labelText} {required && <span style={{ color: 'red' }}>*</span>}
 				</label>
 			)}
 			<div className="mt-1">
@@ -96,4 +96,3 @@ export const InputNumber = ({
 		</div>
 	)
 }
-
