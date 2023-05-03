@@ -1,4 +1,4 @@
-import UserForm from 'src/components/users/form'
+import UserForm from 'src/components/user/form'
 
 const newUser = () => {
 	return <UserForm title="Add User" isNew={true} />
