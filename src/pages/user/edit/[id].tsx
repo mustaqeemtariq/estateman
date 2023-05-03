@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import UserForm from 'src/components/users/form'
+import UserForm from 'src/components/user/form'
 
 const updateUser = () => {
 	const router = useRouter()
