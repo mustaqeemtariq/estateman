@@ -32,10 +32,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 			href: '/property',
 			current: false,
 			children: [
-				{ name: 'View All Properties', href: '/property' },
+				{ name: 'View All Properties', href: '/property/list' },
 				{ name: 'Lease (Rental)', href: '/lease' },
 				{ name: 'On Sale', href: '/sale' },
-				{ name: 'Add Property', href: '/add' }
+				{ name: 'Add Property', href: '/property/new' }
 			]
 		},
 		{
@@ -64,8 +64,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 
 	const { pathname } = useRouter()
 
-	console.log(pathname)
-
 	const [showSidebar, setShowSidebar] = useState(false)
 
 	return (
@@ -87,7 +85,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 				</div>
 			</div>
 			<div className="hidden md:fixed md:inset-y-0 md:flex md:w-72 md:flex-col">
-				<div className="flex min-h-0 flex-1 flex-col border-r border-gray-200">
+				<div className="flex min-h-0 flex-1 flex-col">
 					<div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
 						<div className="flex flex-shrink-0 items-center px-4 mb-4">
 							<Image src={Logo} className="rounded-md w-64" alt="logo" />
