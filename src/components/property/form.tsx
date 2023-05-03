@@ -7,7 +7,7 @@ import { Spinner } from 'src/components/animations/spinner'
 import { Button } from 'src/components/app/button'
 import { Input, InputNumber } from 'src/components/app/input'
 import { AppLayout } from 'src/components/app/layout'
-import { UnitTypes } from 'src/constants/constants'
+import { ContractTypes, PropertyTypes, UnitTypes } from 'src/constants/constants'
 import { PropertyForm } from 'src/types/typings'
 import { Checkbox } from '../app/checkbox'
 import { Container } from '../app/container'
@@ -38,6 +38,7 @@ const PropertyForm = () => {
 		register,
 		control,
 		handleSubmit,
+		watch,
 		formState: { errors }
 	} = useForm<PropertyForm>({
 		resolver: yupResolver(schema),
@@ -48,6 +49,8 @@ const PropertyForm = () => {
 	const handleFormSubmit = (data: any) => {
 		setUpdating(true)
 	}
+
+	const property = watch('property') ?? ''
 
 	return (
 		<AppLayout>
@@ -103,14 +106,16 @@ const PropertyForm = () => {
 													<Checkbox
 														labelText="Sale"
 														name="contract"
-														onChange={onChange}
-														value={value}
+														onChange={e => onChange(e.target.value)}
+														value={ContractTypes.SALE}
+														checked={value === ContractTypes.SALE}
 													/>
 													<Checkbox
 														labelText="Rent"
 														name="contract"
-														onChange={onChange}
-														value={value}
+														onChange={e => onChange(e.target.value)}
+														value={ContractTypes.RENT}
+														checked={value === ContractTypes.RENT}
 													/>
 												</div>
 											)}
@@ -131,20 +136,23 @@ const PropertyForm = () => {
 													<Checkbox
 														labelText="Residential"
 														name="property"
-														onChange={onChange}
-														value={value}
+														onChange={e => onChange(e.target.value)}
+														value={PropertyTypes.RESIDENTIAL}
+														checked={value === PropertyTypes.RESIDENTIAL}
 													/>
 													<Checkbox
 														labelText="Commercial"
 														name="property"
-														onChange={onChange}
-														value={value}
+														onChange={e => onChange(e.target.value)}
+														value={PropertyTypes.COMMERCIAL}
+														checked={value === PropertyTypes.COMMERCIAL}
 													/>
 													<Checkbox
 														labelText="Special Commercial"
 														name="property"
-														onChange={onChange}
-														value={value}
+														onChange={e => onChange(e.target.value)}
+														value={PropertyTypes.SPECIAL}
+														checked={value === PropertyTypes.SPECIAL}
 													/>
 												</div>
 											)}
@@ -165,7 +173,7 @@ const PropertyForm = () => {
 											autoCapitalize="false"
 											placeholder="Google Map Location"
 										/>
-										<div className="flex items-center space-x-8">
+										<div className="flex space-x-8">
 											<Controller
 												name={'area'}
 												control={control}
@@ -201,7 +209,7 @@ const PropertyForm = () => {
 												))}
 											</Select>
 										</div>
-										<div className="flex items-center space-x-8">
+										<div className="flex space-x-8">
 											<Controller
 												name={'price'}
 												control={control}
@@ -253,56 +261,74 @@ const PropertyForm = () => {
 														<Checkbox
 															labelText="House"
 															name="category"
-															onChange={onChange}
-															value={value}
+															onChange={e => onChange(e.target.value)}
+															value="house"
+															checked={value === 'house'}
+															disabled={property !== PropertyTypes.RESIDENTIAL ? true : false}
 														/>
 														<Checkbox
 															labelText="Penthouse"
 															name="category"
-															onChange={onChange}
-															value={value}
+															onChange={e => onChange(e.target.value)}
+															value="penthouse"
+															checked={value === 'penthouse'}
+															disabled={property !== PropertyTypes.RESIDENTIAL ? true : false}
 														/>
 														<Checkbox
 															labelText="Apartment"
 															name="category"
-															onChange={onChange}
-															value={value}
+															onChange={e => onChange(e.target.value)}
+															value="apartment"
+															checked={value === 'apartment'}
+															disabled={property !== PropertyTypes.RESIDENTIAL ? true : false}
 														/>
 														<Checkbox
 															labelText="Studio"
 															name="category"
-															onChange={onChange}
-															value={value}
+															onChange={e => onChange(e.target.value)}
+															value="studio"
+															checked={value === 'studio'}
+															disabled={property !== PropertyTypes.RESIDENTIAL ? true : false}
 														/>
 														<Checkbox
 															labelText="Villa"
 															name="category"
-															onChange={onChange}
-															value={value}
+															onChange={e => onChange(e.target.value)}
+															value="villa"
+															checked={value === 'villa'}
+															disabled={property !== PropertyTypes.RESIDENTIAL ? true : false}
 														/>
 														<Checkbox
 															labelText="Plot"
 															name="category"
-															onChange={onChange}
-															value={value}
+															onChange={e => onChange(e.target.value)}
+															value="plot"
+															checked={value === 'plot'}
+															disabled={property !== PropertyTypes.RESIDENTIAL ? true : false}
 														/>
 														<Checkbox
 															labelText="Shop"
 															name="category"
-															onChange={onChange}
-															value={value}
+															onChange={e => onChange(e.target.value)}
+															value="shop"
+															checked={value === 'shop'}
+															disabled={property === PropertyTypes.RESIDENTIAL ? true : false}
 														/>
 														<Checkbox
 															labelText="Plaza"
 															name="category"
-															onChange={onChange}
-															value={value}
+															onChange={e => onChange(e.target.value)}
+															value="plaza"
+															checked={value === 'plaza'}
+															disabled={property === PropertyTypes.RESIDENTIAL ? true : false}
 														/>
 														<Checkbox
 															labelText="Agriculture Land"
 															name="category"
-															onChange={onChange}
-															value={value}
+															onChange={e => onChange(e.target.value)}
+															value="agriculture land"
+															checked={value === 'agriculture land'}
+															disabled={property === PropertyTypes.RESIDENTIAL ? true : false}
 														/>
 													</div>
 												)}
