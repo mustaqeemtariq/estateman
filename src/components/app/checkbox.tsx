@@ -13,6 +13,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 	controllerError?: FieldError | undefined
 	renderLabel?: boolean
 	required?: boolean
+	disabled?: boolean
 	onChange: React.ChangeEventHandler<HTMLInputElement>
 	multiSelect?: Boolean
 }
@@ -21,8 +22,9 @@ export const Checkbox = ({
 	labelText,
 	index,
 	name,
-	checked = false,
+	checked,
 	register,
+	disabled,
 	value,
 	error,
 	controllerError,
@@ -33,18 +35,18 @@ export const Checkbox = ({
 	...props
 }: InputProps) => {
 	const errorText = (error?.[name]?.message as string) ?? controllerError?.message
-	// const [checkState, setCheckState] = useState<boolean>(checked)
+
 	const [checkValue, setCheckValue] = useState<string>()
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const { checked } = event.target
-
-		setCheckValue(value)
-		onChange?.(event)
-		// } else {
-		// 	setCheckValue(undefined)
-		// 	onChange?.(event)
-		// }
+		if (checked) {
+			setCheckValue(value)
+			onChange?.(event)
+		} else {
+			setCheckValue(undefined)
+			onChange?.(event)
+		}
 	}
 
 	return (
@@ -54,15 +56,20 @@ export const Checkbox = ({
 					{...props}
 					type="checkbox"
 					name={name}
-					onChange={handleChange}
+					onChange={onChange}
 					id={index}
 					value={value}
-					checked={checked}
-					className={clsx('border border-[#0038FF]')}
+					checked={disabled ? false : checked}
+					disabled={disabled}
+					className={clsx('border', disabled ? 'border-gray-400' : 'border-[#0038FF]')}
 				/>
-
 				{renderLabel && labelText && (
-					<label htmlFor={name} className="block text-sm font-small text-[#0D0C18]">
+					<label
+						htmlFor={name}
+						className={clsx(
+							'block text-sm font-small',
+							disabled ? 'text-gray-400' : 'text-[#0D0C18]'
+						)}>
 						{labelText}
 					</label>
 				)}
