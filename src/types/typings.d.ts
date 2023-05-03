@@ -1,3 +1,5 @@
+import { ContractTypes, PropertyTypes, UnitTypes, UserRightTypes } from 'src/constants/constants'
+
 interface User {
 	username: string
 	email: string
@@ -5,10 +7,22 @@ interface User {
 }
 
 type UserForm = User & {
-    cnic: string
+	cnic: string
 	address: string
 	password: string
-    confirmPassword: string
+	confirmPassword: string
 	address: string
-	rights: string[]
+	rights: UserRightTypes
+}
+
+type PropertyForm = {
+	title: string
+	contract: ContractTypes
+	property: PropertyTypes
+	category: string
+	location: string
+	area: number
+	units: UnitTypes
+	price: string
+	year: number
 }
