@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import { Container } from 'src/components/app/container'
+import { AppHeader } from 'src/components/app/header'
 import { AppLayout } from 'src/components/app/layout'
-import { DashboardHeader } from 'src/components/dashboard/header'
 import UserForm from 'src/components/user/form'
 
 const updateUser = () => {
@@ -10,8 +10,8 @@ const updateUser = () => {
 
 	return (
 		<AppLayout>
+			<AppHeader />
 			<Container>
-				<DashboardHeader />
 				<UserForm title="Edit User" isNew={false} userId={id} />
 			</Container>
 		</AppLayout>
