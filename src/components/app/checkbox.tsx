@@ -64,21 +64,10 @@ export const Checkbox = ({
 					className={clsx('border', disabled ? 'border-gray-400' : 'border-[#0038FF]')}
 				/>
 				{renderLabel && labelText && (
-					<label
-						htmlFor={name}
-						className={clsx(
-							'block text-sm font-small',
-							disabled ? 'text-gray-400' : 'text-[#0D0C18]'
-						)}>
+					<label htmlFor={name} className={clsx('block text-sm font-small text-[#0D0C18]')}>
 						{labelText}
 					</label>
 				)}
-				{/* <Image
-					onClick={handleChange}
-					src={checkState ? checkedBox : uncheckedBox}
-					alt="checkbox"
-					className="cursor-pointer"
-				/> */}
 			</div>
 			{errorText && <p className="text-xs text-red-600">{errorText}</p>}
 		</div>
