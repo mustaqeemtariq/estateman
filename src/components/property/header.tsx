@@ -1,21 +1,28 @@
-import { useState } from 'react'
+import { Dispatch, SetStateAction } from 'react'
 import { Tabs } from '../app/tabs'
 
-export const PropertyHeader = () => {
-	const [showTab, setShowTab] = useState('Add Property')
+interface PropertyHeaderProps {
+	active: {
+		propertyDetails: boolean
+		addHistory: boolean
+	}
+	setState: Dispatch<SetStateAction<string>>
+	state: string
+}
 
+export const PropertyHeader = ({ state, setState, active }: PropertyHeaderProps) => {
 	const tabs = [
 		{
 			name: 'Add Property',
-			current: showTab == 'Add Property' ? true : false
+			current: state == 'Add Property' ? true : false
 		},
 		{
 			name: 'Property Details',
-			current: showTab == 'Property Details' ? true : false
+			current: state == 'Property Details' ? true : false
 		},
 		{
 			name: 'Add History',
-			current: showTab == 'Add History' ? true : false
+			current: state == 'Add History' ? true : false
 		}
 	]
 
@@ -25,9 +32,9 @@ export const PropertyHeader = () => {
 				labelText="Property"
 				name="property"
 				value="property"
-				setShowTab={setShowTab}
+				active={active}
+				setShowTab={setState}
 				tabs={tabs}
-				className="text-2xl"
 			/>
 		</div>
 	)
