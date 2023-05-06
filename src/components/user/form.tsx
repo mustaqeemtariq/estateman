@@ -91,12 +91,12 @@ const UserForm = ({ isNew, title, userId }: UserFormProps) => {
 							<h1 className="font-semibold leading-6 text-[#0038FF] text-xl uppercase">{title}</h1>
 						)}
 						{!isNew && (
-							<div className="flex items-center">
+							<div className="flex items-baseline">
 								<h2 className="text-md flex items-center uppercase text-gray-900">
 									<Link href={'/user/list'}>All Users</Link>
 									<ChevronRightIcon className="h-4 w-4" aria-hidden="true" />
 								</h2>
-								<h1 className="font-semibold leading-6 text-[#0038FF] text-xl uppercase">
+								<h1 className="font-semibold leading-6 text-[#0038FF] text-2xl uppercase">
 									{title}
 								</h1>
 							</div>
@@ -110,7 +110,7 @@ const UserForm = ({ isNew, title, userId }: UserFormProps) => {
 									<span className="ml-2">Updating...</span>
 								</>
 							) : (
-								<span className="uppercase">Save</span>
+								<span className="uppercase">{isNew ? 'Save' : 'Update'}</span>
 							)}
 						</Button>
 					</div>
