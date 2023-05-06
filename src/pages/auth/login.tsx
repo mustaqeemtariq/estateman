@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import Image from 'next/image'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import background from 'src/assets/login/bg.png'
 import Logo from 'src/assets/logo/em-logo.png'
 import { Spinner } from 'src/components/animations/spinner'
 import { Button } from 'src/components/app/button'
@@ -34,9 +35,13 @@ const Login = () => {
 		setLoading(true)
 	}
 
+	const bgImage = `url(${background.src})`
+
 	return (
 		<AppLayout renderSidebar={false}>
-			<div className="flex flex-col justify-center items-center py-12">
+			<div
+				style={{ backgroundImage: bgImage }}
+				className="flex flex-col justify-center items-center py-12 bg-cover bg-center">
 				<div className="space-y-1 sm:mx-auto sm:w-full sm:max-w-md">
 					<Image className="mx-auto" src={Logo} alt="logo" />
 				</div>
