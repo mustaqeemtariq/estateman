@@ -3,13 +3,16 @@
 @tailwind utilities;
 
 @layer components {
-    .tw-table-td {
-      @apply whitespace-nowrap px-3 py-3 text-base text-gray-900
-    }
-    .tw-table-th {
-      @apply px-3 py-3.5 text-left text-lg font-semibold text-gray-900 
-    }
-    .tw-table-span {
-      @apply inline-flex rounded-full px-3  font-normal p-1 text-base leading-5 text-white
-    }  
-  }
+	.tw-table-td {
+		@apply whitespace-nowrap px-3 py-3 text-base text-gray-900;
+	}
+	.tw-table-th {
+		@apply px-3 py-3.5 text-left text-lg font-semibold text-gray-900;
+	}
+	.tw-table-span {
+		@apply inline-flex rounded-full px-3  font-normal p-1 text-base leading-5 text-white;
+	}
+	input[type='date']::-webkit-calendar-picker-indicator {
+		@apply absolute inset-0 w-full h-full cursor-pointer z-50;
+	}
+}
