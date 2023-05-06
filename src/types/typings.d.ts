@@ -1,5 +1,4 @@
 import { ContractTypes, PropertyTypes, UnitTypes, UserRightTypes } from 'src/constants/constants'
-import { AddPropertyForm } from 'src/types/typings'
 
 interface User {
 	username: string
