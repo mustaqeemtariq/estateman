@@ -12,7 +12,7 @@ const updateUser = () => {
 		<AppLayout>
 			<AppHeader />
 			<Container>
-				<UserForm title="Edit User" isNew={false} userId={id} />
+				<UserForm title="Edit User" isNew={false} userId={id as string} />
 			</Container>
 		</AppLayout>
 	)
