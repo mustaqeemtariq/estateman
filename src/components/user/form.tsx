@@ -1,16 +1,20 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { useAppDispatch, useAppSelector } from 'src/hooks/rtk'
 import * as yup from 'yup'
 
 import { ChevronRightIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { toast } from 'react-hot-toast'
 import { Spinner } from 'src/components/animations/spinner'
 import { Button } from 'src/components/app/button'
 import { Input, InputNumber } from 'src/components/app/input'
 import { ShowHidePassword } from 'src/components/password'
 import { UserRightTypes } from 'src/constants/constants'
+import { addUser } from 'src/slices/users'
 import { UserForm } from 'src/types/typings'
 import { Checkbox } from '../app/checkbox'
 
@@ -49,16 +53,24 @@ const schema = yup.object<UserForm>().shape({
 interface UserFormProps {
 	isNew: boolean
 	title: string
-	userId?: string | string[]
+	userId?: string
 }
 
 const UserForm = ({ isNew, title, userId }: UserFormProps) => {
+	const { users } = useAppSelector(state => state)
+	const dispatch = useAppDispatch()
+
+	const user = users[userId ?? '']
+
+	const router = useRouter()
+
 	const [isUpdating, setUpdating] = useState(false)
 	const [togglePassword, setTogglePassword] = useState(false)
 	const [toggleConfirmPassword, setToggleConfirmPassword] = useState(false)
 
 	const {
 		register,
+		setValue,
 		control,
 		handleSubmit,
 		formState: { errors }
@@ -68,7 +80,14 @@ const UserForm = ({ isNew, title, userId }: UserFormProps) => {
 	})
 
 	const handleFormSubmit = (data: any) => {
-		setUpdating(true)
+		console.log('D', data)
+
+		// setUpdating(true)
+		dispatch(addUser(data))
+		toast.success('User added successfully')
+		// setTimeout(() => {
+		// 	router.push('/user/list')
+		// }, 500)
 	}
 
 	const [selectedRights, setSelectedRights] = useState<UserRightTypes[]>([])
@@ -81,6 +100,10 @@ const UserForm = ({ isNew, title, userId }: UserFormProps) => {
 			setSelectedRights(selectedRights.filter(right => right !== value))
 		}
 	}
+
+	useEffect(() => {
+		setValue('rights', selectedRights, { shouldValidate: isUpdating && true })
+	}, [selectedRights])
 
 	return (
 		<div className="px-4 sm:px-4 lg:px-4">
@@ -160,7 +183,7 @@ const UserForm = ({ isNew, title, userId }: UserFormProps) => {
 								onClick={() => setTogglePassword(!togglePassword)}
 								className={clsx(
 									'absolute inset-y-0 flex cursor-pointer items-center right-2 top-6',
-									Object.keys(errors).length !== 0 && 'top-2'
+									Object.keys(errors).length !== 0 && 'bottom-2.5'
 								)}>
 								{<ShowHidePassword open={togglePassword} />}
 							</div>
@@ -182,7 +205,7 @@ const UserForm = ({ isNew, title, userId }: UserFormProps) => {
 								onClick={() => setToggleConfirmPassword(!toggleConfirmPassword)}
 								className={clsx(
 									'absolute inset-y-0 flex cursor-pointer items-center right-2 top-6',
-									Object.keys(errors).length !== 0 && 'top-2'
+									Object.keys(errors).length !== 0 && 'bottom-2.5'
 								)}>
 								{<ShowHidePassword open={toggleConfirmPassword} />}
 							</div>
@@ -246,7 +269,7 @@ const UserForm = ({ isNew, title, userId }: UserFormProps) => {
 											placeholder="Enter Address"
 											value={value ?? ''}
 											rows={2}
-											className="block placeholder-[#0D0C18] w-full appearance-none bg-[#E6E6E6] rounded-md border border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+											className="block placeholder-gray-500 w-full appearance-none bg-[#E6E6E6] rounded-md border border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
 										/>
 										{error && <span className="text-xs text-red-600">{error.message}</span>}
 									</>
