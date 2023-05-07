@@ -14,16 +14,19 @@ import {
 import * as yup from 'yup'
 
 import { PlusIcon } from '@heroicons/react/20/solid'
+import clsx from 'clsx'
 import { Spinner } from 'src/components/animations/spinner'
 import { Button } from 'src/components/app/button'
 import { Input, InputNumber } from 'src/components/app/input'
 import { ContractTypes, PropertyTypes, UnitTypes } from 'src/constants/constants'
 import { PropertyFormType } from 'src/types/typings'
 import { Checkbox } from '../app/checkbox'
+import { DateInput } from '../app/date'
 import FileUpload from '../app/file-upload'
 import { Radio } from '../app/radio'
 import { Select } from '../app/select'
 import CallRecord from './call-record'
+import Commission from './commission'
 import PricingHistory from './pricing-history'
 
 interface PropertyFormProps {
@@ -53,7 +56,7 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab }: PropertyFormProp
 		step: FormSteps.ADDPROPERTY
 	})
 
-	const schema = yup.object({
+	const schema = yup.object<PropertyFormType>().shape({
 		title: yup.string().when('$step', {
 			is: FormSteps.ADDPROPERTY,
 			then: schema => schema.required('Title is required')
@@ -84,7 +87,35 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab }: PropertyFormProp
 		}),
 		year: yup.string().when('$step', {
 			is: FormSteps.ADDPROPERTY,
-			then: schema => schema.required('Year is required')
+			then: schema =>
+				schema.test('yearType', 'Year is required', function (value) {
+					if (value) return true
+					return false
+				})
+		}),
+		leaseexpiry: yup.string().when('$step', {
+			is: FormSteps.ADDHISTORY,
+			then: schema =>
+				schema.test('leaseType', 'Date is required', function (value) {
+					if (this.parent.occupancy === 'occupied') {
+						if (value == '') {
+							return false
+						}
+						if (value) {
+							const present = new Date()
+							const selected = new Date(value)
+							if (selected < present) {
+								throw this.createError({
+									message: 'Date cannot be in the past',
+									path: 'leaseexpiry'
+								})
+							}
+							return true
+						}
+					} else {
+						return true
+					}
+				})
 		}),
 		category: yup.string().when('$step', {
 			is: FormSteps.ADDPROPERTY,
@@ -96,19 +127,45 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab }: PropertyFormProp
 		}),
 		house: yup.string().when('$step', {
 			is: FormSteps.PROPERTYDETAILS,
-			then: schema => schema.required('House number is required')
+			then: schema =>
+				schema.test('houseType', 'Invalid house type', function (value) {
+					const name = this.parent.category
+					if (!value) {
+						throw this.createError({
+							message: `${name.charAt(0).toUpperCase().concat(name.slice(1))} number is required`,
+							path: 'house'
+						})
+					}
+					return true
+				})
 		}),
 		gas: yup.string().when('$step', {
 			is: FormSteps.PROPERTYDETAILS,
 			then: schema =>
-				schema.nullable().oneOf([null, 'yes', 'no'], 'Gas must be either "yes" or "no" or empty')
+				schema.test('gasType', 'Invalid gas type', function (value) {
+					console.log(value)
+
+					if (!value) return true
+					if (value.toLowerCase() === 'yes' || value.toLocaleLowerCase() === 'no') return true
+
+					throw this.createError({
+						message: 'Gas must be either "yes" or "no" or empty',
+						path: 'gas'
+					})
+				})
 		}),
 		electricity: yup.string().when('$step', {
 			is: FormSteps.PROPERTYDETAILS,
 			then: schema =>
-				schema
-					.nullable()
-					.oneOf([null, 'yes', 'no'], 'Electricity must be either "yes" or "no" or empty')
+				schema.test('electricityType', 'Invalid electricity type', function (value) {
+					if (!value) return true
+					if (value.toLowerCase() === 'yes' || value.toLocaleLowerCase() === 'no') return true
+
+					throw this.createError({
+						message: 'Electricity must be either "yes" or "no" or empty',
+						path: 'electricity'
+					})
+				})
 		}),
 		name: yup.string().when('$step', {
 			is: FormSteps.PROPERTYDETAILS,
@@ -141,6 +198,7 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab }: PropertyFormProp
 		control,
 		handleSubmit,
 		watch,
+		setValue,
 		formState: { errors }
 	} = useForm<PropertyFormType>({
 		resolver: yupResolver(schema as any),
@@ -149,18 +207,25 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab }: PropertyFormProp
 	})
 
 	const [category, setCategory] = useState<string>()
+	const [showCommission, setShowCommission] = useState(false)
 
 	let component
 
 	switch (state.step) {
 		case FormSteps.ADDPROPERTY:
-			component = <AddPropertyForm {...{ errors, register, control, watch, setCategory }} />
+			component = (
+				<AddPropertyForm {...{ errors, register, control, watch, setCategory, setValue }} />
+			)
 			break
 		case FormSteps.PROPERTYDETAILS:
 			component = <PropertyDetailsForm {...{ errors, register, control, category }} />
 			break
 		case FormSteps.ADDHISTORY:
-			component = <AddHistoryForm {...{ errors, register, control, watch }} />
+			component = (
+				<AddHistoryForm
+					{...{ errors, register, control, watch, setValue, showCommission, setShowCommission }}
+				/>
+			)
 			break
 		default:
 			component = null
@@ -224,11 +289,20 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab }: PropertyFormProp
 					if (state.step === FormSteps.COMPLETE) {
 						onSubmit(event)
 					} else {
+						setShowCommission(false)
 						nextStep(event)
 					}
 				}}>
 				<div className="flex items-center justify-end text-base ">
-					<div>
+					<div className="flex space-x-3">
+						{showCommission && (
+							<button
+								type="button"
+								onClick={() => setShowCommission(false)}
+								className="text-[#485276] px-8 border border-gray-300 rounded-md">
+								<span className="uppercase">Close</span>
+							</button>
+						)}
 						<Button type="submit" disabled={isUpdating} className="bg-black px-6">
 							{isUpdating ? (
 								<>
@@ -236,7 +310,9 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab }: PropertyFormProp
 									<span className="ml-2">Updating...</span>
 								</>
 							) : (
-								<span className="uppercase">Save</span>
+								<span className="uppercase whitespace-nowrap">
+									{showCommission ? 'Save & Add to History' : 'Save'}
+								</span>
 							)}
 						</Button>
 					</div>
@@ -256,15 +332,28 @@ interface FormProps {
 	watch?: UseFormWatch<PropertyFormType>
 	setCategory?: Dispatch<SetStateAction<string | undefined>>
 	category?: string
+	showCommission?: boolean
+	setShowCommission?: Dispatch<SetStateAction<boolean>>
 }
 
-const AddPropertyForm = ({ register, errors, control, watch, setCategory }: FormProps) => {
+const AddPropertyForm = ({
+	register,
+	errors,
+	control,
+	watch,
+	setCategory,
+	setValue
+}: FormProps) => {
 	const property = watch?.('property')
 	const category = watch?.('category')
 
 	useEffect(() => {
 		setCategory?.(category)
 	}, [category])
+
+	const handleDate = (value: string) => {
+		setValue?.('year', value, { shouldValidate: true })
+	}
 
 	return (
 		<div className="space-y-4">
@@ -409,6 +498,7 @@ const AddPropertyForm = ({ register, errors, control, watch, setCategory }: Form
 										name="price"
 										error={errors}
 										required={true}
+										currency={true}
 										placeholder="Enter Price"
 										onChange={onChange}
 										value={value}
@@ -419,17 +509,18 @@ const AddPropertyForm = ({ register, errors, control, watch, setCategory }: Form
 								name={'year'}
 								control={control}
 								render={({ field: { onChange, value } }) => (
-									<InputNumber
+									<DateInput
 										id="year"
+										type="date"
+										register={register}
+										onCalendarClick={handleDate}
+										placeholder="Enter year"
 										labelText="Year"
 										autoComplete="year"
-										maxLength={4}
 										name="year"
 										error={errors}
 										required={true}
-										placeholder="Enter Year"
-										onChange={onChange}
-										value={value}
+										year={true}
 									/>
 								)}
 							/>
@@ -616,8 +707,9 @@ const PropertyDetailsForm = ({
 						<div className="space-y-2">
 							<FileUpload
 								onUpload={handleUpload}
+								name="propertyimages"
 								labelText="Upload Images"
-								name="image"
+								error={errors}
 								placeholder="Upload image file"
 							/>
 							<span className="text-sm">Select up to 10 images, File type: jpg, png, gif, pdf</span>
@@ -800,7 +892,7 @@ const PropertyDetailsForm = ({
 									placeholder="Enter Ligitation"
 									value={value ?? ''}
 									rows={2}
-									className="block placeholder-[#0D0C18] w-full appearance-none bg-[#E6E6E6] rounded-md border border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+									className="block placeholder-gray-500 w-full appearance-none bg-[#E6E6E6] rounded-md border border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
 								/>
 								{error && <span className="text-xs text-red-600">{error.message}</span>}
 							</>
@@ -861,7 +953,7 @@ const PropertyDetailsForm = ({
 									placeholder="Enter Description"
 									value={value ?? ''}
 									rows={5}
-									className="block placeholder-[#0D0C18] w-full appearance-none bg-[#E6E6E6] rounded-md border border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+									className="block placeholder-gray-500 w-full appearance-none bg-[#E6E6E6] rounded-md border border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
 								/>
 								{error && <span className="text-xs text-red-600">{error.message}</span>}
 							</>
@@ -873,7 +965,15 @@ const PropertyDetailsForm = ({
 	)
 }
 
-const AddHistoryForm = ({ register, errors, control, watch, setValue }: FormProps) => {
+const AddHistoryForm = ({
+	register,
+	errors,
+	control,
+	watch,
+	setValue,
+	showCommission,
+	setShowCommission
+}: FormProps) => {
 	const [priceCount, setPriceCount] = useState(1)
 	const [recordCount, setRecordCount] = useState(1)
 
@@ -882,19 +982,25 @@ const AddHistoryForm = ({ register, errors, control, watch, setValue }: FormProp
 	const handleUpload = (files: File[]) => {
 		setUploadedFiles([...uploadedFiles, ...files])
 	}
+
+	const handleDate = (value: string) => {
+		console.log('ASS', value)
+
+		setValue?.('leaseexpiry', value, { shouldValidate: true })
+	}
+
 	const callRecord = watch?.('callrecord')
+	const occupancy = watch?.('occupancy')
 
 	return (
 		<div className="grid grid-cols-4 gap-x-8 gap-y-4">
-			<div className="space-y-6">
-				<Input
+			<div className={clsx('space-y-6', showCommission && 'hidden')}>
+				<DateInput
 					labelText="Date"
 					type="date"
 					id="historydate"
 					autoComplete="historydate"
-					register={register}
 					name="historydate"
-					error={errors}
 					placeholder="2 Jan, 2023"
 					autoCapitalize="false"
 				/>
@@ -938,25 +1044,35 @@ const AddHistoryForm = ({ register, errors, control, watch, setValue }: FormProp
 					/>
 				</div>
 
-				<Input
-					labelText="Lease Expiring on"
-					type="date"
-					id="leaseexpiry"
-					autoComplete="leaseexpiry"
-					register={register}
-					name="leaseexpiry"
-					error={errors}
-					disabled={true}
-					placeholder="31 Jan, 2025"
-					autoCapitalize="false"
+				<Controller
+					name={'leaseexpiry'}
+					control={control}
+					render={({ field: { onChange, value } }) => (
+						<DateInput
+							register={register}
+							onCalendarClick={handleDate}
+							error={errors}
+							labelText="Lease Expiring on"
+							id="leaseexpiry"
+							autoComplete="leaseexpiry"
+							name="leaseexpiry"
+							disabled={occupancy !== 'occupied'}
+							placeholder="31 Jan, 2025"
+							autoCapitalize="false"
+						/>
+					)}
 				/>
 
-				<div className="bg-[#0D0C18] text-white py-2 px-2 justify-center space-x-4 font-semibold rounded-md flex items-center">
+				<div
+					className={clsx(
+						'bg-[#0D0C18] text-white py-2 px-2 justify-center space-x-4 font-semibold rounded-md flex items-center cursor-pointer'
+					)}
+					onClick={() => setShowCommission?.(true)}>
 					<PlusIcon className="h-5 w-5 stroke-white" aria-hidden="true" />
 					<span className="uppercase">Commision</span>
 				</div>
 			</div>
-			<div className="col-span-3 space-y-2">
+			<div className={clsx('col-span-3 space-y-2', showCommission && 'hidden')}>
 				<div className="space-y-4">
 					<div>
 						<label htmlFor="historydetails" className="block text-[#0D0C18]">
@@ -974,7 +1090,7 @@ const AddHistoryForm = ({ register, errors, control, watch, setValue }: FormProp
 										placeholder="Enter Details"
 										value={value ?? ''}
 										rows={2}
-										className="block placeholder-[#0D0C18] w-full appearance-none bg-[#E6E6E6] rounded-md border border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+										className="block placeholder-gray-500 w-full appearance-none bg-[#E6E6E6] rounded-md border border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
 									/>
 									{error && <span className="text-xs text-red-600">{error.message}</span>}
 								</>
@@ -1028,6 +1144,9 @@ const AddHistoryForm = ({ register, errors, control, watch, setValue }: FormProp
 						/>
 					))}
 				</div>
+			</div>
+			<div className="col-span-4">
+				<Commission show={showCommission ?? false} />
 			</div>
 		</div>
 	)
