@@ -3,7 +3,7 @@ import { Container } from 'src/components/app/container'
 import { AppHeader } from 'src/components/app/header'
 import { AppLayout } from 'src/components/app/layout'
 import PropertyForm from 'src/components/property/form'
-import { PropertyHeader } from 'src/components/property/header'
+import { PropertyHeader } from 'src/components/property/form-header'
 
 const newProperty = () => {
 	const [state, setState] = useState('Add Property')

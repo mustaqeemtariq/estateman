@@ -7,7 +7,8 @@ import { Container } from 'src/components/app/container'
 import { AppHeader } from 'src/components/app/header'
 import { AppLayout } from 'src/components/app/layout'
 import { Search } from 'src/components/app/search-input'
-import { Table } from 'src/components/app/table'
+import { Table } from 'src/components/user/table'
+import { User } from 'src/types/typings'
 
 let userList = [
 	{
@@ -32,8 +33,8 @@ let userList = [
 	},
 	{
 		username: 'Ahmad',
-		email: 'mustaqeem@gmail.com',
-		phone: '03331245432'
+		email: 'muzaffar@gmail.com',
+		phone: '111111111'
 	},
 	{
 		username: 'Mukamal',
@@ -70,7 +71,11 @@ const ListUsers = () => {
 		const { filteredUsers } = users.reduce(
 			(prev, curr) => {
 				if (searchText) {
-					if (curr.username.toLowerCase().includes(searchText.toLowerCase())) {
+					if (
+						curr.username.toLowerCase().includes(searchText.toLowerCase()) ||
+						curr.email.toLowerCase().includes(searchText.toLowerCase()) ||
+						curr.phone.includes(searchText)
+					) {
 						return { filteredUsers: [...prev.filteredUsers, curr] }
 					}
 				} else {
