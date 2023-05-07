@@ -2,11 +2,13 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 
 import { Disclosure } from '@headlessui/react'
-import { BuildingOfficeIcon, HomeIcon, UserIcon } from '@heroicons/react/20/solid'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
+import { AiFillHome } from 'react-icons/ai'
+import { BsBuildingFillLock, BsBuildingFillUp, BsFillBuildingFill } from 'react-icons/bs'
+import { ImUsers } from 'react-icons/im'
 import Logo from 'src/assets/logo/em-logo.png'
 
 interface SidebarProps {
@@ -15,10 +17,10 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 	const navigation = [
-		{ name: 'Home', icon: HomeIcon, current: true, href: '/' },
+		{ name: 'Home', icon: AiFillHome, current: true, href: '/' },
 		{
 			name: 'User',
-			icon: UserIcon,
+			icon: ImUsers,
 			href: '/user',
 			current: false,
 			children: [
@@ -28,7 +30,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 		},
 		{
 			name: 'Property Listing',
-			icon: BuildingOfficeIcon,
+			icon: BsFillBuildingFill,
 			href: '/property',
 			current: false,
 			children: [
@@ -40,7 +42,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 		},
 		{
 			name: 'Auctions',
-			icon: BuildingOfficeIcon,
+			icon: BsFillBuildingFill,
 			href: '/auction',
 			current: false,
 			children: [
@@ -50,13 +52,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 		},
 		{
 			name: 'Signed Lease (Rental)',
-			icon: BuildingOfficeIcon,
+			icon: BsBuildingFillUp,
 			current: false,
 			href: '/lease'
 		},
 		{
 			name: 'Units Sold',
-			icon: BuildingOfficeIcon,
+			icon: BsBuildingFillLock,
 			current: false,
 			href: '/units'
 		}
@@ -108,8 +110,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 														className={clsx(
 															'mr-3 h-6 w-6 flex-shrink-0',
 															pathname === item.href
-																? 'text-gray-600'
-																: 'text-gray-600 group-hover:text-gray-500'
+																? 'text-gray-600 '
+																: 'text-[#717B9D] group-hover:text-gray-500'
 														)}
 														aria-hidden="true"
 													/>
@@ -138,8 +140,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 															className={clsx(
 																'mr-3 h-6 w-6 flex-shrink-0  ',
 																open
-																	? 'text-gray-600 group-hover:text-gray-500'
-																	: 'text-gray-600 group-hover:text-gray-500'
+																	? 'text-[#717B9D] group-hover:text-gray-500'
+																	: 'text-[#717B9D] group-hover:text-gray-500'
 															)}
 															aria-hidden="true"
 														/>
