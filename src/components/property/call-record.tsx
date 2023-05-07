@@ -6,6 +6,7 @@ import { Input, InputNumber } from '../app/input'
 import { PlusIcon, XMarkIcon } from '@heroicons/react/20/solid'
 import { Dispatch, SetStateAction } from 'react'
 import * as yup from 'yup'
+import { DateInput } from '../app/date'
 
 interface CallRecordProps {
 	isFirst: boolean
@@ -27,14 +28,12 @@ const CallRecord = ({ recordCount, setRecordCount, isFirst }: CallRecordProps) =
 
 	return (
 		<div className="flex space-x-2 items-center">
-			<Input
+			<DateInput
 				type="date"
 				id="date"
 				placeholder="Date"
 				autoComplete="date"
-				register={register}
 				name="date"
-				error={errors}
 				required={true}
 				disabled={isFirst}
 				autoCapitalize="false"
@@ -91,6 +90,7 @@ const CallRecord = ({ recordCount, setRecordCount, isFirst }: CallRecordProps) =
 
 			{isFirst && (
 				<button
+					type="button"
 					onClick={() => setRecordCount(prev => prev + 1)}
 					className="bg-[#0038FF] rounded-md p-2 text-white mt-1">
 					<PlusIcon className="h-7 w-7 stroke-white" aria-hidden="true" />
@@ -99,6 +99,7 @@ const CallRecord = ({ recordCount, setRecordCount, isFirst }: CallRecordProps) =
 
 			{recordCount > 1 && !isFirst && (
 				<button
+					type="button"
 					onClick={() => setRecordCount(prev => prev - 1)}
 					className="bg-[#717B9D] rounded-md p-2 text-white mt-1">
 					<XMarkIcon className="h-7 w-7 stroke-white" aria-hidden="true" />

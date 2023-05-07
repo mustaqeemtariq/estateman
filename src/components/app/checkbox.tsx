@@ -7,7 +7,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 	name: string
 	index?: string
 	checked?: boolean
-	value?: string
+	value?: string | string[]
 	register?: UseFormRegister<any>
 	error?: FieldErrors<FieldValues>
 	controllerError?: FieldError | undefined
@@ -41,7 +41,7 @@ export const Checkbox = ({
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const { checked } = event.target
 		if (checked) {
-			setCheckValue(value)
+			setCheckValue(typeof value == 'string' ? value : '')
 			onChange?.(event)
 		} else {
 			setCheckValue(undefined)

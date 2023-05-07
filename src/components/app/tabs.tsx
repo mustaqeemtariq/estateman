@@ -13,7 +13,7 @@ interface TabsProps {
 	setShowTab: Dispatch<SetStateAction<string>>
 	tabs: Tab[]
 	className?: string
-	active: {
+	active?: {
 		propertyDetails: boolean
 		addHistory: boolean
 	}
@@ -47,16 +47,16 @@ export const Tabs = ({
 							<button
 								onClick={() => {
 									index == 0 && setShowTab(tab.name)
-									index == 1 && active.propertyDetails && setShowTab(tab.name)
-									index == 2 && active.addHistory && setShowTab(tab.name)
+									index == 1 && active?.propertyDetails && setShowTab(tab.name)
+									index == 2 && active?.addHistory && setShowTab(tab.name)
 								}}
 								key={tab.name}
 								className={clsx(
 									tab.current
-										? 'border-indigo-500 text-gray-900 text-2xl'
+										? 'border-indigo-500 border-b-4 text-gray-900 text-2xl'
 										: 'border-transparent text-gray-400 text-lg',
 									'hoverborder-gray-300 hover:text-gray-700 font-small',
-									'whitespace-nowrap border-b-4 py-4 px-6 font-medium uppercase ',
+									'whitespace-nowrap py-4 px-6 font-medium uppercase',
 									className
 								)}
 								aria-current={tab.current ? 'page' : undefined}>
