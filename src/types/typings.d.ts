@@ -1,9 +1,25 @@
 import { ContractTypes, PropertyTypes, UnitTypes, UserRightTypes } from 'src/constants/constants'
 
 interface User {
+	id: string
 	username: string
 	email: string
 	phone: string
+}
+
+interface Users {
+	[id: string]: Mother
+}
+
+interface RootReducerState {
+	db: RootDBState
+	users: Users
+}
+
+interface RootDBState {
+	client_id: string
+	initialized: boolean
+	queue: {}
 }
 
 type UserForm = User & {
@@ -12,7 +28,7 @@ type UserForm = User & {
 	password: string
 	confirmPassword: string
 	address: string
-	rights: UserRightTypes
+	rights: UserRightTypes[]
 }
 
 type AddPropertyForm = {
@@ -24,7 +40,7 @@ type AddPropertyForm = {
 	area: number
 	units: UnitTypes
 	price: string
-	year: number
+	year: string
 }
 
 type OwnerDetails = {
@@ -71,4 +87,12 @@ type CallRecordForm = {
 type PricingHistoryForm = {
 	price?: string
 	date?: string
+}
+
+type CommissionForm = {
+	commissionprice?: string
+	accountnumber?: string
+	chequenumber?: string
+	branch?: string
+	bankdetails?: string
 }
