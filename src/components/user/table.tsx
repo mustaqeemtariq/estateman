@@ -14,10 +14,7 @@ export const Table = ({ headers, items, renderComponent }: TableParams) => {
 			<thead>
 				<tr>
 					{headers.map((header, index) => (
-						<th
-							key={header + index}
-							scope="col"
-							className='text-sm lg:text-base tw-table-th'>
+						<th key={header + index} scope="col" className="text-sm lg:text-base tw-table-th">
 							{header}
 						</th>
 					))}
