@@ -19,7 +19,7 @@ import { Spinner } from 'src/components/animations/spinner'
 import { Button } from 'src/components/app/button'
 import { Input, InputNumber } from 'src/components/app/input'
 import { ContractTypes, PropertyTypes, UnitTypes } from 'src/constants/constants'
-import { PropertyFormType } from 'src/types/typings'
+import { Property } from 'src/types/typings'
 import { Checkbox } from '../app/checkbox'
 import { DateInput } from '../app/date'
 import FileUpload from '../app/file-upload'
@@ -56,7 +56,7 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab }: PropertyFormProp
 		step: FormSteps.ADDPROPERTY
 	})
 
-	const schema = yup.object<PropertyFormType>().shape({
+	const schema = yup.object<Property>().shape({
 		title: yup.string().when('$step', {
 			is: FormSteps.ADDPROPERTY,
 			then: schema => schema.required('Title is required')
@@ -200,7 +200,7 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab }: PropertyFormProp
 		watch,
 		setValue,
 		formState: { errors }
-	} = useForm<PropertyFormType>({
+	} = useForm<Property>({
 		resolver: yupResolver(schema as any),
 		context: { step: state.step },
 		mode: 'all'
@@ -324,12 +324,12 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab }: PropertyFormProp
 }
 
 interface FormProps {
-	register?: UseFormRegister<PropertyFormType>
-	errors?: FieldErrors<PropertyFormType>
-	control?: Control<PropertyFormType, any>
-	setValue?: UseFormSetValue<PropertyFormType>
-	resetField?: UseFormResetField<PropertyFormType>
-	watch?: UseFormWatch<PropertyFormType>
+	register?: UseFormRegister<Property>
+	errors?: FieldErrors<Property>
+	control?: Control<Property, any>
+	setValue?: UseFormSetValue<Property>
+	resetField?: UseFormResetField<Property>
+	watch?: UseFormWatch<Property>
 	setCategory?: Dispatch<SetStateAction<string | undefined>>
 	category?: string
 	showCommission?: boolean

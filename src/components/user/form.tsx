@@ -1,27 +1,25 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { useAppDispatch, useAppSelector } from 'src/hooks/rtk'
 import * as yup from 'yup'
 
 import { ChevronRightIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { toast } from 'react-hot-toast'
 import { Spinner } from 'src/components/animations/spinner'
 import { Button } from 'src/components/app/button'
 import { Input, InputNumber } from 'src/components/app/input'
 import { ShowHidePassword } from 'src/components/password'
 import { UserRightTypes } from 'src/constants/constants'
-import { addUser } from 'src/slices/users'
-import { UserForm } from 'src/types/typings'
+import userService from 'src/services/user'
+import { User, UserForm } from 'src/types/typings'
 import { Checkbox } from '../app/checkbox'
 
 const schema = yup.object<UserForm>().shape({
-	username: yup.string().required('Name is required'),
-	email: yup.string().email('Email must be a valid email address').required('Email is required'),
-	password: yup
+	Username: yup.string().required('Name is required'),
+	Email: yup.string().email('Email must be a valid email address').required('Email is required'),
+	Password: yup
 		.string()
 		.required('Password is required')
 		.min(8, 'Password must be at least 8 characters long')
@@ -29,21 +27,21 @@ const schema = yup.object<UserForm>().shape({
 			/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/,
 			'Password must contain one uppercase letter, one number, and one special character'
 		),
-	confirmPassword: yup
+	ConfirmPassword: yup
 		.string()
-		.oneOf([yup.ref('password')], 'Passwords must match')
+		.oneOf([yup.ref('Password')], 'Passwords must match')
 		.required('Confirm password is required'),
-	phone: yup
+	Contact: yup
 		.string()
 		.required('Contact number is a required field')
 		.min(11, 'Phone number should be 11 digits')
 		.max(11, 'Phone number should be 11 digits'),
-	cnic: yup
+	CNIC: yup
 		.string()
 		.required('CNIC is a required field')
 		.min(13, 'CNIC should be 13 digits')
 		.max(13, 'CNIC should be 13 digits'),
-	address: yup.string().required('Address is a required field'),
+	Address: yup.string().required('Address is a required field'),
 	rights: yup
 		.array()
 		.min(1, 'Please select at least one user right')
@@ -53,17 +51,10 @@ const schema = yup.object<UserForm>().shape({
 interface UserFormProps {
 	isNew: boolean
 	title: string
-	userId?: string
+	data?: User
 }
 
-const UserForm = ({ isNew, title, userId }: UserFormProps) => {
-	const { users } = useAppSelector(state => state)
-	const dispatch = useAppDispatch()
-
-	const user = users[userId ?? '']
-
-	const router = useRouter()
-
+const UserForm = ({ isNew, title, data }: UserFormProps) => {
 	const [isUpdating, setUpdating] = useState(false)
 	const [togglePassword, setTogglePassword] = useState(false)
 	const [toggleConfirmPassword, setToggleConfirmPassword] = useState(false)
@@ -76,14 +67,20 @@ const UserForm = ({ isNew, title, userId }: UserFormProps) => {
 		formState: { errors }
 	} = useForm<UserForm>({
 		resolver: yupResolver(schema),
+		defaultValues: isNew ? {} : data,
 		mode: 'all'
 	})
 
-	const handleFormSubmit = (data: any) => {
-		console.log('D', data)
+	const postData = async (data: any) => {
+		const response = userService.addUser({ ...data, id: undefined })
+		return response
+	}
 
-		// setUpdating(true)
-		dispatch(addUser(data))
+	const handleFormSubmit = (data: any) => {
+		console.log({ ...data, id: undefined })
+
+		console.log(postData(data))
+
 		toast.success('User added successfully')
 		// setTimeout(() => {
 		// 	router.push('/user/list')
@@ -145,7 +142,7 @@ const UserForm = ({ isNew, title, userId }: UserFormProps) => {
 							id="username"
 							autoComplete="username"
 							register={register}
-							name="username"
+							name="Username"
 							error={errors}
 							required={true}
 							autoCapitalize="false"
@@ -158,7 +155,7 @@ const UserForm = ({ isNew, title, userId }: UserFormProps) => {
 							id="email"
 							autoComplete="email"
 							register={register}
-							name="email"
+							name="Email"
 							error={errors}
 							required={true}
 							autoCapitalize="false"
@@ -172,7 +169,7 @@ const UserForm = ({ isNew, title, userId }: UserFormProps) => {
 								id="password"
 								autoComplete="password"
 								register={register}
-								name="password"
+								name="Password"
 								type={togglePassword ? 'text' : 'password'}
 								error={errors}
 								required={true}
@@ -195,7 +192,7 @@ const UserForm = ({ isNew, title, userId }: UserFormProps) => {
 								autoComplete="confirmPassword"
 								type={toggleConfirmPassword ? 'text' : 'password'}
 								register={register}
-								name="confirmPassword"
+								name="ConfirmPassword"
 								error={errors}
 								required={true}
 								autoCapitalize="false"
@@ -213,14 +210,14 @@ const UserForm = ({ isNew, title, userId }: UserFormProps) => {
 					</div>
 					<div className="flex sm:space-x-8 max-sm:flex-col">
 						<Controller
-							name={'cnic'}
+							name={'CNIC'}
 							control={control}
 							render={({ field: { onChange, value } }) => (
 								<InputNumber
 									labelText="CNIC"
 									id="cnic"
 									autoComplete="cnic"
-									name="cnic"
+									name="CNIC"
 									onChange={onChange}
 									value={value}
 									error={errors}
@@ -232,7 +229,7 @@ const UserForm = ({ isNew, title, userId }: UserFormProps) => {
 							)}
 						/>
 						<Controller
-							name={'phone'}
+							name={'Contact'}
 							control={control}
 							render={({ field: { onChange, value } }) => (
 								<InputNumber
@@ -241,7 +238,7 @@ const UserForm = ({ isNew, title, userId }: UserFormProps) => {
 									onChange={onChange}
 									value={value}
 									autoComplete="phone"
-									name="phone"
+									name="Contact"
 									error={errors}
 									required={true}
 									maxLength={11}
@@ -257,14 +254,14 @@ const UserForm = ({ isNew, title, userId }: UserFormProps) => {
 						</label>
 						<div className="mt-2">
 							<Controller
-								name="address"
+								name="Address"
 								control={control}
 								rules={{ required: true }}
 								render={({ field: { onChange, value }, fieldState: { error } }) => (
 									<>
 										<textarea
 											id="address"
-											name="address"
+											name="Address"
 											onChange={onChange}
 											placeholder="Enter Address"
 											value={value ?? ''}
