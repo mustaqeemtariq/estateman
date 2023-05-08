@@ -1,80 +1,31 @@
-import clsx from 'clsx'
-import { useMemo, useState } from 'react'
-
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/20/solid'
+import clsx from 'clsx'
 import Link from 'next/link'
+import { useMemo, useState } from 'react'
 import { Container } from 'src/components/app/container'
 import { AppHeader } from 'src/components/app/header'
 import { AppLayout } from 'src/components/app/layout'
+
 import { Search } from 'src/components/app/search-input'
 import { Table } from 'src/components/user/table'
+import userService from 'src/services/user'
 import { User } from 'src/types/typings'
 
-let userList = [
-	{
-		username: 'Mustaqeem',
-		email: 'mustaqeem@gmail.com',
-		phone: '03331245432'
-	},
-	{
-		username: 'Usama',
-		email: 'mustaqeem@gmail.com',
-		phone: '03331245432'
-	},
-	{
-		username: 'Ali',
-		email: 'mustaqeem@gmail.com',
-		phone: '03331245432'
-	},
-	{
-		username: 'Hassan',
-		email: 'mustaqeem@gmail.com',
-		phone: '03331245432'
-	},
-	{
-		username: 'Ahmad',
-		email: 'muzaffar@gmail.com',
-		phone: '111111111'
-	},
-	{
-		username: 'Mukamal',
-		email: 'mustaqeem@gmail.com',
-		phone: '03331245432'
-	},
-	{
-		username: 'Muzaffar',
-		email: 'mustaqeem@gmail.com',
-		phone: '03331245432'
-	},
-	{
-		username: 'Kamal',
-		email: 'mustaqeem@gmail.com',
-		phone: '03331245432'
-	},
-	{
-		username: 'Qasim',
-		email: 'mustaqeem@gmail.com',
-		phone: '03331245432'
-	},
-	{
-		username: 'Hamza',
-		email: 'mustaqeem@gmail.com',
-		phone: '03331245432'
-	}
-]
+interface UserProps {
+	usersData: User[]
+}
 
-const ListUsers = () => {
-	const [users, setUsers] = useState<User[]>(userList)
+const ListUsers = ({ usersData }: UserProps) => {
 	const [searchText, setSearchText] = useState('')
 
 	const { filteredUsers } = useMemo(() => {
-		const { filteredUsers } = users.reduce(
+		const { filteredUsers } = usersData.reduce(
 			(prev, curr) => {
 				if (searchText) {
 					if (
-						curr.username.toLowerCase().includes(searchText.toLowerCase()) ||
-						curr.email.toLowerCase().includes(searchText.toLowerCase()) ||
-						curr.phone.includes(searchText)
+						curr.Username.toLowerCase().includes(searchText.toLowerCase()) ||
+						curr.Email.toLowerCase().includes(searchText.toLowerCase()) ||
+						curr.Contact.includes(searchText)
 					) {
 						return { filteredUsers: [...prev.filteredUsers, curr] }
 					}
@@ -89,19 +40,19 @@ const ListUsers = () => {
 			}
 		)
 		return { filteredUsers }
-	}, [users, searchText])
+	}, [usersData, searchText])
 
-	const renderPeopleTBody = (users: User[]) => {
+	const renderPeopleTBody = (userData: User[]) => {
 		return (
 			<tbody className="bg-white">
-				{users.map((user, index) => (
-					<tr key={user.username + index} className={clsx(index % 2 === 0 && 'bg-gray-100')}>
-						<td className="tw-table-td hidden">{index + 1}</td>
-						<td className="tw-table-td">{user.username}</td>
-						<td className="tw-table-td text-blue-500 hover:underline">{user.email}</td>
-						<td className="tw-table-td">{user.phone}</td>
+				{userData.map((user, index) => (
+					<tr key={user.Username + index} className={clsx(index % 2 === 0 && 'bg-gray-100')}>
+						<td className="tw-table-td hidden">{user.id}</td>
+						<td className="tw-table-td">{user.Username}</td>
+						<td className="tw-table-td text-blue-500 hover:underline">{user.Email}</td>
+						<td className="tw-table-td">{user.Contact}</td>
 						<td className="tw-table-td text-blue-500">
-							<Link href={`/user/edit/${index + 1}`}>
+							<Link href={`/user/edit/${user.id}`}>
 								<PencilSquareIcon className="h-6 w-6" aria-hidden="true" />
 							</Link>
 						</td>
@@ -150,6 +101,15 @@ const ListUsers = () => {
 			</Container>
 		</AppLayout>
 	)
+}
+
+export const getStaticProps = async () => {
+	const response = await userService.getAllUsers()
+	return {
+		props: {
+			usersData: response
+		}
+	}
 }
 
 export default ListUsers

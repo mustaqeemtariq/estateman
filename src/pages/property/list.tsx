@@ -5,6 +5,8 @@ import { AppLayout } from 'src/components/app/layout'
 import { Select } from 'src/components/app/select'
 import PropertyCard from 'src/components/property/card'
 import { ListHeader } from 'src/components/property/list-header'
+import propertyService from 'src/services/property'
+import { Property } from 'src/types/typings'
 
 const listData = [
 	{
@@ -41,12 +43,18 @@ const listData = [
 	}
 ]
 
-function PropertyList() {
+interface PropertyListProps {
+	propertiesData: Property[]
+}
+
+function PropertyList({ propertiesData }: PropertyListProps) {
+	console.log('AA', propertiesData)
+
 	return (
 		<AppLayout>
 			<AppHeader />
 			<Container>
-				<ListHeader count={listData.length} />
+				<ListHeader count={propertiesData.length} />
 				<div className="flex space-x-2 mb-4">
 					<Select name="period">
 						<option value="newest">Newest</option>
@@ -79,20 +87,30 @@ function PropertyList() {
 					</Select>
 				</div>
 				<div className="grid grid-cols-3 gap-x-4 gap-y-3">
-					{listData.map(item => (
+					{propertiesData.map(item => (
 						<PropertyCard
-							image={item.image}
-							contract={item.contract}
-							title={item.title}
-							location={item.location}
-							category={item.category}
-							occupancy={item.occupancy}
+							key={item.Title}
+							image={item.PropertyDetails?.images}
+							contract={item.ContractType}
+							title={item.Title}
+							location={item.Location}
+							category={item.PropertyCategory}
+							occupancy={item.AddHistory.OccupancyStatus ?? ''}
 						/>
 					))}
 				</div>
 			</Container>
 		</AppLayout>
 	)
+}
+
+export const getStaticProps = async () => {
+	const response = await propertyService.getAllProperties()
+	return {
+		props: {
+			propertiesData: response
+		}
+	}
 }
 
 export default PropertyList
