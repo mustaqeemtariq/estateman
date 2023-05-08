@@ -23,3 +23,19 @@ export enum UnitTypes {
 	ACRE = 'Acre',
 	MURABBA = 'Murabba'
 }
+
+
+
+export enum CityNames {
+    KARACHI = 'Karachi',
+    LAHORE = 'Lahore',
+    ISLAMABAD = 'Islamabad',
+    RAWALPINDI = 'Rawalpindi',
+    PESHAWAR = 'Peshawar',
+    QUETTA = 'Quetta',
+    FAISALABAD = 'Faisalabad',
+    MULTAN = 'Multan',
+    HYDERABAD = 'Hyderabad',
+    GUJRANWALA = 'Gujranwala'
+  }
+
