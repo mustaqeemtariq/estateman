@@ -2,9 +2,9 @@ import { ContractTypes, PropertyTypes, UnitTypes, UserRightTypes } from 'src/con
 
 interface User {
 	id: string
-	username: string
-	email: string
-	phone: string
+	Username: string
+	Email: string
+	Contact: string
 }
 
 interface Users {
@@ -23,76 +23,102 @@ interface RootDBState {
 }
 
 type UserForm = User & {
-	cnic: string
-	address: string
-	password: string
-	confirmPassword: string
-	address: string
+	CNIC: string
+	Address: string
+	Password: string
+	ConfirmPassword: string
+	Address: string
 	rights: UserRightTypes[]
 }
 
 type AddPropertyForm = {
-	title: string
-	contract: ContractTypes
-	property: PropertyTypes
-	category: string
-	location: string
-	area: number
-	units: UnitTypes
-	price: string
-	year: string
+	Title: string
+	ContractType: ContractTypes
+	PropertyType: PropertyTypes
+	PropertyCategory: string
+	Location: string
+	LandArea: number
+	Units: UnitTypes
+	Price: string
+	YearBuilt: string
 }
 
 type OwnerDetails = {
-	name: string
-	phone: string
-	alternatephone: string
-	address: string
-	cnic: string
-	ligitation: string
-	description: string
+	Name: string
+	ContactNumber: string
+	AlternateNumber: string
+	Address: string
+	CNIC: string
+	Ligitation: string
+	OwnerDescription: string
 }
 
 type PropertyDetailsForm = OwnerDetails & {
-	city: string
-	house: string
-	street?: number
-	society?: string
+	City: string
+	Housenumber: string
+	Streetno?: number
+	Society?: string
 	places?: string
-	sector?: string
-	bed?: number
-	bath?: number
-	kitchen?: number
-	gas?: string
-	electricity?: string
+	Sector?: string
+	Bed?: number
+	Bath?: number
+	Kitchen?: number
+	Gas?: string
+	Electricity?: string
+	images?: string[]
 }
 
 type AddHistoryForm = {
-	historydate?: string
-	occupancy?: string
-	leaseexpiry?: string
+	Date?: string
+	OccupancyStatus?: string
+	LeaseExpiringOn?: string
 	historydetails?: string
-	historyimage?: File[]
-	callrecord?: string
+	images?: string[]
+	CallDetails?: CallRecordForm[]
+	AddPricingHistory?: PricingHistoryForm[]
 }
 
-type PropertyFormType = AddPropertyForm & PropertyDetailsForm & AddHistoryForm
-
 type CallRecordForm = {
-	date?: string
+	from?: string
+	to?: string
+	type: string
 	phone?: string
-	callername?: string
+	description?: string
 }
 
 type PricingHistoryForm = {
 	price?: string
-	date?: string
+	year?: string
 }
 
 type CommissionForm = {
-	commissionprice?: string
-	accountnumber?: string
-	chequenumber?: string
-	branch?: string
-	bankdetails?: string
+	Amount?: string
+	AccountNumber?: string
+	Cheque?: string
+	Branch?: string
+	BankDetails?: string
+}
+
+type Property = AddPropertyForm &
+	OwnerDetails & {
+		PropertyDetails: PropertyDetailsForm
+		AddHistory: AddHistoryForm
+		AddCommission?: CommissionForm
+	}
+
+type Auction = {
+	title: string
+	auctioneer: string
+	city: CityNames
+	society?: string
+	date?: string
+	location?: string
+	area: string
+	balance?: string
+	units: UnitTypes
+	reservedPrice: string
+	auctionplace: string
+	contactname?: string
+	contactphone?: string
+	auctionimage?: string[]
 }
