@@ -1,7 +1,5 @@
-import Image, { StaticImageData } from 'next/image'
-
 interface PropertyCardProps {
-	image: StaticImageData
+	image: string[] | undefined
 	contract: string
 	title: string
 	location: string
@@ -19,7 +17,11 @@ const PropertyCard = ({
 }: PropertyCardProps) => {
 	return (
 		<div className="rounded-md border border-gray-300 hover:bg-[#0D0C18]/[85%] hover:shadow-lg relative">
-			<Image src={image} alt="cardImage" className="w-full h-auto" />
+			{image && image.length > 0 ? (
+				<img src={image[1]} width={20} height={20} alt="cardImage" className="w-full max-h-20" />
+			) : (
+				<div className="w-full h-40 bg-gray-500"></div>
+			)}
 
 			<div className="p-4">
 				<p className="text-[#0038FF]">{contract}</p>

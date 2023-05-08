@@ -22,7 +22,7 @@ export const Search = ({ className, placeholder, ...restProp }: SearchInputProps
 					name="search"
 					id="search"
 					className={clsx(
-						'block rounded-md pl-10 p-[15px] outline-none border-slate-300 border text-base sm:w-[420px]',
+						'block rounded-md pl-10 p-[15px] outline-none border-slate-300 border text-base sm:w-[380px]',
 						className?.includes('p') ? className : 'py-[12px]'
 					)}
 					placeholder={placeholder ?? 'Search...'}

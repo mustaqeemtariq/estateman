@@ -15,17 +15,19 @@ export const AppHeader = () => {
 				</div>
 			</div>
 
-			<nav className="flex justify-between">
-				<Search placeholder="Search Property" className="py-2" />
-				<div className="flex items-center space-x-2 bg-white px-8 rounded-md border border-slate-300">
+			<nav className="grid grid-cols-5 gap-x-3">
+				<div className='col-span-2'>
+					<Search placeholder="Search Property" className="py-2" />
+				</div>
+				<div className="flex w-full items-center space-x-2 bg-white px-2 rounded-md border border-slate-300">
 					<ExclamationTriangleIcon className="text-[#DC4200] h-5 w-5" />
 					<span className="uppercase">Lease Due</span>
 				</div>
-				<div className="flex items-center space-x-2 bg-white px-8 rounded-md border border-slate-300">
+				<div className="flex w-full items-center space-x-2 bg-white px-2 rounded-md border border-slate-300">
 					<BanknotesIcon className="text-[#0038FF] h-5 w-5" />
 					<span className="uppercase">Total Sales</span>
 				</div>
-				<div className="flex text-white bg-[#0038FF] rounded-md items-center space-x-2 px-8 border border-slate-300">
+				<div className="flex w-full text-white bg-[#0038FF] rounded-md items-center space-x-2 px-2 border border-slate-300">
 					<PlusIcon className="h-5 w-5" />
 					<span className="uppercase">Add User</span>
 				</div>
