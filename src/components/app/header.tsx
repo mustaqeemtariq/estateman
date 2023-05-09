@@ -1,6 +1,7 @@
 import { ExclamationTriangleIcon, LockClosedIcon } from '@heroicons/react/20/solid'
 import { BanknotesIcon, PlusIcon } from '@heroicons/react/24/outline'
 import { Search } from './search-input'
+import Link from 'next/link'
 
 export const AppHeader = () => {
 	return (
@@ -8,11 +9,11 @@ export const AppHeader = () => {
 			<div className="flex justify-between mb-4">
 				<h4>
 					<span className="text-gray-500">Welcome</span> John Smith
-				</h4>
-				<div className="flex space-x-2 items-center">
+				</h4>		
+				<Link href={'/auth/login'} className='flex space-x-2 items-center'>
 					<LockClosedIcon className="h-5 w-5" />
 					<span className="uppercase">Log Out</span>
-				</div>
+				</Link>				
 			</div>
 
 			<nav className="grid grid-cols-5 gap-x-3">
