@@ -1,6 +1,15 @@
-import { yupResolver } from '@hookform/resolvers/yup'
-import { Controller, useForm } from 'react-hook-form'
-import { CallRecordForm } from 'src/types/typings'
+import {
+	Control,
+	Controller,
+	FieldErrors,
+	UseFieldArrayAppend,
+	UseFieldArrayRemove,
+	UseFormRegister,
+	UseFormResetField,
+	UseFormSetValue,
+	UseFormWatch
+} from 'react-hook-form'
+import { CallRecordForm, Property } from 'src/types/typings'
 import { Input, InputNumber } from '../app/input'
 
 import { PlusIcon, XMarkIcon } from '@heroicons/react/20/solid'
@@ -12,46 +21,68 @@ interface CallRecordProps {
 	isFirst: boolean
 	recordCount: number
 	setRecordCount: Dispatch<SetStateAction<number>>
+	register?: UseFormRegister<Property>
+	errors?: FieldErrors<Property>
+	control?: Control<Property, any>
+	setValue?: UseFormSetValue<Property>
+	resetField?: UseFormResetField<Property>
+	watch?: UseFormWatch<Property>
+	appendData: UseFieldArrayAppend<Property, 'CallDetails'> | undefined
+	removeData: UseFieldArrayRemove | undefined
 }
 
-const CallRecord = ({ recordCount, setRecordCount, isFirst }: CallRecordProps) => {
+const CallRecord = ({
+	removeData,
+	appendData,
+	setValue,
+	recordCount,
+	setRecordCount,
+	isFirst,
+	errors,
+	register,
+	control
+}: CallRecordProps) => {
 	const schema = yup.object<CallRecordForm>().shape({})
 
-	const {
-		register,
-		control,
-		formState: { errors }
-	} = useForm<CallRecordForm>({
-		resolver: yupResolver(schema),
-		mode: 'all'
-	})
+	const handleDate = (value: string) => {
+		setValue?.('CallerDate', value)
+	}
+
+	const handleAdd = () => {
+		appendData?.({ CallerDate: '', CallerFrom: '', CallerName: '', CallerTo: '' })
+		setRecordCount(prev => prev + 1)
+	}
+
+	const handleRemove = () => {
+		const indexToRemove = recordCount - 1
+		removeData?.(indexToRemove)
+		setRecordCount(prev => prev - 1)
+	}
 
 	return (
 		<div className="flex space-x-2 items-center">
 			<DateInput
-				type="date"
 				id="date"
 				placeholder="Date"
 				autoComplete="date"
-				name="date"
+				name="CallerDate"
 				required={true}
-				disabled={isFirst}
 				autoCapitalize="false"
+				onCalendarClick={handleDate}
 			/>
 			<label htmlFor="phone">From: </label>
 			<Controller
-				name={'phone'}
+				name={'CallerFrom'}
 				control={control}
 				render={({ field: { onChange, value } }) => (
 					<InputNumber
 						id="phone"
 						autoComplete="phone"
-						name="phone"
+						name="CallerFrom"
 						error={errors}
 						required={true}
-						disabled={isFirst}
-						placeholder="+123987654321"
-						maxLength={12}
+						placeholder="123987654321"
+						maxLength={13}
 						onChange={onChange}
 						value={value}
 					/>
@@ -61,28 +92,26 @@ const CallRecord = ({ recordCount, setRecordCount, isFirst }: CallRecordProps) =
 				id="callername"
 				autoComplete="callername"
 				register={register}
-				name="callername"
+				name="CallerName"
 				error={errors}
 				required={true}
-				disabled={isFirst}
 				autoCapitalize="false"
 				placeholder="Caller Name"
 			/>
 			<label htmlFor="phone">To: </label>
 			<Controller
-				name={'phone'}
+				name={'CallerTo'}
 				control={control}
 				render={({ field: { onChange, value } }) => (
 					<InputNumber
 						id="phone"
 						autoComplete="phone"
-						name="phone"
+						name="CallerTo"
 						error={errors}
 						required={true}
-						disabled={isFirst}
-						placeholder="+923007654321"
+						placeholder="923007654321"
 						onChange={onChange}
-						maxLength={12}
+						maxLength={13}
 						value={value}
 					/>
 				)}
@@ -91,7 +120,7 @@ const CallRecord = ({ recordCount, setRecordCount, isFirst }: CallRecordProps) =
 			{isFirst && (
 				<button
 					type="button"
-					onClick={() => setRecordCount(prev => prev + 1)}
+					onClick={handleAdd}
 					className="bg-[#0038FF] rounded-md p-2 text-white mt-1">
 					<PlusIcon className="h-7 w-7 stroke-white" aria-hidden="true" />
 				</button>
@@ -100,7 +129,7 @@ const CallRecord = ({ recordCount, setRecordCount, isFirst }: CallRecordProps) =
 			{recordCount > 1 && !isFirst && (
 				<button
 					type="button"
-					onClick={() => setRecordCount(prev => prev - 1)}
+					onClick={handleRemove}
 					className="bg-[#717B9D] rounded-md p-2 text-white mt-1">
 					<XMarkIcon className="h-7 w-7 stroke-white" aria-hidden="true" />
 				</button>

@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Controller, useForm } from 'react-hook-form'
-import { CommissionForm } from 'src/types/typings'
+import { Control, Controller, FieldErrors, UseFormRegister, UseFormResetField, UseFormSetValue, UseFormWatch, useForm } from 'react-hook-form'
+import { CommissionForm, Property } from 'src/types/typings'
 import { Input, InputNumber } from '../app/input'
 
 import clsx from 'clsx'
@@ -8,32 +8,29 @@ import * as yup from 'yup'
 
 interface CommissionProps {
 	show: boolean
+	register?: UseFormRegister<Property>
+	errors?: FieldErrors<Property>
+	control?: Control<Property, any>
+	setValue?: UseFormSetValue<Property>
+	resetField?: UseFormResetField<Property>
+	watch?: UseFormWatch<Property>
 }
 
-const Commission = ({ show }: CommissionProps) => {
+const Commission = ({ show, control, register, errors }: CommissionProps) => {
 	const schema = yup.object<CommissionForm>().shape({})
-
-	const {
-		register,
-		control,
-		formState: { errors }
-	} = useForm<CommissionForm>({
-		resolver: yupResolver(schema),
-		mode: 'all'
-	})
 
 	return (
 		<div className={clsx('grid grid-col-2 gap-x-8 gap-y-8', !show && 'hidden')}>
 			<div className="space-y-6">
 				<Controller
-					name={'commissionprice'}
+					name={'CommissionAmount'}
 					control={control}
 					render={({ field: { onChange, value } }) => (
 						<InputNumber
 							id="commissionprice"
 							labelText="Amount(Pkr)"
 							autoComplete="commissionprice"
-							name="commissionprice"
+							name="CommissionAmount"
 							error={errors}
 							currency={true}
 							placeholder="Enter Price"
@@ -43,14 +40,14 @@ const Commission = ({ show }: CommissionProps) => {
 					)}
 				/>
 				<Controller
-					name={'accountnumber'}
+					name={'AccountNumber'}
 					control={control}
 					render={({ field: { onChange, value } }) => (
 						<InputNumber
 							id="accountnumber"
 							labelText="Account Number"
 							autoComplete="accountnumber"
-							name="accountnumber"
+							name="AccountNumber"
 							error={errors}
 							currency={true}
 							placeholder="Enter account number"
@@ -62,14 +59,14 @@ const Commission = ({ show }: CommissionProps) => {
 			</div>
 			<div className="space-y-6">
 				<Controller
-					name={'chequenumber'}
+					name={'Cheque'}
 					control={control}
 					render={({ field: { onChange, value } }) => (
 						<InputNumber
 							id="chequenumber"
 							labelText="Cheque #"
 							autoComplete="chequenumber"
-							name="chequenumber"
+							name="Cheque"
 							error={errors}
 							currency={true}
 							placeholder="Enter cheque number"
@@ -83,7 +80,7 @@ const Commission = ({ show }: CommissionProps) => {
 					autoComplete="branch"
 					labelText="Branch"
 					register={register}
-					name="branch"
+					name="Branch"
 					error={errors}
 					autoCapitalize="false"
 					placeholder="Enter branch"
@@ -95,7 +92,7 @@ const Commission = ({ show }: CommissionProps) => {
 					autoComplete="bankdetails"
 					labelText="Bank Details"
 					register={register}
-					name="bankdetails"
+					name="BankDetails"
 					error={errors}
 					autoCapitalize="false"
 					placeholder="Enter bank details"
