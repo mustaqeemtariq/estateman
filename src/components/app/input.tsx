@@ -83,7 +83,7 @@ export const InputNumber = ({
 		const { value } = event.target
 		if (currency) {
 			const formattedValue = formatCurrency(value)
-			setInput(formattedValue)
+			setInput(formattedValue ?? '')
 			onChange?.(event)
 		} else if (
 			value === '' ||
@@ -97,7 +97,7 @@ export const InputNumber = ({
 	return (
 		<div className="w-full">
 			{renderLabel && labelText && (
-				<label htmlFor={name} className="block text-[#0D0C18] capitalize">
+				<label htmlFor={name} className="block text-[#0D0C18] capitalize whitespace-nowrap">
 					{labelText} {required && <span style={{ color: 'red' }}>*</span>}
 				</label>
 			)}
