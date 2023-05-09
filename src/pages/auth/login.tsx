@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { toast } from 'react-hot-toast'
 import background from 'src/assets/login/bg.png'
 import Logo from 'src/assets/logo/em-logo.png'
 import { Spinner } from 'src/components/animations/spinner'
@@ -32,20 +33,20 @@ const Login = () => {
 	const router = useRouter()
 	const [isLoading, setLoading] = useState(false)
 	const [togglePassword, setTogglePassword] = useState(false)
-	const [showMessage, setShowMessage] = useState(false)
 
 	const loginUser = async (Username: string, Password: string) => {
 		const response = await authService.login(Username, Password)
+	
 		if (response.success) {
+			toast.success("Successfully Login")
 			router.push('/')
-			setLoading(false)
 		} else {
-			setShowMessage(true)
+			toast.error("Invalid Credentials")
+			setLoading(false)
 		}
 	}
 
 	const handleFormSubmit = (data: any) => {
-		setShowMessage(false)
 		const { Username, Password } = data
 		loginUser(Username, Password)
 		setLoading(true)
@@ -60,7 +61,6 @@ const Login = () => {
 				className="flex flex-col justify-center items-center py-12 bg-cover bg-center h-screen">
 				<div className="space-y-1 sm:mx-auto sm:w-full sm:max-w-md">
 					<Image className="mx-auto" src={Logo} alt="logo" />
-					{showMessage && <p className="text-md text-red-600">Invalid Credentials</p>}
 				</div>
 
 				<div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
