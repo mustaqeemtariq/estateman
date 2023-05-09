@@ -15,6 +15,7 @@ import { UserRightTypes } from 'src/constants/constants'
 import userService from 'src/services/user'
 import { User, UserForm } from 'src/types/typings'
 import { Checkbox } from '../app/checkbox'
+import { useRouter } from 'next/router'
 
 const schema = yup.object<UserForm>().shape({
 	Username: yup.string().required('Name is required'),
@@ -59,6 +60,9 @@ const UserForm = ({ isNew, title, data }: UserFormProps) => {
 	const [togglePassword, setTogglePassword] = useState(false)
 	const [toggleConfirmPassword, setToggleConfirmPassword] = useState(false)
 
+	const router = useRouter()
+	const { id } = router.query
+
 	const {
 		register,
 		setValue,
@@ -71,20 +75,33 @@ const UserForm = ({ isNew, title, data }: UserFormProps) => {
 		mode: 'all'
 	})
 
-	const postData = async (data: any) => {
-		const response = userService.addUser({ ...data, id: undefined })
-		return response
+	const postData = async (data: User) => {
+		const response = await userService.addUser(data)
+		if (response.success) {
+			toast.success('User added successfully')
+			router.push('/user/list')
+		}
+		else {
+			toast.error('Error adding User')
+			setUpdating(false)
+		}
 	}
 
-	const handleFormSubmit = (data: any) => {
-		console.log({ ...data, id: undefined })
+	const updateData = async (data: User) => {
+		const response = await userService.editUser(id as string, data)
+		if (response.success) {
+			toast.success('User updated successfully')
+			router.push('/user/list')
+		}
+		else {
+			toast.error('Error updating User')
+			setUpdating(false)
+		}
+	}
 
-		console.log(postData(data))
-
-		toast.success('User added successfully')
-		// setTimeout(() => {
-		// 	router.push('/user/list')
-		// }, 500)
+	const handleFormSubmit = (data: User) => {
+		setUpdating(true)
+		isNew ? postData(data) : updateData(data) 
 	}
 
 	const [selectedRights, setSelectedRights] = useState<UserRightTypes[]>([])
@@ -162,8 +179,8 @@ const UserForm = ({ isNew, title, data }: UserFormProps) => {
 							placeholder="Enter Email"
 						/>
 					</div>
-					<div className="flex sm:space-x-8 max-sm:flex-col">
-						<div className="relative w-full">
+					<div className="flex sm:space-x-8 max-h-20 max-sm:flex-col">
+						<div className="relative w-full flex items-center">
 							<Input
 								labelText="Password"
 								id="password"
@@ -179,13 +196,12 @@ const UserForm = ({ isNew, title, data }: UserFormProps) => {
 							<div
 								onClick={() => setTogglePassword(!togglePassword)}
 								className={clsx(
-									'absolute inset-y-0 flex cursor-pointer items-center right-2 top-6',
-									Object.keys(errors).length !== 0 && 'bottom-2.5'
+									'absolute inset-y-0 flex cursor-pointer items-center top-6 right-2'
 								)}>
 								{<ShowHidePassword open={togglePassword} />}
 							</div>
 						</div>
-						<div className="relative w-full">
+						<div className="relative w-full flex items-center">
 							<Input
 								labelText="Confirm Password"
 								id="confirmPassword"
@@ -201,8 +217,7 @@ const UserForm = ({ isNew, title, data }: UserFormProps) => {
 							<div
 								onClick={() => setToggleConfirmPassword(!toggleConfirmPassword)}
 								className={clsx(
-									'absolute inset-y-0 flex cursor-pointer items-center right-2 top-6',
-									Object.keys(errors).length !== 0 && 'bottom-2.5'
+									'absolute inset-y-0 flex cursor-pointer items-center top-6 right-2'
 								)}>
 								{<ShowHidePassword open={toggleConfirmPassword} />}
 							</div>
