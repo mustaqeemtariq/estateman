@@ -2,6 +2,7 @@ import { PencilSquareIcon, TrashIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
+import { toast } from 'react-hot-toast'
 import { Container } from 'src/components/app/container'
 import { AppHeader } from 'src/components/app/header'
 import { AppLayout } from 'src/components/app/layout'
@@ -17,6 +18,13 @@ interface UserProps {
 
 const ListUsers = ({ usersData }: UserProps) => {
 	const [searchText, setSearchText] = useState('')
+
+	const deleteUser = async(id: string) => {
+		const response = await userService.deleteUser(id)
+		if (response.success) {
+			toast.success('User deleted successfully')
+		}
+	}
 
 	const { filteredUsers } = useMemo(() => {
 		const { filteredUsers } = usersData.reduce(
@@ -57,7 +65,7 @@ const ListUsers = ({ usersData }: UserProps) => {
 							</Link>
 						</td>
 						<td className="tw-table-td text-red-500">
-							<TrashIcon className="h-6 w-6" aria-hidden="true" />
+							<TrashIcon onClick={() => deleteUser(user.id)} className="h-6 w-6 cursor-pointer" aria-hidden="true" />
 						</td>
 					</tr>
 				))}

@@ -5,6 +5,7 @@ import { AppLayout } from 'src/components/app/layout'
 import { Select } from 'src/components/app/select'
 import PropertyCard from 'src/components/property/card'
 import { ListHeader } from 'src/components/property/list-header'
+import { CityNames } from 'src/constants/constants'
 import propertyService from 'src/services/property'
 import { Property } from 'src/types/typings'
 
@@ -48,7 +49,6 @@ interface PropertyListProps {
 }
 
 function PropertyList({ propertiesData }: PropertyListProps) {
-	console.log('AA', propertiesData)
 
 	return (
 		<AppLayout>
@@ -62,9 +62,11 @@ function PropertyList({ propertiesData }: PropertyListProps) {
 					</Select>
 					<Select name="city">
 						<option value="">City</option>
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
+						{Object.values(CityNames).map(unit => (
+							<option key={unit} value={unit}>
+								{unit}
+							</option>
+						))}
 					</Select>
 					<Select name="type">
 						<option value="">Type</option>
@@ -87,9 +89,9 @@ function PropertyList({ propertiesData }: PropertyListProps) {
 					</Select>
 				</div>
 				<div className="grid grid-cols-3 gap-x-4 gap-y-3">
-					{propertiesData.map(item => (
+					{propertiesData.map((item, index) => (
 						<PropertyCard
-							key={item.Title}
+							key={item.Title + index}
 							image={item.PropertyDetails?.images}
 							contract={item.ContractType}
 							title={item.Title}
