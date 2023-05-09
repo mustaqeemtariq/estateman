@@ -10,6 +10,9 @@ const login = (Username: string, Password: string) => {
 		.then(response => {
 			return response.data
 		})
+		.catch(err => {
+			return err.response.data
+		})
 }
 
 const authService = { login }

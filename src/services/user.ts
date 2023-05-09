@@ -13,21 +13,29 @@ const getAllUsers = () => {
 const addUser = (data: User) => {
 	return axios
 		.post(`${apiHost}/ADDUSER`, {
-			data
+			...data
 		})
 		.then(response => response.data)
+		.catch(err => {
+			return err.response.data
+		})
 }
 
 const editUser = (id: string, data: User) => {
 	return axios
 		.put(`${apiHost}/EditUSER?id=${id}`, {
-			data
+			...data
 		})
 		.then(response => response.data)
+		.catch(err => {
+			return err.response.data
+		})
 }
 
 const deleteUser = (id: string) => {
-	return axios.delete(`${apiHost}/USER?id=${id}`).then(response => response.data)
+	return axios.delete(`${apiHost}/USER/${id}`).then(response => response.data).catch(err => {
+		return err.response.data
+	})
 }
 
 const searchUser = (value: string) => {
