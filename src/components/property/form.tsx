@@ -4,10 +4,13 @@ import {
 	Control,
 	Controller,
 	FieldErrors,
+	UseFieldArrayAppend,
+	UseFieldArrayRemove,
 	UseFormRegister,
 	UseFormResetField,
 	UseFormSetValue,
 	UseFormWatch,
+	useFieldArray,
 	useForm
 } from 'react-hook-form'
 
@@ -18,7 +21,7 @@ import clsx from 'clsx'
 import { Spinner } from 'src/components/animations/spinner'
 import { Button } from 'src/components/app/button'
 import { Input, InputNumber } from 'src/components/app/input'
-import { ContractTypes, PropertyTypes, UnitTypes } from 'src/constants/constants'
+import { CityNames, ContractTypes, PropertyTypes, UnitTypes } from 'src/constants/constants'
 import { Property } from 'src/types/typings'
 import { Checkbox } from '../app/checkbox'
 import { DateInput } from '../app/date'
@@ -57,35 +60,35 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab }: PropertyFormProp
 	})
 
 	const schema = yup.object<Property>().shape({
-		title: yup.string().when('$step', {
+		Title: yup.string().when('$step', {
 			is: FormSteps.ADDPROPERTY,
 			then: schema => schema.required('Title is required')
 		}),
-		contract: yup.string().when('$step', {
+		ContractType: yup.string().when('$step', {
 			is: FormSteps.ADDPROPERTY,
 			then: schema => schema.required('Contract Type is required')
 		}),
-		property: yup.string().when('$step', {
+		PropertyType: yup.string().when('$step', {
 			is: FormSteps.ADDPROPERTY,
 			then: schema => schema.required('Property Type is required')
 		}),
-		location: yup.string().when('$step', {
+		Location: yup.string().when('$step', {
 			is: FormSteps.ADDPROPERTY,
 			then: schema => schema.required('Location is required')
 		}),
-		area: yup.string().when('$step', {
+		LandArea: yup.string().when('$step', {
 			is: FormSteps.ADDPROPERTY,
 			then: schema => schema.required('Area is required')
 		}),
-		units: yup.string().when('$step', {
+		Units: yup.string().when('$step', {
 			is: FormSteps.ADDPROPERTY,
 			then: schema => schema.required('Select a unit')
 		}),
-		price: yup.string().when('$step', {
+		Price: yup.string().when('$step', {
 			is: FormSteps.ADDPROPERTY,
 			then: schema => schema.required('Price is required')
 		}),
-		year: yup.string().when('$step', {
+		YearBuilt: yup.string().when('$step', {
 			is: FormSteps.ADDPROPERTY,
 			then: schema =>
 				schema.test('yearType', 'Year is required', function (value) {
@@ -93,7 +96,7 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab }: PropertyFormProp
 					return false
 				})
 		}),
-		leaseexpiry: yup.string().when('$step', {
+		LeaseExpiringOn: yup.string().when('$step', {
 			is: FormSteps.ADDHISTORY,
 			then: schema =>
 				schema.test('leaseType', 'Date is required', function (value) {
@@ -107,7 +110,7 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab }: PropertyFormProp
 							if (selected < present) {
 								throw this.createError({
 									message: 'Date cannot be in the past',
-									path: 'leaseexpiry'
+									path: 'LeaseExpiringon'
 								})
 							}
 							return true
@@ -117,29 +120,29 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab }: PropertyFormProp
 					}
 				})
 		}),
-		category: yup.string().when('$step', {
+		PropertyCategory: yup.string().when('$step', {
 			is: FormSteps.ADDPROPERTY,
 			then: schema => schema.required('Category is required')
 		}),
-		city: yup.string().when('$step', {
+		City: yup.string().when('$step', {
 			is: FormSteps.PROPERTYDETAILS,
 			then: schema => schema.required('City is required')
 		}),
-		house: yup.string().when('$step', {
+		Housenumber: yup.string().when('$step', {
 			is: FormSteps.PROPERTYDETAILS,
 			then: schema =>
 				schema.test('houseType', 'Invalid house type', function (value) {
-					const name = this.parent.category
+					const name = this.parent.PropertyCategory
 					if (!value) {
 						throw this.createError({
 							message: `${name.charAt(0).toUpperCase().concat(name.slice(1))} number is required`,
-							path: 'house'
+							path: 'Housenumber'
 						})
 					}
 					return true
 				})
 		}),
-		gas: yup.string().when('$step', {
+		Gas: yup.string().when('$step', {
 			is: FormSteps.PROPERTYDETAILS,
 			then: schema =>
 				schema.test('gasType', 'Invalid gas type', function (value) {
@@ -150,11 +153,11 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab }: PropertyFormProp
 
 					throw this.createError({
 						message: 'Gas must be either "yes" or "no" or empty',
-						path: 'gas'
+						path: 'Gas'
 					})
 				})
 		}),
-		electricity: yup.string().when('$step', {
+		Electricity: yup.string().when('$step', {
 			is: FormSteps.PROPERTYDETAILS,
 			then: schema =>
 				schema.test('electricityType', 'Invalid electricity type', function (value) {
@@ -163,19 +166,19 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab }: PropertyFormProp
 
 					throw this.createError({
 						message: 'Electricity must be either "yes" or "no" or empty',
-						path: 'electricity'
+						path: 'Electricity'
 					})
 				})
 		}),
-		name: yup.string().when('$step', {
+		Name: yup.string().when('$step', {
 			is: FormSteps.PROPERTYDETAILS,
 			then: schema => schema.required('Name is required')
 		}),
-		address: yup.string().when('$step', {
+		Address: yup.string().when('$step', {
 			is: FormSteps.PROPERTYDETAILS,
 			then: schema => schema.required('Address is required')
 		}),
-		phone: yup.string().when('$step', {
+		ContactNumber: yup.string().when('$step', {
 			is: FormSteps.PROPERTYDETAILS,
 			then: schema =>
 				schema
@@ -183,7 +186,7 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab }: PropertyFormProp
 					.min(11, 'Phone number should be 11 digits')
 					.max(11, 'Phone number should be 11 digits')
 		}),
-		cnic: yup.string().when('$step', {
+		CNIC: yup.string().when('$step', {
 			is: FormSteps.PROPERTYDETAILS,
 			then: schema =>
 				schema
@@ -206,6 +209,16 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab }: PropertyFormProp
 		mode: 'all'
 	})
 
+	const { append: appendCallDetails, remove: removeCallDetails } = useFieldArray({
+		control,
+		name: 'CallDetails'
+	})
+
+	const { append: appendPricingHistory, remove: removePricingHistory } = useFieldArray({
+		control,
+		name: 'AddPricingHistory'
+	})
+
 	const [category, setCategory] = useState<string>()
 	const [showCommission, setShowCommission] = useState(false)
 
@@ -223,7 +236,19 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab }: PropertyFormProp
 		case FormSteps.ADDHISTORY:
 			component = (
 				<AddHistoryForm
-					{...{ errors, register, control, watch, setValue, showCommission, setShowCommission }}
+					{...{
+						errors,
+						register,
+						control,
+						watch,
+						setValue,
+						showCommission,
+						setShowCommission,
+						appendCallDetails,
+						appendPricingHistory,
+						removeCallDetails,
+						removePricingHistory
+					}}
 				/>
 			)
 			break
@@ -278,6 +303,8 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab }: PropertyFormProp
 	const [isUpdating, setUpdating] = useState(false)
 
 	const onSubmit = handleSubmit(data => {
+		console.log('DDDDDD', data)
+
 		// setUpdating(true)
 	})
 
@@ -334,6 +361,10 @@ interface FormProps {
 	category?: string
 	showCommission?: boolean
 	setShowCommission?: Dispatch<SetStateAction<boolean>>
+	appendPricingHistory?: UseFieldArrayAppend<Property, 'AddPricingHistory'>
+	appendCallDetails?: UseFieldArrayAppend<Property, 'CallDetails'>
+	removePricingHistory?: UseFieldArrayRemove
+	removeCallDetails?: UseFieldArrayRemove
 }
 
 const AddPropertyForm = ({
@@ -344,15 +375,15 @@ const AddPropertyForm = ({
 	setCategory,
 	setValue
 }: FormProps) => {
-	const property = watch?.('property')
-	const category = watch?.('category')
+	const property = watch?.('PropertyType')
+	const category = watch?.('PropertyCategory')
 
 	useEffect(() => {
 		setCategory?.(category)
 	}, [category])
 
 	const handleDate = (value: string) => {
-		setValue?.('year', value, { shouldValidate: true })
+		setValue?.('YearBuilt', value, { shouldValidate: true })
 	}
 
 	return (
@@ -367,7 +398,7 @@ const AddPropertyForm = ({
 						id="title"
 						autoComplete="title"
 						register={register}
-						name="title"
+						name="Title"
 						error={errors}
 						required={true}
 						autoCapitalize="false"
@@ -376,24 +407,24 @@ const AddPropertyForm = ({
 				</div>
 				<div className="grid grid-cols-2 gap-x-24 gap-y-4">
 					<div className="space-y-2">
-						<label htmlFor="contract">
+						<label htmlFor="ContractType">
 							Contract Type <span className="text-[#FF0000]">*</span>
 						</label>
 						<Controller
-							name="contract"
+							name="ContractType"
 							control={control}
 							render={({ field: { onChange, value } }) => (
 								<div className="flex space-x-16">
 									<Checkbox
 										labelText="Sale"
-										name="contract"
+										name="ContractType"
 										onChange={e => onChange(e.target.value)}
 										value={ContractTypes.SALE}
 										checked={value === ContractTypes.SALE}
 									/>
 									<Checkbox
 										labelText="Rent"
-										name="contract"
+										name="ContractType"
 										onChange={e => onChange(e.target.value)}
 										value={ContractTypes.RENT}
 										checked={value === ContractTypes.RENT}
@@ -401,34 +432,34 @@ const AddPropertyForm = ({
 								</div>
 							)}
 						/>
-						{errors && <p className="text-xs text-red-600">{errors.contract?.message}</p>}
+						{errors && <p className="text-xs text-red-600">{errors.ContractType?.message}</p>}
 					</div>
 					<div className="space-y-2">
-						<label htmlFor="property">
+						<label htmlFor="PropertyType">
 							Property Type <span className="text-[#FF0000]">*</span>
 						</label>
 						<Controller
-							name="property"
+							name="PropertyType"
 							control={control}
 							render={({ field: { onChange, value } }) => (
 								<div className="flex justify-between flex-wrap">
 									<Checkbox
 										labelText="Residential"
-										name="property"
+										name="PropertyType"
 										onChange={e => onChange(e.target.value)}
 										value={PropertyTypes.RESIDENTIAL}
 										checked={value === PropertyTypes.RESIDENTIAL}
 									/>
 									<Checkbox
 										labelText="Commercial"
-										name="property"
+										name="PropertyType"
 										onChange={e => onChange(e.target.value)}
 										value={PropertyTypes.COMMERCIAL}
 										checked={value === PropertyTypes.COMMERCIAL}
 									/>
 									<Checkbox
 										labelText="Special Commercial"
-										name="property"
+										name="PropertyType"
 										onChange={e => onChange(e.target.value)}
 										value={PropertyTypes.SPECIAL}
 										checked={value === PropertyTypes.SPECIAL}
@@ -436,7 +467,7 @@ const AddPropertyForm = ({
 								</div>
 							)}
 						/>
-						{errors && <p className="text-xs text-red-600">{errors?.property?.message}</p>}
+						{errors && <p className="text-xs text-red-600">{errors?.PropertyType?.message}</p>}
 					</div>
 					<div className="space-y-3">
 						<Input
@@ -444,7 +475,7 @@ const AddPropertyForm = ({
 							labelText="Location"
 							autoComplete="location"
 							register={register}
-							name="location"
+							name="Location"
 							error={errors}
 							required={true}
 							autoCapitalize="false"
@@ -452,14 +483,14 @@ const AddPropertyForm = ({
 						/>
 						<div className="flex space-x-8">
 							<Controller
-								name={'area'}
+								name={'LandArea'}
 								control={control}
 								render={({ field: { onChange, value } }) => (
 									<InputNumber
 										id="area"
 										labelText="Land Area"
 										autoComplete="area"
-										name="area"
+										name="LandArea"
 										error={errors}
 										required={true}
 										placeholder="Enter Area"
@@ -473,7 +504,7 @@ const AddPropertyForm = ({
 								labelText="Units"
 								autoComplete="units"
 								register={register}
-								name="units"
+								name="Units"
 								errors={errors}
 								required={true}
 								className="bg-[#E8E8E8]                                                "
@@ -488,14 +519,14 @@ const AddPropertyForm = ({
 						</div>
 						<div className="flex space-x-8">
 							<Controller
-								name={'price'}
+								name={'Price'}
 								control={control}
 								render={({ field: { onChange, value } }) => (
 									<InputNumber
 										id="price"
 										labelText="Price (Pkr)"
 										autoComplete="price"
-										name="price"
+										name="Price"
 										error={errors}
 										required={true}
 										currency={true}
@@ -506,7 +537,7 @@ const AddPropertyForm = ({
 								)}
 							/>
 							<Controller
-								name={'year'}
+								name={'YearBuilt'}
 								control={control}
 								render={({ field: { onChange, value } }) => (
 									<DateInput
@@ -517,7 +548,7 @@ const AddPropertyForm = ({
 										placeholder="Enter year"
 										labelText="Year"
 										autoComplete="year"
-										name="year"
+										name="YearBuilt"
 										error={errors}
 										required={true}
 										year={true}
@@ -528,17 +559,17 @@ const AddPropertyForm = ({
 					</div>
 					<div>
 						<div className="space-y-2">
-							<label htmlFor="category">
+							<label htmlFor="PropertyCategory">
 								Property Category <span className="text-[#FF0000]">*</span>
 							</label>
 							<Controller
-								name="category"
+								name="PropertyCategory"
 								control={control}
 								render={({ field: { onChange, value } }) => (
 									<div className="grid grid-cols-2 gap-y-2">
 										<Checkbox
 											labelText="House"
-											name="category"
+											name="PropertyCategory"
 											onChange={e => onChange(e.target.value)}
 											value="house"
 											checked={value === 'house'}
@@ -546,7 +577,7 @@ const AddPropertyForm = ({
 										/>
 										<Checkbox
 											labelText="Penthouse"
-											name="category"
+											name="PropertyCategory"
 											onChange={e => onChange(e.target.value)}
 											value="penthouse"
 											checked={value === 'penthouse'}
@@ -554,7 +585,7 @@ const AddPropertyForm = ({
 										/>
 										<Checkbox
 											labelText="Apartment"
-											name="category"
+											name="PropertyCategory"
 											onChange={e => onChange(e.target.value)}
 											value="apartment"
 											checked={value === 'apartment'}
@@ -562,7 +593,7 @@ const AddPropertyForm = ({
 										/>
 										<Checkbox
 											labelText="Studio"
-											name="category"
+											name="PropertyCategory"
 											onChange={e => onChange(e.target.value)}
 											value="studio"
 											checked={value === 'studio'}
@@ -570,7 +601,7 @@ const AddPropertyForm = ({
 										/>
 										<Checkbox
 											labelText="Villa"
-											name="category"
+											name="PropertyCategory"
 											onChange={e => onChange(e.target.value)}
 											value="villa"
 											checked={value === 'villa'}
@@ -578,7 +609,7 @@ const AddPropertyForm = ({
 										/>
 										<Checkbox
 											labelText="Plot"
-											name="category"
+											name="PropertyCategory"
 											onChange={e => onChange(e.target.value)}
 											value="plot"
 											checked={value === 'plot'}
@@ -586,7 +617,7 @@ const AddPropertyForm = ({
 										/>
 										<Checkbox
 											labelText="Shop"
-											name="category"
+											name="PropertyCategory"
 											onChange={e => onChange(e.target.value)}
 											value="shop"
 											checked={value === 'shop'}
@@ -598,7 +629,7 @@ const AddPropertyForm = ({
 										/>
 										<Checkbox
 											labelText="Plaza"
-											name="category"
+											name="PropertyCategory"
 											onChange={e => onChange(e.target.value)}
 											value="plaza"
 											checked={value === 'plaza'}
@@ -610,7 +641,7 @@ const AddPropertyForm = ({
 										/>
 										<Checkbox
 											labelText="Agriculture Land"
-											name="category"
+											name="PropertyCategory"
 											onChange={e => onChange(e.target.value)}
 											value="agriculture land"
 											checked={value === 'agriculture land'}
@@ -623,7 +654,7 @@ const AddPropertyForm = ({
 									</div>
 								)}
 							/>
-							{errors && <p className="text-xs text-red-600">{errors.category?.message}</p>}
+							{errors && <p className="text-xs text-red-600">{errors.PropertyCategory?.message}</p>}
 						</div>
 					</div>
 				</div>
@@ -632,14 +663,7 @@ const AddPropertyForm = ({
 	)
 }
 
-const PropertyDetailsForm = ({
-	register,
-	errors,
-	control,
-	watch,
-	setValue,
-	category
-}: FormProps) => {
+const PropertyDetailsForm = ({ register, errors, control, category }: FormProps) => {
 	const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
 
 	const handleUpload = (files: File[]) => {
@@ -656,13 +680,13 @@ const PropertyDetailsForm = ({
 							labelText="City"
 							autoComplete="city"
 							register={register}
-							name="city"
+							name="City"
 							errors={errors}
 							required={true}
 							className="bg-[#E8E8E8]                                                "
 							autoCapitalize="false">
 							<option value="">Select a City</option>
-							{Object.values(UnitTypes).map(unit => (
+							{Object.values(CityNames).map(unit => (
 								<option key={unit} value={unit}>
 									{unit}
 								</option>
@@ -671,14 +695,14 @@ const PropertyDetailsForm = ({
 
 						<div className="flex space-x-8">
 							<Controller
-								name={'house'}
+								name={'Housenumber'}
 								control={control}
 								render={({ field: { onChange, value } }) => (
 									<InputNumber
 										id="house"
 										labelText={`${category} number`}
 										autoComplete="house"
-										name="house"
+										name="Housenumber"
 										error={errors}
 										required={true}
 										placeholder={`Enter ${category} number`}
@@ -688,14 +712,14 @@ const PropertyDetailsForm = ({
 								)}
 							/>
 							<Controller
-								name={'street'}
+								name={'Streetno'}
 								control={control}
 								render={({ field: { onChange, value } }) => (
 									<InputNumber
 										id="street"
 										labelText="Street#"
 										autoComplete="street"
-										name="street"
+										name="Streetno"
 										error={errors}
 										placeholder="Enter Street Number"
 										onChange={onChange}
@@ -722,7 +746,7 @@ const PropertyDetailsForm = ({
 								labelText="Society (if Any)"
 								autoComplete="society"
 								register={register}
-								name="society"
+								name="Society"
 								errors={errors}
 								className="bg-[#E8E8E8]                                                "
 								autoCapitalize="false">
@@ -750,7 +774,7 @@ const PropertyDetailsForm = ({
 								labelText="Sector or Area"
 								autoComplete="sector"
 								register={register}
-								name="sector"
+								name="Sector"
 								error={errors}
 								autoCapitalize="false"
 								placeholder="Enter a Sector or Area"
@@ -758,14 +782,14 @@ const PropertyDetailsForm = ({
 						</div>
 						<div className="flex space-x-2">
 							<Controller
-								name={'bed'}
+								name={'Bed'}
 								control={control}
 								render={({ field: { onChange, value } }) => (
 									<InputNumber
 										id="bed"
 										labelText="Bed"
 										autoComplete="bed"
-										name="bed"
+										name="Bed"
 										error={errors}
 										onChange={onChange}
 										value={value}
@@ -774,14 +798,14 @@ const PropertyDetailsForm = ({
 								)}
 							/>
 							<Controller
-								name={'bath'}
+								name={'Bath'}
 								control={control}
 								render={({ field: { onChange, value } }) => (
 									<InputNumber
 										id="bath"
 										labelText="Bath"
 										autoComplete="bath"
-										name="bath"
+										name="Bath"
 										error={errors}
 										onChange={onChange}
 										value={value}
@@ -790,14 +814,14 @@ const PropertyDetailsForm = ({
 								)}
 							/>
 							<Controller
-								name={'kitchen'}
+								name={'Kitchen'}
 								control={control}
 								render={({ field: { onChange, value } }) => (
 									<InputNumber
 										id="kitchen"
 										labelText="Kitchen"
 										autoComplete="kitchen"
-										name="kitchen"
+										name="Kitchen"
 										error={errors}
 										onChange={onChange}
 										value={value}
@@ -812,7 +836,7 @@ const PropertyDetailsForm = ({
 								labelText="Gas"
 								autoComplete="gas"
 								register={register}
-								name="gas"
+								name="Gas"
 								error={errors}
 								autoCapitalize="false"
 							/>
@@ -821,7 +845,7 @@ const PropertyDetailsForm = ({
 								labelText="Electricity"
 								autoComplete="electricity"
 								register={register}
-								name="electricity"
+								name="Electricity"
 								error={errors}
 								autoCapitalize="false"
 							/>
@@ -840,7 +864,7 @@ const PropertyDetailsForm = ({
 						id="name"
 						autoComplete="name"
 						register={register}
-						name="name"
+						name="Name"
 						error={errors}
 						required={true}
 						autoCapitalize="false"
@@ -851,21 +875,21 @@ const PropertyDetailsForm = ({
 						id="address"
 						autoComplete="address"
 						register={register}
-						name="address"
+						name="Address"
 						error={errors}
 						required={true}
 						autoCapitalize="false"
 						placeholder="Enter Address"
 					/>
 					<Controller
-						name={'cnic'}
+						name={'CNIC'}
 						control={control}
 						render={({ field: { onChange, value } }) => (
 							<InputNumber
 								labelText="CNIC"
 								id="cnic"
 								autoComplete="cnic"
-								name="cnic"
+								name="CNIC"
 								onChange={onChange}
 								value={value}
 								error={errors}
@@ -881,13 +905,13 @@ const PropertyDetailsForm = ({
 					</label>
 
 					<Controller
-						name="ligitation"
+						name="Ligitation"
 						control={control}
 						render={({ field: { onChange, value }, fieldState: { error } }) => (
 							<>
 								<textarea
 									id="ligitation"
-									name="ligitation"
+									name="Ligitation"
 									onChange={onChange}
 									placeholder="Enter Ligitation"
 									value={value ?? ''}
@@ -901,7 +925,7 @@ const PropertyDetailsForm = ({
 				</div>
 				<div className="space-y-4">
 					<Controller
-						name={'phone'}
+						name={'ContactNumber'}
 						control={control}
 						render={({ field: { onChange, value } }) => (
 							<InputNumber
@@ -910,7 +934,7 @@ const PropertyDetailsForm = ({
 								onChange={onChange}
 								value={value}
 								autoComplete="phone"
-								name="phone"
+								name="ContactNumber"
 								error={errors}
 								required={true}
 								maxLength={11}
@@ -920,7 +944,7 @@ const PropertyDetailsForm = ({
 						)}
 					/>
 					<Controller
-						name={'alternatephone'}
+						name={'AlternateNumber'}
 						control={control}
 						render={({ field: { onChange, value } }) => (
 							<InputNumber
@@ -929,7 +953,7 @@ const PropertyDetailsForm = ({
 								onChange={onChange}
 								value={value}
 								autoComplete="alternatephone"
-								name="alternatephone"
+								name="AlternateNumber"
 								error={errors}
 								maxLength={11}
 								autoCapitalize="false"
@@ -942,13 +966,13 @@ const PropertyDetailsForm = ({
 					</label>
 
 					<Controller
-						name="description"
+						name="OwnerDescription"
 						control={control}
 						render={({ field: { onChange, value }, fieldState: { error } }) => (
 							<>
 								<textarea
 									id="description"
-									name="description"
+									name="OwnerDescription"
 									onChange={onChange}
 									placeholder="Enter Description"
 									value={value ?? ''}
@@ -972,7 +996,11 @@ const AddHistoryForm = ({
 	watch,
 	setValue,
 	showCommission,
-	setShowCommission
+	setShowCommission,
+	appendCallDetails,
+	removeCallDetails,
+	appendPricingHistory,
+	removePricingHistory
 }: FormProps) => {
 	const [priceCount, setPriceCount] = useState(1)
 	const [recordCount, setRecordCount] = useState(1)
@@ -984,13 +1012,11 @@ const AddHistoryForm = ({
 	}
 
 	const handleDate = (value: string) => {
-		console.log('ASS', value)
-
-		setValue?.('leaseexpiry', value, { shouldValidate: true })
+		setValue?.('LeaseExpiringOn', value, { shouldValidate: true })
 	}
 
-	const callRecord = watch?.('callrecord')
-	const occupancy = watch?.('occupancy')
+	const callRecord = watch?.('CallType')
+	const occupancy = watch?.('OccupancyStatus')
 
 	return (
 		<div className="grid grid-cols-4 gap-x-8 gap-y-4">
@@ -1000,41 +1026,41 @@ const AddHistoryForm = ({
 					type="date"
 					id="historydate"
 					autoComplete="historydate"
-					name="historydate"
+					name="Date"
 					placeholder="2 Jan, 2023"
 					autoCapitalize="false"
 				/>
 				<div>
-					<label htmlFor="occupancy">Occupancy Status</label>
+					<label htmlFor="OccupancyStatus">Occupancy Status</label>
 					<Controller
-						name={'occupancy'}
+						name={'OccupancyStatus'}
 						control={control}
 						render={({ field: { onChange, value } }) => (
 							<div className="flex flex-col bg-[#E6E6E6] p-3 space-y-2">
 								<Radio
 									labelText="Occupied"
-									name="occupancy"
+									name="OccupancyStatus"
 									onChange={e => onChange(e.target.value)}
 									value="occupied"
 									checked={value === 'occupied'}
 								/>
 								<Radio
 									labelText="Vacant"
-									name="occupancy"
+									name="OccupancyStatus"
 									onChange={e => onChange(e.target.value)}
 									value="vacant"
 									checked={value === 'vacant'}
 								/>
 								<Radio
 									labelText="Sold"
-									name="occupancy"
+									name="OccupancyStatus"
 									onChange={e => onChange(e.target.value)}
 									value="sold"
 									checked={value === 'sold'}
 								/>
 								<Radio
 									labelText="Not Sold"
-									name="occupancy"
+									name="OccupancyStatus"
 									onChange={e => onChange(e.target.value)}
 									value="notsold"
 									checked={value === 'notsold'}
@@ -1045,7 +1071,7 @@ const AddHistoryForm = ({
 				</div>
 
 				<Controller
-					name={'leaseexpiry'}
+					name={'LeaseExpiringOn'}
 					control={control}
 					render={({ field: { onChange, value } }) => (
 						<DateInput
@@ -1055,7 +1081,7 @@ const AddHistoryForm = ({
 							labelText="Lease Expiring on"
 							id="leaseexpiry"
 							autoComplete="leaseexpiry"
-							name="leaseexpiry"
+							name="LeaseexpiringOn"
 							disabled={occupancy !== 'occupied'}
 							placeholder="31 Jan, 2025"
 							autoCapitalize="false"
@@ -1079,13 +1105,13 @@ const AddHistoryForm = ({
 							Add Details
 						</label>
 						<Controller
-							name="historydetails"
+							name="HistoryDetails"
 							control={control}
 							render={({ field: { onChange, value }, fieldState: { error } }) => (
 								<>
 									<textarea
 										id="historydetails"
-										name="historydetails"
+										name="HistoryDetails"
 										onChange={onChange}
 										placeholder="Enter Details"
 										value={value ?? ''}
@@ -1100,25 +1126,25 @@ const AddHistoryForm = ({
 					<FileUpload
 						onUpload={handleUpload}
 						labelText="Upload Images"
-						name="historyimage"
+						name="HistoryImages"
 						id="historyimage"
 						placeholder="Select upto 10 files, File Type: jpg, png, gif, pdf"
 					/>
 					<Controller
-						name={'callrecord'}
+						name={'CallType'}
 						control={control}
 						render={({ field: { onChange, value } }) => (
 							<div className="flex space-x-6">
 								<Radio
 									labelText="Incoming Call Record"
-									name="callrecord"
+									name="CallType"
 									onChange={e => onChange(e.target.value)}
 									value="incoming"
 									checked={value === 'incoming'}
 								/>
 								<Radio
 									labelText="Outgoing Call Record"
-									name="callrecord"
+									name="CallType"
 									onChange={e => onChange(e.target.value)}
 									value="outgoing"
 									checked={value === 'outgoing'}
@@ -1133,6 +1159,12 @@ const AddHistoryForm = ({
 								isFirst={index == 0}
 								recordCount={recordCount}
 								setRecordCount={setRecordCount}
+								register={register}
+								control={control}
+								errors={errors}
+								setValue={setValue}
+								appendData={appendCallDetails}
+								removeData={removeCallDetails}
 							/>
 						))}
 					{Array.from({ length: priceCount }, (_, index) => (
@@ -1141,12 +1173,24 @@ const AddHistoryForm = ({
 							isFirst={index == 0}
 							priceCount={priceCount}
 							setPriceCount={setPriceCount}
+							register={register}
+							control={control}
+							errors={errors}
+							setValue={setValue}
+							appendData={appendPricingHistory}
+							removeData={removePricingHistory}
+							index={index}
 						/>
 					))}
 				</div>
 			</div>
 			<div className="col-span-4">
-				<Commission show={showCommission ?? false} />
+				<Commission
+					show={showCommission ?? false}
+					register={register}
+					control={control}
+					errors={errors}
+				/>
 			</div>
 		</div>
 	)
