@@ -53,10 +53,10 @@ type OwnerDetails = {
 	OwnerDescription: string
 }
 
-type PropertyDetailsForm = OwnerDetails & {
+type PropertyDetailsForm = {
 	City: string
 	Housenumber: string
-	Streetno?: number
+	Streetno?: string
 	Society?: string
 	places?: string
 	Sector?: string
@@ -65,34 +65,34 @@ type PropertyDetailsForm = OwnerDetails & {
 	Kitchen?: number
 	Gas?: string
 	Electricity?: string
-	images?: string[]
+	PropertyImages?: string[]
 }
 
 type AddHistoryForm = {
-	Date?: string
+	HistoryDate?: string
 	OccupancyStatus?: string
 	LeaseExpiringOn?: string
-	historydetails?: string
-	images?: string[]
+	HistoryDetails?: string
+	HistoryImages?: string[]
+	CallType?: string
 	CallDetails?: CallRecordForm[]
 	AddPricingHistory?: PricingHistoryForm[]
 }
 
 type CallRecordForm = {
-	from?: string
-	to?: string
-	type: string
-	phone?: string
-	description?: string
+	CallerFrom?: string
+	CallerTo?: string
+	CallerDate?: string
+	CallerName?: string
 }
 
 type PricingHistoryForm = {
-	price?: string
-	year?: string
+	HistoryPrice?: string
+	HistoryYear?: string
 }
 
 type CommissionForm = {
-	Amount?: string
+	CommissionAmount?: string
 	AccountNumber?: string
 	Cheque?: string
 	Branch?: string
@@ -100,11 +100,12 @@ type CommissionForm = {
 }
 
 type Property = AddPropertyForm &
-	OwnerDetails & {
-		PropertyDetails: PropertyDetailsForm
-		AddHistory: AddHistoryForm
-		AddCommission?: CommissionForm
-	}
+	OwnerDetails &
+	PropertyDetailsForm &
+	AddHistoryForm &
+	CommissionForm &
+	PricingHistoryForm &
+	CallRecordForm
 
 type Auction = {
 	title: string
