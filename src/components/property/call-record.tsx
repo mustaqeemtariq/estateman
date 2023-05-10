@@ -2,8 +2,7 @@ import {
 	Control,
 	Controller,
 	FieldErrors,
-	UseFieldArrayAppend,
-	UseFieldArrayRemove,
+	UseFormGetValues,
 	UseFormRegister,
 	UseFormResetField,
 	UseFormSetValue,
@@ -27,36 +26,34 @@ interface CallRecordProps {
 	setValue?: UseFormSetValue<Property>
 	resetField?: UseFormResetField<Property>
 	watch?: UseFormWatch<Property>
-	appendData: UseFieldArrayAppend<Property, 'CallDetails'> | undefined
-	removeData: UseFieldArrayRemove | undefined
+	getValues: UseFormGetValues<Property> | undefined
+	index: number
 }
 
 const CallRecord = ({
-	removeData,
-	appendData,
 	setValue,
+	getValues,
 	recordCount,
 	setRecordCount,
 	isFirst,
 	errors,
 	register,
-	control
+	control,
+	index
 }: CallRecordProps) => {
 	const schema = yup.object<CallRecordForm>().shape({})
 
 	const handleDate = (value: string) => {
-		setValue?.('CallerDate', value)
+		setValue?.(`CallDetails.${[index]}.CallerDate`, value)
 	}
 
 	const handleAdd = () => {
-		appendData?.({ CallerDate: '', CallerFrom: '', CallerName: '', CallerTo: '' })
 		setRecordCount(prev => prev + 1)
 	}
 
 	const handleRemove = () => {
-		const indexToRemove = recordCount - 1
-		removeData?.(indexToRemove)
 		setRecordCount(prev => prev - 1)
+		const callDetails = getValues?.(`CallDetails.${[index]}.CallerDate`)
 	}
 
 	return (
@@ -65,20 +62,20 @@ const CallRecord = ({
 				id="date"
 				placeholder="Date"
 				autoComplete="date"
-				name="CallerDate"
+				name={`CallDetails.${[index]}.CallerDate`}
 				required={true}
 				autoCapitalize="false"
 				onCalendarClick={handleDate}
 			/>
 			<label htmlFor="phone">From: </label>
 			<Controller
-				name={'CallerFrom'}
+				name={`CallDetails.${[index]}.CallerFrom`}
 				control={control}
 				render={({ field: { onChange, value } }) => (
 					<InputNumber
 						id="phone"
 						autoComplete="phone"
-						name="CallerFrom"
+						name={`CallDetails.${[index]}.CallerFrom`}
 						error={errors}
 						required={true}
 						placeholder="123987654321"
@@ -92,7 +89,7 @@ const CallRecord = ({
 				id="callername"
 				autoComplete="callername"
 				register={register}
-				name="CallerName"
+				name={`CallDetails.${[index]}.CallerName`}
 				error={errors}
 				required={true}
 				autoCapitalize="false"
@@ -100,13 +97,13 @@ const CallRecord = ({
 			/>
 			<label htmlFor="phone">To: </label>
 			<Controller
-				name={'CallerTo'}
+				name={`CallDetails.${[index]}.CallerTo`}
 				control={control}
 				render={({ field: { onChange, value } }) => (
 					<InputNumber
 						id="phone"
 						autoComplete="phone"
-						name="CallerTo"
+						name={`CallDetails.${[index]}.CallerTo`}
 						error={errors}
 						required={true}
 						placeholder="923007654321"

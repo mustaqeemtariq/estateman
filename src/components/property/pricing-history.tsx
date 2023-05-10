@@ -13,7 +13,7 @@ import { Property } from 'src/types/typings'
 import { InputNumber } from '../app/input'
 
 import { PlusIcon, XMarkIcon } from '@heroicons/react/20/solid'
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { DateInput } from '../app/date'
 
 interface PricingHistoryProps {
@@ -26,8 +26,6 @@ interface PricingHistoryProps {
 	setValue?: UseFormSetValue<Property>
 	resetField?: UseFormResetField<Property>
 	watch?: UseFormWatch<Property>
-	appendData?: UseFieldArrayAppend<Property, 'AddPricingHistory'> | undefined
-	removeData?: UseFieldArrayRemove | undefined
 	index: number
 }
 
@@ -39,22 +37,21 @@ const PricingHistory = ({
 	register,
 	errors,
 	control,
-	appendData,
-	removeData,
+	watch,
 	index
 }: PricingHistoryProps) => {
 	const handleDate = (value: string) => {
-		setValue?.('HistoryYear', value)
+		setValue?.(`AddPricingHistory.${[index]}.HistoryYear`, value)
 	}
 
+	const price = watch?.('HistoryPrice')
+	const year = watch?.('HistoryYear')
+	
 	const handleAdd = () => {
-		appendData?.({ HistoryPrice: '', HistoryYear: '' })
 		setPriceCount(prev => prev + 1)
 	}
 
 	const handleRemove = () => {
-		const indexToRemove = priceCount - 1
-		removeData?.(indexToRemove)
 		setPriceCount(prev => prev - 1)
 	}
 
@@ -62,14 +59,13 @@ const PricingHistory = ({
 		<div className="flex space-x-2 items-center">
 			<label htmlFor="price">Price(Pkr) </label>
 			<Controller
-				name={'HistoryPrice'}
+				name={`AddPricingHistory.${[index]}.HistoryPrice`}
 				control={control}
 				render={({ field: { onChange, value } }) => (
 					<InputNumber
 						id="price"
 						autoComplete="price"
-						name={`HistoryPrice.${index}.value`}
-						register={register}
+						name={`HistoryPrice`}
 						error={errors}
 						required={true}
 						placeholder="0"
@@ -89,7 +85,7 @@ const PricingHistory = ({
 				autoComplete="date"
 				register={register}
 				onCalendarClick={handleDate}
-				name={`HistoryYear.${index}.value`}
+				name={`AddPricingHistory.${[index]}.HistoryYear`}
 				required={true}
 				autoCapitalize="false"
 			/>
