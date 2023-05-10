@@ -75,20 +75,24 @@ type AddHistoryForm = {
 	HistoryDetails?: string
 	HistoryImages?: string[]
 	CallType?: string
-	CallDetails?: CallRecordForm[]
-	AddPricingHistory?: PricingHistoryForm[]
+	CallDetails?: CallRecordForm
+	AddPricingHistory?: PricingHistoryForm
 }
 
 type CallRecordForm = {
-	CallerFrom?: string
-	CallerTo?: string
-	CallerDate?: string
-	CallerName?: string
+	[index: string]: {
+		CallerFrom?: string
+		CallerTo?: string
+		CallerDate?: string
+		CallerName?: string
+	}
 }
 
 type PricingHistoryForm = {
-	HistoryPrice?: string
-	HistoryYear?: string
+	[index: string]: {
+		HistoryPrice?: string
+		HistoryYear?: string
+	}
 }
 
 type CommissionForm = {
@@ -122,4 +126,13 @@ type Auction = {
 	contactname?: string
 	contactphone?: string
 	auctionimage?: string[]
+}
+
+type FilterParameter = {
+	period: string
+	city: string
+	type: string
+	category: string
+	contract?: string
+	status?: string
 }
