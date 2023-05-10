@@ -8,7 +8,7 @@ import { AppHeader } from 'src/components/app/header'
 import { AppLayout } from 'src/components/app/layout'
 
 import { Search } from 'src/components/app/search-input'
-import { Table } from 'src/components/user/table'
+import { Table } from 'src/components/app/table'
 import userService from 'src/services/user'
 import { User } from 'src/types/typings'
 
@@ -19,7 +19,7 @@ interface UserProps {
 const ListUsers = ({ usersData }: UserProps) => {
 	const [searchText, setSearchText] = useState('')
 
-	const deleteUser = async(id: string) => {
+	const deleteUser = async (id: string) => {
 		const response = await userService.deleteUser(id)
 		if (response.success) {
 			toast.success('User deleted successfully')
@@ -65,7 +65,11 @@ const ListUsers = ({ usersData }: UserProps) => {
 							</Link>
 						</td>
 						<td className="tw-table-td text-red-500">
-							<TrashIcon onClick={() => deleteUser(user.id)} className="h-6 w-6 cursor-pointer" aria-hidden="true" />
+							<TrashIcon
+								onClick={() => deleteUser(user.id)}
+								className="h-6 w-6 cursor-pointer"
+								aria-hidden="true"
+							/>
 						</td>
 					</tr>
 				))}
