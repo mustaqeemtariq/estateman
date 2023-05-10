@@ -4,13 +4,11 @@ import {
 	Control,
 	Controller,
 	FieldErrors,
-	UseFieldArrayAppend,
-	UseFieldArrayRemove,
+	UseFormGetValues,
 	UseFormRegister,
 	UseFormResetField,
 	UseFormSetValue,
 	UseFormWatch,
-	useFieldArray,
 	useForm
 } from 'react-hook-form'
 
@@ -202,21 +200,12 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab }: PropertyFormProp
 		handleSubmit,
 		watch,
 		setValue,
+		getValues,
 		formState: { errors }
 	} = useForm<Property>({
 		resolver: yupResolver(schema as any),
 		context: { step: state.step },
 		mode: 'all'
-	})
-
-	const { append: appendCallDetails, remove: removeCallDetails } = useFieldArray({
-		control,
-		name: 'CallDetails'
-	})
-
-	const { append: appendPricingHistory, remove: removePricingHistory } = useFieldArray({
-		control,
-		name: 'AddPricingHistory'
 	})
 
 	const [category, setCategory] = useState<string>()
@@ -242,12 +231,9 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab }: PropertyFormProp
 						control,
 						watch,
 						setValue,
+						getValues,
 						showCommission,
-						setShowCommission,
-						appendCallDetails,
-						appendPricingHistory,
-						removeCallDetails,
-						removePricingHistory
+						setShowCommission
 					}}
 				/>
 			)
@@ -355,16 +341,13 @@ interface FormProps {
 	errors?: FieldErrors<Property>
 	control?: Control<Property, any>
 	setValue?: UseFormSetValue<Property>
+	getValues?: UseFormGetValues<Property>
 	resetField?: UseFormResetField<Property>
 	watch?: UseFormWatch<Property>
 	setCategory?: Dispatch<SetStateAction<string | undefined>>
 	category?: string
 	showCommission?: boolean
 	setShowCommission?: Dispatch<SetStateAction<boolean>>
-	appendPricingHistory?: UseFieldArrayAppend<Property, 'AddPricingHistory'>
-	appendCallDetails?: UseFieldArrayAppend<Property, 'CallDetails'>
-	removePricingHistory?: UseFieldArrayRemove
-	removeCallDetails?: UseFieldArrayRemove
 }
 
 const AddPropertyForm = ({
@@ -997,10 +980,7 @@ const AddHistoryForm = ({
 	setValue,
 	showCommission,
 	setShowCommission,
-	appendCallDetails,
-	removeCallDetails,
-	appendPricingHistory,
-	removePricingHistory
+	getValues
 }: FormProps) => {
 	const [priceCount, setPriceCount] = useState(1)
 	const [recordCount, setRecordCount] = useState(1)
@@ -1163,8 +1143,8 @@ const AddHistoryForm = ({
 								control={control}
 								errors={errors}
 								setValue={setValue}
-								appendData={appendCallDetails}
-								removeData={removeCallDetails}
+								getValues={getValues}
+								index={index}
 							/>
 						))}
 					{Array.from({ length: priceCount }, (_, index) => (
@@ -1176,9 +1156,8 @@ const AddHistoryForm = ({
 							register={register}
 							control={control}
 							errors={errors}
+							watch={watch}
 							setValue={setValue}
-							appendData={appendPricingHistory}
-							removeData={removePricingHistory}
 							index={index}
 						/>
 					))}
