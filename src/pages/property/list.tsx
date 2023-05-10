@@ -1,13 +1,16 @@
+import clsx from 'clsx'
+import { useEffect, useState } from 'react'
 import cardImage from 'src/assets/card/pexels-binyamin-mellish-1500459 1.png'
 import { Container } from 'src/components/app/container'
+import { AppFilter } from 'src/components/app/filter'
 import { AppHeader } from 'src/components/app/header'
 import { AppLayout } from 'src/components/app/layout'
-import { Select } from 'src/components/app/select'
-import PropertyCard from 'src/components/property/card'
+import { Table } from 'src/components/app/table'
+import PropertyBoxCard from 'src/components/property/box-card'
 import { ListHeader } from 'src/components/property/list-header'
-import { CityNames } from 'src/constants/constants'
 import propertyService from 'src/services/property'
-import { Property } from 'src/types/typings'
+import { FilterParameter, Property } from 'src/types/typings'
+import { ApplyFilter } from 'src/utils/filter'
 
 const listData = [
 	{
@@ -48,66 +51,118 @@ interface PropertyListProps {
 	propertiesData: Property[]
 }
 
-function PropertyList({ propertiesData }: PropertyListProps) {
+const PropertyList = ({ propertiesData }: PropertyListProps) => {
+	const [filterParams, setFilterParams] = useState<FilterParameter>({
+		period: 'newest',
+		city: '',
+		type: '',
+		category: '',
+		contract: ''
+	})
+
+	const [view, setView] = useState('box')
+	const [data, setData] = useState(propertiesData)
+
+	useEffect(() => {
+		const filteredData = ApplyFilter(filterParams, propertiesData)
+		setData(filteredData)
+	}, [filterParams])
 
 	return (
 		<AppLayout>
 			<AppHeader />
 			<Container>
-				<ListHeader count={propertiesData.length} />
-				<div className="flex space-x-2 mb-4">
-					<Select name="period">
-						<option value="newest">Newest</option>
-						<option value="oldest">Oldest</option>
-					</Select>
-					<Select name="city">
-						<option value="">City</option>
-						{Object.values(CityNames).map(unit => (
-							<option key={unit} value={unit}>
-								{unit}
-							</option>
-						))}
-					</Select>
-					<Select name="type">
-						<option value="">Type</option>
-						<option value="residential">Residential</option>
-						<option value="commercial">Commercial</option>
-					</Select>
-					<Select name="category">
-						<option value="house">House</option>
-						<option value="penthouse">PentHouse</option>
-						<option value="apartment">Apartment</option>
-						<option value="studio">Studio</option>
-						<option value="villa">Villa</option>
-						<option value="plot">Plot</option>
-						<option value="land">Agricultural Land</option>
-					</Select>
-					<Select name="contract">
-						<option value="">Contract</option>
-						<option value="rent">For Rent</option>
-						<option value="sale">For Sale</option>
-					</Select>
-				</div>
-				<div className="grid grid-cols-3 gap-x-4 gap-y-3">
-					{propertiesData.map((item, index) => (
-						<PropertyCard
-							key={item.Title + index}
-							image={item.PropertyDetails?.images}
-							contract={item.ContractType}
-							title={item.Title}
-							location={item.Location}
-							category={item.PropertyCategory}
-							occupancy={item.AddHistory.OccupancyStatus ?? ''}
-						/>
-					))}
-				</div>
+				<ListHeader count={data.length} setView={setView} />
+				<AppFilter showContract={true} setFilterData={setFilterParams} />
+				{view === 'box' ? <BoxView data={data} /> : <ListView data={data} />}
 			</Container>
 		</AppLayout>
 	)
 }
 
+interface ViewProps {
+	data: Property[]
+}
+
+const BoxView = ({ data }: ViewProps) => {
+	return (
+		<div className="grid grid-cols-3 gap-x-4 gap-y-3">
+			{data.map((item, index) => (
+				<PropertyBoxCard
+					key={item.Title + index}
+					image={item.PropertyDetails?.images}
+					contract={item.ContractType}
+					title={item.Title}
+					location={item.Location}
+					category={item.PropertyCategory}
+					occupancy={item.AddHistory?.OccupancyStatus}
+				/>
+			))}
+		</div>
+	)
+}
+
+const ListView = ({ data }: ViewProps) => {
+	const renderPeopleTBody = (data: Property[]) => {
+		return (
+			<tbody className="bg-white">
+				{data.map((item, index) => (
+					<tr
+						key={item.Title + index}
+						className={clsx(' hover:bg-[#0D0C18]/[85%]', index % 2 === 0 && 'bg-gray-100')}>
+						<td className="tw-table-td col-span-2">{item.PropertyDetails?.image}</td>
+						<td className="tw-table-td">
+							<div className="flex flex-col">
+								{item.Title}
+								<span className="text-blue-500">{item.Address} 22</span>
+							</div>
+						</td>
+						<td className="tw-table-td">{item.City}</td>
+						<td className="tw-table-td">{item.PropertyCategory}</td>
+						<td className="tw-table-td">{item.OccupancyStatus}</td>
+						<td className="tw-table-td">{item.ContractType}</td>
+						<td className="tw-table-td">{item.LeaseExpiringOn}</td>
+						<td className="tw-table-td relative">
+							<div className="absolute top-4 right-56 z-20 opacity-0 hover:opacity-100 transition-opacity">
+								<button className="mx-2 text-black bg-[#FCFDFF] rounded-md px-9 py-2 uppercase">
+									View
+								</button>
+								<button className="mx-2 text-white bg-[#DC4200] rounded-md px-10 py-2 uppercase">
+									Edit
+								</button>
+								<button className="mx-2 text-white bg-[#0038FF] rounded-md px-8 py-2">
+									Add History
+								</button>
+							</div>
+						</td>
+					</tr>
+				))}
+			</tbody>
+		)
+	}
+
+	return (
+		<>
+			<div className="mt-6 flow-root overflow-hidden rounded-lg">
+				<div className="-my-2 -mx-4 overflow-x-auto  sm:-mx-6 lg:-mx-8">
+					<div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+						<div>
+							<Table
+								headers={['Property', '', 'City', 'Category', 'Status', 'Contract', 'Expiring On']}
+								items={data}
+								renderComponent={renderPeopleTBody}
+							/>
+						</div>
+					</div>
+				</div>
+			</div>
+		</>
+	)
+}
+
 export const getStaticProps = async () => {
 	const response = await propertyService.getAllProperties()
+
 	return {
 		props: {
 			propertiesData: response
