@@ -60,20 +60,20 @@ type PropertyDetailsForm = {
 	Society?: string
 	places?: string
 	Sector?: string
-	Bed?: number
-	Bath?: number
-	Kitchen?: number
+	Bed?: string
+	Bath?: string
+	Kitchen?: string
 	Gas?: string
 	Electricity?: string
-	PropertyImages?: string[]
+	images?: string[]
 }
 
 type AddHistoryForm = {
-	HistoryDate?: string
+	Date?: string
 	OccupancyStatus?: string
 	LeaseExpiringOn?: string
-	HistoryDetails?: string
-	HistoryImages?: string[]
+	AddDetails?: string
+	images?: string[]
 	CallType?: string
 	CallDetails?: CallRecordForm
 	AddPricingHistory?: PricingHistoryForm
@@ -85,6 +85,7 @@ type CallRecordForm = {
 		CallerTo?: string
 		CallerDate?: string
 		CallerName?: string
+		type?: string
 	}
 }
 
@@ -96,7 +97,7 @@ type PricingHistoryForm = {
 }
 
 type CommissionForm = {
-	CommissionAmount?: string
+	Amount?: string
 	AccountNumber?: string
 	Cheque?: string
 	Branch?: string
@@ -107,32 +108,36 @@ type Property = AddPropertyForm &
 	OwnerDetails &
 	PropertyDetailsForm &
 	AddHistoryForm &
-	CommissionForm &
-	PricingHistoryForm &
-	CallRecordForm
+	CommissionForm & {
+		PropertyDetails: PropertyDetailsForm
+		AddHistory: AddHistoryForm
+		AddCommission: CommissionForm
+	}
 
 type Auction = {
-	title: string
-	auctioneer: string
-	city: CityNames
-	society?: string
-	date?: string
-	location?: string
-	area: string
-	balance?: string
-	units: UnitTypes
-	reservedPrice: string
-	auctionplace: string
-	contactname?: string
-	contactphone?: string
-	auctionimage?: string[]
+	Title: string
+	Auctioneer: string
+	City: CityNames
+	Society?: string
+	AuctionDateandTime?: string
+	Location?: string
+	LandArea: string
+	Balance?: string
+	Units: UnitTypes
+	ReservePrice: string
+	PlaceofAuction: string
+	ContactPerson?: string
+	ContactNumber?: string
+	images?: string[]
 }
 
 type FilterParameter = {
-	period: string
+	period?: string
 	city: string
-	type: string
-	category: string
+	type?: string
+	category?: string
 	contract?: string
 	status?: string
+	society?: string
+	auctioneer?: string
 }
