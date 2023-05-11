@@ -20,6 +20,12 @@ import { Spinner } from 'src/components/animations/spinner'
 import { Button } from 'src/components/app/button'
 import { Input, InputNumber } from 'src/components/app/input'
 import { CityNames, ContractTypes, PropertyTypes, UnitTypes } from 'src/constants/constants'
+import {
+	AddHistoryFormValues,
+	AddPropertyFormValues,
+	CommissionFormValues,
+	PropertyDetailsFormValues
+} from 'src/constants/form-defaults'
 import { Property } from 'src/types/typings'
 import { Checkbox } from '../app/checkbox'
 import { DateInput } from '../app/date'
@@ -39,6 +45,7 @@ interface PropertyFormProps {
 		}>
 	>
 	setCurrentTab: Dispatch<SetStateAction<string>>
+	data?: Property
 }
 
 enum FormSteps {
@@ -52,7 +59,7 @@ type StateType = {
 	step: FormSteps
 }
 
-const PropertyForm = ({ currentTab, setActive, setCurrentTab }: PropertyFormProps) => {
+const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFormProps) => {
 	const [state, setState] = useState<StateType>({
 		step: FormSteps.ADDPROPERTY
 	})
@@ -205,6 +212,12 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab }: PropertyFormProp
 	} = useForm<Property>({
 		resolver: yupResolver(schema as any),
 		context: { step: state.step },
+		defaultValues: {
+			...AddPropertyFormValues(data),
+			...PropertyDetailsFormValues(data),
+			...AddHistoryFormValues(data),
+			...CommissionFormValues(data)
+		},
 		mode: 'all'
 	})
 
@@ -1085,13 +1098,13 @@ const AddHistoryForm = ({
 							Add Details
 						</label>
 						<Controller
-							name="HistoryDetails"
+							name="AddDetails"
 							control={control}
 							render={({ field: { onChange, value }, fieldState: { error } }) => (
 								<>
 									<textarea
-										id="historydetails"
-										name="HistoryDetails"
+										id="adddetails"
+										name="AddDetails"
 										onChange={onChange}
 										placeholder="Enter Details"
 										value={value ?? ''}
@@ -1106,7 +1119,7 @@ const AddHistoryForm = ({
 					<FileUpload
 						onUpload={handleUpload}
 						labelText="Upload Images"
-						name="HistoryImages"
+						name="images"
 						id="historyimage"
 						placeholder="Select upto 10 files, File Type: jpg, png, gif, pdf"
 					/>
