@@ -1,21 +1,26 @@
 import axios from 'axios'
-import { Auction, Property } from 'src/types/typings'
+import { Auction } from 'src/types/typings'
+import { apiHost } from 'src/utils/host'
 
 const getAllAuctions = () => {
 	return axios
-		.get('/viewAllAuction')
-		.then(response => response.data)
+		.get(`${apiHost}/viewAllAuction`)
+		.then(response => response.data.data)
+		.catch(error => error.response.data)
 }
 
 const addAuction = (data: Auction) => {
-    return axios.post('/ADDAuction', {
-        data
-    })
+	return axios
+		.post(`${apiHost}/ADDAuction`, {
+			...data
+		})
+		.then(response => response.data)
+		.catch(error => error.response.data)
 }
 
 const auctionService = {
 	getAllAuctions,
-    addAuction
+	addAuction
 }
 
 export default auctionService
