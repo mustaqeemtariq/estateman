@@ -12,24 +12,23 @@ import { DateInput } from '../app/date'
 import FileUpload from '../app/file-upload'
 import { Radio } from '../app/radio'
 import { Select } from '../app/select'
+import auctionService from 'src/services/auction'
+import { toast } from 'react-hot-toast'
 
 const schema = yup.object<Auction>().shape({
-	title: yup.string().required('Title is required e.g Furnished 2 Bed F 11'),
-	auctioneer: yup
-		.array()
-		.min(1, 'Please select at least one auctioneer, Bank or Government')
-		.required('Please select at least one option'),
-	username: yup.string().required('Name is required'),
-	location: yup.string().required('Location is required'),
-	area: yup.string().required('Area is required'),
-	units: yup.string().required('Select a unit'),
-	price: yup.string().required('Price is required'),
-	placeOfAuction: yup.string().required('Place Of Auction is required'),
-	city: yup
+	Title: yup.string().required('Title is required e.g Furnished 2 Bed F 11'),
+	Auctioneer: yup.string().required('Please select at least one option'),
+	ContactPerson: yup.string().required('Name is required'),
+	Location: yup.string().required('Location is required'),
+	LandArea: yup.string().required('Area is required'),
+	Units: yup.string().required('Select a unit'),
+	ReservePrice: yup.string().required('Price is required'),
+	PlaceofAuction: yup.string().required('Place Of Auction is required'),
+	City: yup
 		.string()
 		.min(1, 'Please select at least one city')
 		.required('Please select at least one city'),
-	phone: yup
+	ContactNumber: yup
 		.string()
 		.required('Contact number is a required field')
 		.min(11, 'Phone number should be 11 digits')
@@ -49,7 +48,20 @@ const AuctionForm = () => {
 		mode: 'all'
 	})
 
-	const handleFormSubmit = (data: any) => {
+	const postData = async (data: Auction) => {
+		const response = await auctionService.addAuction(data)
+		if (response.success) {
+			toast.success('Auction addded successfully')
+		}
+		else {
+			toast.error('Something went wrong')
+			setUpdating(false)
+		}
+	}
+
+	const handleFormSubmit = (data: Auction) => {
+		postData(data)
+		
 		setUpdating(true)
 	}
 
@@ -84,7 +96,7 @@ const AuctionForm = () => {
 							id="title"
 							autoComplete="title"
 							register={register}
-							name="title"
+							name="Title"
 							error={errors}
 							required={true}
 							autoCapitalize="false"
@@ -92,7 +104,7 @@ const AuctionForm = () => {
 						/>
 						<div className="flex flex-col w-full">
 							<Controller
-								name={'auctioneer'}
+								name={'Auctioneer'}
 								control={control}
 								render={({ field: { onChange, value } }) => (
 									<div className="flex flex-col w-full space-y-4">
@@ -100,14 +112,14 @@ const AuctionForm = () => {
 										<div className="flex flex-row items-center gap-x-14">
 											<Radio
 												labelText="Bank"
-												name="bank"
+												name="Bank"
 												onChange={e => onChange(e.target.value)}
 												value="bank"
 												checked={value === 'bank'}
 											/>
 											<Radio
 												labelText="Government"
-												name="government"
+												name="Government"
 												onChange={e => onChange(e.target.value)}
 												value="government"
 												checked={value === 'government'}
@@ -116,7 +128,7 @@ const AuctionForm = () => {
 									</div>
 								)}
 							/>
-							{errors && <p className="text-xs text-red-600">{errors.auctioneer?.message}</p>}
+							{errors && <p className="text-xs text-red-600">{errors.Auctioneer?.message}</p>}
 						</div>
 					</div>
 
@@ -127,7 +139,7 @@ const AuctionForm = () => {
 								labelText="City"
 								autoComplete="city"
 								register={register}
-								name="city"
+								name="City"
 								errors={errors}
 								required={true}
 								className="bg-[#E8E8E8]"
@@ -144,7 +156,7 @@ const AuctionForm = () => {
 								labelText="Society"
 								autoComplete="society"
 								register={register}
-								name="society"
+								name="Society"
 								errors={errors}
 								required={true}
 								className="bg-[#E8E8E8]"
@@ -167,7 +179,7 @@ const AuctionForm = () => {
 								placeholder="Date"
 								autoComplete="date"
 								register={register}
-								name="date"
+								name="AuctionDateandTime"
 								error={errors}
 								required={true}
 								autoCapitalize="false"
@@ -181,7 +193,7 @@ const AuctionForm = () => {
 							id="location"
 							autoComplete="location"
 							register={register}
-							name="location"
+							name="Location"
 							error={errors}
 							required={true}
 							autoCapitalize="false"
@@ -192,13 +204,13 @@ const AuctionForm = () => {
 							<div className="flex flex-col w-full">
 								<label htmlFor="balance">Balance(Pkr) </label>
 								<Controller
-									name={'balance'}
+									name={'Balance'}
 									control={control}
 									render={({ field: { onChange, value } }) => (
 										<InputNumber
 											id="balance"
 											autoComplete="balance"
-											name="balance"
+											name="Balance"
 											error={errors}
 											required={true}
 											placeholder="0"
@@ -212,7 +224,7 @@ const AuctionForm = () => {
 							<div className="flex flex-col w-full">
 								<label htmlFor="reservedPrice">Reserve Price(Pkr) </label>
 								<Controller
-									name={'reservedPrice'}
+									name={'ReservePrice'}
 									control={control}
 									render={({ field: { onChange, value } }) => (
 										<InputNumber
@@ -236,7 +248,7 @@ const AuctionForm = () => {
 							<div className="flex flex-col w-full">
 								<label htmlFor="balance">Area</label>
 								<Controller
-									name={'area'}
+									name={'LandArea'}
 									control={control}
 									render={({ field: { onChange, value } }) => (
 										<InputNumber
@@ -257,7 +269,7 @@ const AuctionForm = () => {
 								labelText="Unit"
 								autoComplete="unit"
 								register={register}
-								name="unit"
+								name="Units"
 								errors={errors}
 								required={true}
 								className="bg-[#E8E8E8]                                                "
@@ -276,7 +288,7 @@ const AuctionForm = () => {
 								id="username"
 								autoComplete="username"
 								register={register}
-								name="username"
+								name="ContactPerson"
 								error={errors}
 								required={true}
 								autoCapitalize="false"
@@ -284,7 +296,7 @@ const AuctionForm = () => {
 							/>
 
 							<Controller
-								name={'contactphone'}
+								name={'ContactNumber'}
 								control={control}
 								render={({ field: { onChange, value } }) => (
 									<InputNumber
@@ -293,7 +305,7 @@ const AuctionForm = () => {
 										onChange={onChange}
 										value={value}
 										autoComplete="phone"
-										name="phone"
+										name="ContactNumber"
 										error={errors}
 										required={true}
 										maxLength={11}
@@ -310,7 +322,7 @@ const AuctionForm = () => {
 							id="placeOfAuction"
 							autoComplete="placeOfAuction"
 							register={register}
-							name="placeOfAuction"
+							name="PlaceofAuction"
 							error={errors}
 							required={true}
 							autoCapitalize="false"
@@ -319,8 +331,8 @@ const AuctionForm = () => {
 						<FileUpload
 							onUpload={handleUpload}
 							labelText="Upload Images"
-							name="historyimage"
-							id="historyimage"
+							name="images"
+							id="images"
 							placeholder="Select upto 10 files, File Type: jpg, png, gif, pdf"
 						/>
 					</div>
