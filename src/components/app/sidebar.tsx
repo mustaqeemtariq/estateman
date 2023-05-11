@@ -46,7 +46,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 			href: '/auction',
 			current: false,
 			children: [
-				{ name: 'View All Auctions', href: '/auctions' },
+				{ name: 'View All Auctions', href: '/auction/list' },
 				{ name: 'Add Auction', href: '/auction/new' }
 			]
 		},
