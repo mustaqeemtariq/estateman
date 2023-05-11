@@ -2,8 +2,6 @@ import {
 	Control,
 	Controller,
 	FieldErrors,
-	UseFieldArrayAppend,
-	UseFieldArrayRemove,
 	UseFormRegister,
 	UseFormResetField,
 	UseFormSetValue,
@@ -13,7 +11,7 @@ import { Property } from 'src/types/typings'
 import { InputNumber } from '../app/input'
 
 import { PlusIcon, XMarkIcon } from '@heroicons/react/20/solid'
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction } from 'react'
 import { DateInput } from '../app/date'
 
 interface PricingHistoryProps {
@@ -44,9 +42,9 @@ const PricingHistory = ({
 		setValue?.(`AddPricingHistory.${[index]}.HistoryYear`, value)
 	}
 
-	const price = watch?.('HistoryPrice')
-	const year = watch?.('HistoryYear')
-	
+	const price = watch?.('AddPricingHistory.HistoryPrice')
+	const year = watch?.('AddPricingHistory.HistoryYear')
+
 	const handleAdd = () => {
 		setPriceCount(prev => prev + 1)
 	}
