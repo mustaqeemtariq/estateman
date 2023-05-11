@@ -1,7 +1,6 @@
-import { FilterParameter, Property } from 'src/types/typings'
+import { Auction, FilterParameter, Property } from 'src/types/typings'
 
-export const ApplyFilter = (filterData: FilterParameter, originalData: Property[]) => {
-	// filter by period
+export const ApplyPropertyFilter = (filterData: FilterParameter, originalData: Property[]) => {
 	let filteredData = originalData.slice()
 
 	if (filterData.period === 'newest') {
@@ -14,38 +13,57 @@ export const ApplyFilter = (filterData: FilterParameter, originalData: Property[
 		})
 	}
 
-	// filter by city
 	if (filterData.city !== '') {
 		filteredData = filteredData.filter(item => {
 			return item.Location === filterData.city
 		})
 	}
 
-	// filter by type
 	if (filterData.type !== '') {
 		filteredData = filteredData.filter(item => {
 			return item.PropertyCategory === filterData.type
 		})
 	}
 
-	// filter by category
 	if (filterData.category !== '') {
 		filteredData = filteredData.filter(item => {
 			return item.PropertyCategory === filterData.category
 		})
 	}
 
-	// filter by contract
 	if (filterData.contract !== '') {
 		filteredData = filteredData.filter(item => {
 			return item.ContractType === filterData.contract
 		})
 	}
 
-	// filter by status
 	if (filterData.status !== '') {
 		filteredData = filteredData.filter(item => {
 			return item.OccupancyStatus === filterData.status
+		})
+	}
+
+	return filteredData
+}
+
+export const ApplyAuctionFilter = (filterData: FilterParameter, originalData: Auction[]) => {
+	let filteredData = originalData.slice()
+
+	if (filterData.city !== '') {
+		filteredData = filteredData.filter(item => {
+			return item.City === filterData.city
+		})
+	}
+
+	if (filterData.society !== '') {
+		filteredData = filteredData.filter(item => {
+			return item.Society === filterData.society
+		})
+	}
+
+	if (filterData.auctioneer !== '') {
+		filteredData = filteredData.filter(item => {
+			return item.Auctioneer === filterData.auctioneer
 		})
 	}
 
