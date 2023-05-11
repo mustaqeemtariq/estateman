@@ -1,23 +1,26 @@
-import { useState } from 'react'
+import { Dispatch, SetStateAction } from 'react'
 import { Tabs } from '../app/tabs'
 
-export const AuctionHeader = () => {
-	const [showTab, setShowTab] = useState('Auction')
+interface AuctionHeaderProps {
+	setState: Dispatch<SetStateAction<string>>
+	state: string
+}
 
+export const AuctionHeader = ({ state, setState }: AuctionHeaderProps) => {
 	const tabs = [
 		{
-			name: 'Add Auction',
-			current: showTab == 'Auction' ? true : false
+			name: state,
+			current: true
 		}
 	]
 
 	return (
 		<div>
 			<Tabs
-				labelText="Add Auction"
+				labelText="Auction"
 				name="Auction"
 				value="Auction"
-				setShowTab={setShowTab}
+				setShowTab={setState}
 				tabs={tabs}
 				className="w-full text-left text-2xl"
 			/>
