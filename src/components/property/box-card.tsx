@@ -1,10 +1,13 @@
+import Image from 'next/image'
+import EmptyImage from 'src/assets/card/emptyImage.png'
+
 interface BoxCardProps {
 	image: string[] | undefined
 	contract: string
 	title: string
 	location: string
 	category: string
-	occupancy: string
+	occupancy: string | undefined
 }
 
 const PropertyBoxCard = ({
@@ -17,11 +20,13 @@ const PropertyBoxCard = ({
 }: BoxCardProps) => {
 	return (
 		<div className="rounded-md border border-gray-300 hover:bg-[#0D0C18]/[85%] hover:shadow-lg relative">
-			{image && image.length > 0 ? (
-				<img src={image[1]} width={20} height={20} alt="cardImage" className="w-full max-h-20" />
-			) : (
-				<div className="w-full h-40 bg-gray-500"></div>
-			)}
+			<Image
+				src={image?.[0] ?? EmptyImage}
+				width={20}
+				height={20}
+				alt="cardImage"
+				className="w-full max-h-20 max-w-20"
+			/>
 
 			<div className="p-4">
 				<p className="text-[#0038FF]">{contract}</p>
