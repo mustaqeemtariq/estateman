@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { apiHost } from 'src/utils/host'
+import { indexedStorageDB } from 'src/utils/local-forage'
 
 const login = (Username: string, Password: string) => {
 	return axios
@@ -15,6 +16,10 @@ const login = (Username: string, Password: string) => {
 		})
 }
 
-const authService = { login }
+const logout = () => {
+	indexedStorageDB.clear(() => console.log('store clear'))
+}
+
+const authService = { login, logout }
 
 export default authService

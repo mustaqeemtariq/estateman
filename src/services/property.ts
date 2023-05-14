@@ -1,4 +1,5 @@
 import axios from 'axios'
+import moment from 'moment'
 import { Property } from 'src/types/typings'
 import { apiHost } from 'src/utils/host'
 
@@ -7,7 +8,7 @@ const getAllProperties = () => {
 }
 
 const getLeaseProperties = () => {
-	return axios.get(`${apiHost}/AllLease`).then(response => response.data)
+	return axios.get(`${apiHost}/AllLease`).then(response => response.data.data)
 }
 
 const addProperty = (data: Property) => {
@@ -25,11 +26,28 @@ const updateProperty = (id: string, data: Property) => {
 }
 
 const getHistory = () => {
-	return axios.get(`${apiHost}/ALLHistory`).then(response => response.data)
+	return axios
+		.get(`${apiHost}/ALLHistory`)
+		.then(response => response.data.data)
+		.catch(err => err.response.data)
 }
 
 const searchProperty = (value: string) => {
-	return axios.get(`${apiHost}/searchproperty`).then(response => response.data)
+	return axios
+		.get(`${apiHost}/searchproperty?Title=${value}`)
+		.then(response => response.data.data)
+		.catch(err => err.response.data)
+}
+
+const leaseDue = () => {
+	const currentDate = moment(new Date()).format('YYYY-MM-DD')
+	return axios
+		.get(`${apiHost}/LeaseDue?currentDate=${currentDate}`)
+		.then(response => response.data.data)
+}
+
+const getPropertyByContract = (type: string) => {
+	return axios.get(`${apiHost}/UnitsSold?ContractType=${type}`).then(response => response.data.data)
 }
 
 const propertyService = {
@@ -38,7 +56,9 @@ const propertyService = {
 	addProperty,
 	updateProperty,
 	getHistory,
-	searchProperty
+	searchProperty,
+	leaseDue,
+	getPropertyByContract
 }
 
 export default propertyService
