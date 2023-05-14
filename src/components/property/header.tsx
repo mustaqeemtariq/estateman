@@ -1,16 +1,23 @@
 import { Dispatch, SetStateAction } from 'react'
-import { Tabs } from '../app/tabs'
+import { Tab, Tabs } from '../app/tabs'
 
 interface PropertyHeaderProps {
 	active: {
 		propertyDetails: boolean
 		addHistory: boolean
+		allHistory: boolean
 	}
 	setState: Dispatch<SetStateAction<string>>
 	state: string
+	showHistory?: boolean
 }
 
-export const PropertyHeader = ({ state, setState, active }: PropertyHeaderProps) => {
+export const PropertyHeader = ({
+	state,
+	setState,
+	active,
+	showHistory = false
+}: PropertyHeaderProps) => {
 	const tabs = [
 		{
 			name: 'Add Property',
@@ -23,8 +30,12 @@ export const PropertyHeader = ({ state, setState, active }: PropertyHeaderProps)
 		{
 			name: 'Add History',
 			current: state == 'Add History' ? true : false
+		},
+		showHistory && {
+			name: 'All History',
+			current: state === 'All History'
 		}
-	]
+	].filter(Boolean) as Tab[]
 
 	return (
 		<div className="flex justify-between items-center mb-4">
