@@ -9,7 +9,8 @@ const newProperty = () => {
 	const [state, setState] = useState('Add Property')
 	const [active, setActive] = useState({
 		propertyDetails: false,
-		addHistory: false
+		addHistory: false,
+		allHistory: false
 	})
 
 	return (
