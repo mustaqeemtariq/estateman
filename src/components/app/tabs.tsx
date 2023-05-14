@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import { Dispatch, SetStateAction } from 'react'
 
-interface Tab {
+export interface Tab {
 	name: string
 	current: boolean
 }
