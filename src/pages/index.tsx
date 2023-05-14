@@ -9,39 +9,33 @@ import { DashboardCard } from 'src/components/dashboard/card'
 import { DashboardHeader } from 'src/components/dashboard/header'
 import { Rent } from 'src/components/dashboard/rent'
 import { Sales } from 'src/components/dashboard/sales'
+import propertyService from 'src/services/property'
+import userService from 'src/services/user'
+import { Property, User } from 'src/types/typings'
 
-const cardData = [
-	{
-		name: 'Active Users',
-		stats: 5,
-		image: UserImage
-	},
-	{
-		name: 'For Rent',
-		stats: 20,
-		image: RentImage
-	},
-	{
-		name: 'For Sale',
-		stats: 21,
-		image: SaleImage
-	},
-	{
-		name: 'Lease Due',
-		stats: 10,
-		image: LeaseDue
-	}
-]
+interface HomeProps {
+	leaseDue: Property[]
+	rent: Property[]
+	sale: Property[]
+	users: User[]
+}
 
-export default function Home() {
+const Home = ({ leaseDue, rent, sale, users }: HomeProps) => {
+	const cardData = [
+		{ name: 'Active Users', stats: users.length, image: UserImage },
+		{ name: 'For Rent', stats: rent.length, image: RentImage },
+		{ name: 'For Sale', stats: sale.length, image: SaleImage },
+		{ name: 'Lease Due', stats: leaseDue.length, image: LeaseDue }
+	]
+
 	return (
 		<AppLayout>
 			<AppHeader />
 			<Container>
 				<DashboardHeader />
 				<div className="flex justify-center sm:flex-col xl:flex-row space-y-10 xl:space-y-0 xl:space-x-8 md:space-x-0">
-					<Sales />
-					<Rent />
+					<Sales data={sale} />
+					<Rent data={rent} />
 				</div>
 				<div className="flex justify-between mt-4">
 					{cardData.map((item, index) => (
@@ -58,3 +52,20 @@ export default function Home() {
 		</AppLayout>
 	)
 }
+
+export const getStaticProps = async () => {
+	const leaseResponse = await propertyService.leaseDue()
+	const rentResponse = await propertyService.getPropertyByContract('Rent')
+	const saleResponse = await propertyService.getPropertyByContract('Sale')
+	const userResponse = await userService.getAllUsers()
+	return {
+		props: {
+			leaseDue: leaseResponse,
+			rent: rentResponse,
+			sale: saleResponse,
+			users: userResponse
+		}
+	}
+}
+
+export default Home
