@@ -3,17 +3,17 @@ import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import * as yup from 'yup'
 
+import { toast } from 'react-hot-toast'
 import { Spinner } from 'src/components/animations/spinner'
 import { Button } from 'src/components/app/button'
 import { Input, InputNumber } from 'src/components/app/input'
 import { CityNames, UnitTypes } from 'src/constants/constants'
+import auctionService from 'src/services/auction'
 import { Auction } from 'src/types/typings'
 import { DateInput } from '../app/date'
 import FileUpload from '../app/file-upload'
 import { Radio } from '../app/radio'
 import { Select } from '../app/select'
-import auctionService from 'src/services/auction'
-import { toast } from 'react-hot-toast'
 
 const schema = yup.object<Auction>().shape({
 	Title: yup.string().required('Title is required e.g Furnished 2 Bed F 11'),
@@ -42,6 +42,7 @@ const AuctionForm = () => {
 		register,
 		control,
 		handleSubmit,
+		setValue,
 		formState: { errors }
 	} = useForm<Auction>({
 		resolver: yupResolver(schema),
@@ -52,16 +53,19 @@ const AuctionForm = () => {
 		const response = await auctionService.addAuction(data)
 		if (response.success) {
 			toast.success('Auction addded successfully')
-		}
-		else {
+		} else {
 			toast.error('Something went wrong')
+			console.log(response.message)
+
 			setUpdating(false)
 		}
 	}
 
 	const handleFormSubmit = (data: Auction) => {
+		console.log(data)
+
 		postData(data)
-		
+
 		setUpdating(true)
 	}
 
@@ -69,6 +73,10 @@ const AuctionForm = () => {
 
 	const handleUpload = (files: File[]) => {
 		setUploadedFiles([...uploadedFiles, ...files])
+	}
+
+	const handleDate = (value: string) => {
+		setValue?.('AuctionDateandTime', value)
 	}
 
 	return (
@@ -174,11 +182,12 @@ const AuctionForm = () => {
 								Auction Date & Time
 							</label>
 							<DateInput
-								type="date"
 								id="date"
+								type="datetime-local"
 								placeholder="Date"
 								autoComplete="date"
 								register={register}
+								onCalendarClick={handleDate}
 								name="AuctionDateandTime"
 								error={errors}
 								required={true}
