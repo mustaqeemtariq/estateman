@@ -1,9 +1,17 @@
-import { yupResolver } from '@hookform/resolvers/yup'
-import { Control, Controller, FieldErrors, UseFormRegister, UseFormResetField, UseFormSetValue, UseFormWatch, useForm } from 'react-hook-form'
+import {
+	Control,
+	Controller,
+	FieldErrors,
+	UseFormRegister,
+	UseFormResetField,
+	UseFormSetValue,
+	UseFormWatch
+} from 'react-hook-form'
 import { CommissionForm, Property } from 'src/types/typings'
 import { Input, InputNumber } from '../app/input'
 
 import clsx from 'clsx'
+import { useEffect } from 'react'
 import * as yup from 'yup'
 
 interface CommissionProps {
@@ -14,23 +22,41 @@ interface CommissionProps {
 	setValue?: UseFormSetValue<Property>
 	resetField?: UseFormResetField<Property>
 	watch?: UseFormWatch<Property>
+	shouldReset?: boolean
 }
 
-const Commission = ({ show, control, register, errors }: CommissionProps) => {
+const Commission = ({
+	show,
+	control,
+	register,
+	errors,
+	resetField,
+	shouldReset = false
+}: CommissionProps) => {
 	const schema = yup.object<CommissionForm>().shape({})
+
+	useEffect(() => {
+		if (shouldReset) {
+			resetField?.('AddCommision.Amount')
+			resetField?.('AddCommision.AccountNumber')
+			resetField?.('AddCommision.BankDetails')
+			resetField?.('AddCommision.Branch')
+			resetField?.('AddCommision.Cheque')
+		}
+	}, [shouldReset])
 
 	return (
 		<div className={clsx('grid grid-col-2 gap-x-8 gap-y-8', !show && 'hidden')}>
 			<div className="space-y-6">
 				<Controller
-					name={'CommissionAmount'}
+					name={'AddCommission.Amount'}
 					control={control}
 					render={({ field: { onChange, value } }) => (
 						<InputNumber
 							id="commissionprice"
 							labelText="Amount(Pkr)"
 							autoComplete="commissionprice"
-							name="CommissionAmount"
+							name="AddCommission.Amount"
 							error={errors}
 							currency={true}
 							placeholder="Enter Price"
@@ -40,14 +66,14 @@ const Commission = ({ show, control, register, errors }: CommissionProps) => {
 					)}
 				/>
 				<Controller
-					name={'AccountNumber'}
+					name={'AddCommission.AccountNumber'}
 					control={control}
 					render={({ field: { onChange, value } }) => (
 						<InputNumber
 							id="accountnumber"
 							labelText="Account Number"
 							autoComplete="accountnumber"
-							name="AccountNumber"
+							name="AddCommission.AccountNumber"
 							error={errors}
 							currency={true}
 							placeholder="Enter account number"
@@ -59,14 +85,14 @@ const Commission = ({ show, control, register, errors }: CommissionProps) => {
 			</div>
 			<div className="space-y-6">
 				<Controller
-					name={'Cheque'}
+					name={'AddCommission.Cheque'}
 					control={control}
 					render={({ field: { onChange, value } }) => (
 						<InputNumber
 							id="chequenumber"
 							labelText="Cheque #"
 							autoComplete="chequenumber"
-							name="Cheque"
+							name="AddCommission.Cheque"
 							error={errors}
 							currency={true}
 							placeholder="Enter cheque number"
@@ -80,7 +106,7 @@ const Commission = ({ show, control, register, errors }: CommissionProps) => {
 					autoComplete="branch"
 					labelText="Branch"
 					register={register}
-					name="Branch"
+					name="AddCommission.Branch"
 					error={errors}
 					autoCapitalize="false"
 					placeholder="Enter branch"
@@ -92,7 +118,7 @@ const Commission = ({ show, control, register, errors }: CommissionProps) => {
 					autoComplete="bankdetails"
 					labelText="Bank Details"
 					register={register}
-					name="BankDetails"
+					name="AddCommission.BankDetails"
 					error={errors}
 					autoCapitalize="false"
 					placeholder="Enter bank details"

@@ -8,18 +8,17 @@ import {
 	UseFormSetValue,
 	UseFormWatch
 } from 'react-hook-form'
-import { CallRecordForm, Property } from 'src/types/typings'
+import { Property } from 'src/types/typings'
 import { Input, InputNumber } from '../app/input'
 
 import { PlusIcon, XMarkIcon } from '@heroicons/react/20/solid'
 import { Dispatch, SetStateAction } from 'react'
-import * as yup from 'yup'
 import { DateInput } from '../app/date'
 
 interface CallRecordProps {
 	isFirst: boolean
 	recordCount: number
-	setRecordCount: Dispatch<SetStateAction<number>>
+	setRecordCount: Dispatch<SetStateAction<number>> | undefined
 	register?: UseFormRegister<Property>
 	errors?: FieldErrors<Property>
 	control?: Control<Property, any>
@@ -33,6 +32,7 @@ interface CallRecordProps {
 const CallRecord = ({
 	setValue,
 	getValues,
+	resetField,
 	recordCount,
 	setRecordCount,
 	isFirst,
@@ -41,19 +41,20 @@ const CallRecord = ({
 	control,
 	index
 }: CallRecordProps) => {
-	const schema = yup.object<CallRecordForm>().shape({})
-
 	const handleDate = (value: string) => {
-		setValue?.(`CallDetails.${[index]}.CallerDate`, value)
+		setValue?.(`SentCallDetails.${[index]}.CallerDate`, value)
 	}
 
 	const handleAdd = () => {
-		setRecordCount(prev => prev + 1)
+		setRecordCount?.(prev => prev + 1)
 	}
 
 	const handleRemove = () => {
-		setRecordCount(prev => prev - 1)
-		const callDetails = getValues?.(`CallDetails.${[index]}.CallerDate`)
+		setRecordCount?.(prev => prev - 1)
+		resetField?.(`SentCallDetails.${[index]}.CallerDate`)
+		resetField?.(`SentCallDetails.${[index]}.CallerFrom`)
+		resetField?.(`SentCallDetails.${[index]}.CallerName`)
+		resetField?.(`SentCallDetails.${[index]}.CallerTo`)
 	}
 
 	return (
@@ -62,14 +63,14 @@ const CallRecord = ({
 				id="date"
 				placeholder="Date"
 				autoComplete="date"
-				name={`CallDetails.${[index]}.CallerDate`}
+				name={`SentCallDetails.${[index]}.CallerDate`}
 				required={true}
 				autoCapitalize="false"
 				onCalendarClick={handleDate}
 			/>
 			<label htmlFor="phone">From: </label>
 			<Controller
-				name={`CallDetails.${[index]}.CallerFrom`}
+				name={`SentCallDetails.${[index]}.CallerFrom`}
 				control={control}
 				render={({ field: { onChange, value } }) => (
 					<InputNumber
@@ -97,7 +98,7 @@ const CallRecord = ({
 			/>
 			<label htmlFor="phone">To: </label>
 			<Controller
-				name={`CallDetails.${[index]}.CallerTo`}
+				name={`SentCallDetails.${[index]}.CallerTo`}
 				control={control}
 				render={({ field: { onChange, value } }) => (
 					<InputNumber

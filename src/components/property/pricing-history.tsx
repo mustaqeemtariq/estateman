@@ -17,7 +17,7 @@ import { DateInput } from '../app/date'
 interface PricingHistoryProps {
 	isFirst: boolean
 	priceCount: number
-	setPriceCount: Dispatch<SetStateAction<number>>
+	setPriceCount: Dispatch<SetStateAction<number>> | undefined
 	register?: UseFormRegister<Property>
 	errors?: FieldErrors<Property>
 	control?: Control<Property, any>
@@ -30,6 +30,7 @@ interface PricingHistoryProps {
 const PricingHistory = ({
 	setValue,
 	priceCount,
+	resetField,
 	setPriceCount,
 	isFirst,
 	register,
@@ -39,25 +40,27 @@ const PricingHistory = ({
 	index
 }: PricingHistoryProps) => {
 	const handleDate = (value: string) => {
-		setValue?.(`AddPricingHistory.${[index]}.HistoryYear`, value)
+		setValue?.(`SentPricingHistory.${[index]}.HistoryYear`, value)
 	}
 
-	const price = watch?.('AddPricingHistory.HistoryPrice')
-	const year = watch?.('AddPricingHistory.HistoryYear')
+	const price = watch?.('SentPricingHistory.HistoryPrice')
+	const year = watch?.('SentPricingHistory.HistoryYear')
 
 	const handleAdd = () => {
-		setPriceCount(prev => prev + 1)
+		setPriceCount?.(prev => prev + 1)
 	}
 
 	const handleRemove = () => {
-		setPriceCount(prev => prev - 1)
+		setPriceCount?.(prev => prev - 1)
+		resetField?.(`SentPricingHistory.${[index]}.HistoryPrice`)
+		resetField?.(`SentPricingHistory.${[index]}.HistoryYear`)
 	}
 
 	return (
 		<div className="flex space-x-2 items-center">
 			<label htmlFor="price">Price(Pkr) </label>
 			<Controller
-				name={`AddPricingHistory.${[index]}.HistoryPrice`}
+				name={`SentPricingHistory.${[index]}.HistoryPrice`}
 				control={control}
 				render={({ field: { onChange, value } }) => (
 					<InputNumber
@@ -83,7 +86,7 @@ const PricingHistory = ({
 				autoComplete="date"
 				register={register}
 				onCalendarClick={handleDate}
-				name={`AddPricingHistory.${[index]}.HistoryYear`}
+				name={`SentPricingHistory.${[index]}.HistoryYear`}
 				required={true}
 				autoCapitalize="false"
 			/>
