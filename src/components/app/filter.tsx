@@ -34,7 +34,17 @@ export const AppFilter = ({
 						<option value="newest">Newest</option>
 						<option value="oldest">Oldest</option>
 					</select>
-
+					<select
+						name="city"
+						onChange={handleData}
+						className="mt-1 block w-full rounded-md border-0 py-3 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 sm:text-sm sm:leading-6 outline-none">
+						<option value="">City</option>
+						{Object.values(CityNames).map(unit => (
+							<option key={unit} value={unit}>
+								{unit}
+							</option>
+						))}
+					</select>
 					<select
 						name="type"
 						onChange={handleData}
@@ -71,21 +81,10 @@ export const AppFilter = ({
 							onChange={handleData}
 							className="mt-1 block w-full rounded-md border-0 py-3 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 sm:text-sm sm:leading-6 outline-none">
 							<option value="">Status</option>
-							<option value="vacant">For Rent</option>
-							<option value="occupied">For Sale</option>
+							<option value="vacant">Vacant</option>
+							<option value="occupied">Occupied</option>
 						</select>
 					)}
-					<select
-						name="city"
-						onChange={handleData}
-						className="mt-1 block w-full rounded-md border-0 py-3 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 sm:text-sm sm:leading-6 outline-none">
-						<option value="">City</option>
-						{Object.values(CityNames).map(unit => (
-							<option key={unit} value={unit}>
-								{unit}
-							</option>
-						))}
-					</select>
 				</>
 			)}
 
