@@ -1,3 +1,4 @@
+import moment from 'moment'
 import {
 	Area,
 	CartesianGrid,
@@ -8,56 +9,88 @@ import {
 	XAxis,
 	YAxis
 } from 'recharts'
+import { Property } from 'src/types/typings'
 
-export const Sales = () => {
+interface SalesProps {
+	data: Property[]
+}
+
+interface ChartData {
+	[key: string]: {
+		year: string
+		sales: number
+	}
+}
+
+export const Sales = ({ data }: SalesProps) => {
+	const groupedData = data.reduce((acc: ChartData, curr) => {
+		const year = moment(curr.AddHistory.Date).format('YYYY')
+		if (year) {
+			if (!acc[year]) {
+				acc[year] = { year, sales: 0 }
+			}
+			acc[year].sales++
+		}
+		return acc
+	}, {})
+
+	const result = Object.values(groupedData)
+
 	return (
 		<div className="w-full">
 			<div className="mt-2 sm:p-4">
 				<h2 className="text-2xl text-gray-700 text-center uppercase">Units Sold</h2>
 			</div>
 			<div className="w-full px-1">
-				<SalesChart />
+				<SalesChart data={result} />
 			</div>
 		</div>
 	)
 }
 
-const data = [
-	{
-		year: 2020,
-		sales: 15
-	},
-	{
-		year: 2020.5,
-		sales: 22
-	},
-	{
-		year: 2021,
-		sales: 25
-	},
-	{
-		year: 2021.5,
-		sales: 30
-	},
-	{
-		year: 2021.6,
-		sales: 60
-	},
-	{
-		year: 2022,
-		sales: 20
-	},
-	{
-		year: 2022.5,
-		sales: 51
-	},
-	{
-		year: 2023,
-		sales: 60
-	}
-]
+// const data = [
+// 	{
+// 		year: 2020,
+// 		sales: 15
+// 	},
+// 	{
+// 		year: 2020.5,
+// 		sales: 22
+// 	},
+// 	{
+// 		year: 2021,
+// 		sales: 25
+// 	},
+// 	{
+// 		year: 2021.5,
+// 		sales: 30
+// 	},
+// 	{
+// 		year: 2021.6,
+// 		sales: 60
+// 	},
+// 	{
+// 		year: 2022,
+// 		sales: 20
+// 	},
+// 	{
+// 		year: 2022.5,
+// 		sales: 51
+// 	},
+// 	{
+// 		year: 2023,
+// 		sales: 60
+// 	}
+// ]
 
-const SalesChart = () => {
+interface SalesChartProps {
+	data: {
+		year: string
+		sales: number
+	}[]
+}
+
+const SalesChart = ({ data }: SalesChartProps) => {
 	return (
 		<div>
 			<ResponsiveContainer height={300}>
