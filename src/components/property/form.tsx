@@ -20,12 +20,7 @@ import { Spinner } from 'src/components/animations/spinner'
 import { Button } from 'src/components/app/button'
 import { Input, InputNumber } from 'src/components/app/input'
 import { CityNames, ContractTypes, PropertyTypes, UnitTypes } from 'src/constants/constants'
-import {
-	AddHistoryFormValues,
-	AddPropertyFormValues,
-	CommissionFormValues,
-	PropertyDetailsFormValues
-} from 'src/constants/form-defaults'
+import { AddPropertyFormValues, PropertyDetailsFormValues } from 'src/constants/form-defaults'
 import { Property } from 'src/types/typings'
 import { Checkbox } from '../app/checkbox'
 import { DateInput } from '../app/date'
@@ -42,6 +37,7 @@ interface PropertyFormProps {
 		SetStateAction<{
 			propertyDetails: boolean
 			addHistory: boolean
+			allHistory: boolean
 		}>
 	>
 	setCurrentTab: Dispatch<SetStateAction<string>>
@@ -207,46 +203,82 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 		handleSubmit,
 		watch,
 		setValue,
-		getValues,
+		resetField,
 		formState: { errors }
 	} = useForm<Property>({
 		resolver: yupResolver(schema as any),
 		context: { step: state.step },
 		defaultValues: {
 			...AddPropertyFormValues(data),
-			...PropertyDetailsFormValues(data),
-			...AddHistoryFormValues(data),
-			...CommissionFormValues(data)
+			...PropertyDetailsFormValues(data)
+			// ...AddHistoryFormValues(data),
+			// ...CommissionFormValues(data)
 		},
 		mode: 'all'
 	})
 
 	const [category, setCategory] = useState<string>()
 	const [showCommission, setShowCommission] = useState(false)
+	const [propertyImages, setPropertyImages] = useState<File[]>([])
+	const [historyImages, setHistoryImages] = useState<File[]>([])
+	const [shouldReset, setShouldReset] = useState(false)
+	const [priceCount, setPriceCount] = useState(1)
+	const [recordCount, setRecordCount] = useState(1)
+	const [propertyDate, setPropertyDate] = useState<string>('')
+	const [historyDate, setHistoryDate] = useState<string>('')
+	const [leaseDate, setLeaseDate] = useState<string>('')
 
 	let component
 
 	switch (state.step) {
 		case FormSteps.ADDPROPERTY:
 			component = (
-				<AddPropertyForm {...{ errors, register, control, watch, setCategory, setValue }} />
+				<AddPropertyForm
+					{...{
+						errors,
+						register,
+						control,
+						watch,
+						setCategory,
+						setValue,
+						data,
+						propertyDate,
+						setPropertyDate
+					}}
+				/>
 			)
 			break
 		case FormSteps.PROPERTYDETAILS:
-			component = <PropertyDetailsForm {...{ errors, register, control, category }} />
+			component = (
+				<PropertyDetailsForm
+					{...{ errors, register, control, category, data, propertyImages, setPropertyImages }}
+				/>
+			)
 			break
 		case FormSteps.ADDHISTORY:
 			component = (
 				<AddHistoryForm
 					{...{
 						errors,
+						data,
 						register,
 						control,
 						watch,
+						resetField,
+						shouldReset,
 						setValue,
-						getValues,
+						historyDate,
+						setHistoryDate,
+						leaseDate,
+						setLeaseDate,
+						historyImages,
+						setHistoryImages,
 						showCommission,
-						setShowCommission
+						setShowCommission,
+						priceCount,
+						setPriceCount,
+						recordCount,
+						setRecordCount
 					}}
 				/>
 			)
@@ -264,6 +296,7 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 		}))
 		setActive(prev => {
 			return {
+				allHistory: prev.addHistory ? true : false,
 				addHistory: prev.propertyDetails ? true : false,
 				propertyDetails: true
 			}
@@ -324,7 +357,10 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 						{showCommission && (
 							<button
 								type="button"
-								onClick={() => setShowCommission(false)}
+								onClick={() => {
+									setShouldReset(true)
+									setShowCommission(false)
+								}}
 								className="text-[#485276] px-8 border border-gray-300 rounded-md">
 								<span className="uppercase">Close</span>
 							</button>
@@ -359,8 +395,24 @@ interface FormProps {
 	watch?: UseFormWatch<Property>
 	setCategory?: Dispatch<SetStateAction<string | undefined>>
 	category?: string
+	propertyDate?: string
+	setPropertyDate?: Dispatch<SetStateAction<string>>
+	historyDate?: string
+	setHistoryDate?: Dispatch<SetStateAction<string>>
+	LeaseDate?: string
+	setLeaseDate?: Dispatch<SetStateAction<string>>
+	propertyImages?: File[]
+	setPropertyImages?: Dispatch<SetStateAction<File[]>>
+	historyImages?: File[]
+	setHistoryImages?: Dispatch<SetStateAction<File[]>>
 	showCommission?: boolean
+	shouldReset?: boolean
 	setShowCommission?: Dispatch<SetStateAction<boolean>>
+	data?: Property
+	priceCount?: number
+	setPriceCount?: Dispatch<SetStateAction<number>>
+	recordCount?: number
+	setRecordCount?: Dispatch<SetStateAction<number>>
 }
 
 const AddPropertyForm = ({
@@ -369,6 +421,9 @@ const AddPropertyForm = ({
 	control,
 	watch,
 	setCategory,
+	propertyDate,
+	setPropertyDate,
+	data,
 	setValue
 }: FormProps) => {
 	const property = watch?.('PropertyType')
@@ -380,6 +435,7 @@ const AddPropertyForm = ({
 
 	const handleDate = (value: string) => {
 		setValue?.('YearBuilt', value, { shouldValidate: true })
+		setPropertyDate?.(value)
 	}
 
 	return (
@@ -538,10 +594,11 @@ const AddPropertyForm = ({
 								render={({ field: { onChange, value } }) => (
 									<DateInput
 										id="year"
-										type="date"
+										value={data?.YearBuilt}
 										register={register}
 										onCalendarClick={handleDate}
 										placeholder="Enter year"
+										prevValue={propertyDate}
 										labelText="Year"
 										autoComplete="year"
 										name="YearBuilt"
@@ -567,56 +624,56 @@ const AddPropertyForm = ({
 											labelText="House"
 											name="PropertyCategory"
 											onChange={e => onChange(e.target.value)}
-											value="house"
-											checked={value === 'house'}
+											value="House"
+											checked={value === 'House'}
 											disabled={property !== PropertyTypes.RESIDENTIAL ? true : false}
 										/>
 										<Checkbox
 											labelText="Penthouse"
 											name="PropertyCategory"
 											onChange={e => onChange(e.target.value)}
-											value="penthouse"
-											checked={value === 'penthouse'}
+											value="Penthouse"
+											checked={value === 'Penthouse'}
 											disabled={property !== PropertyTypes.RESIDENTIAL ? true : false}
 										/>
 										<Checkbox
 											labelText="Apartment"
 											name="PropertyCategory"
 											onChange={e => onChange(e.target.value)}
-											value="apartment"
-											checked={value === 'apartment'}
+											value="Apartment"
+											checked={value === 'Apartment'}
 											disabled={property !== PropertyTypes.RESIDENTIAL ? true : false}
 										/>
 										<Checkbox
 											labelText="Studio"
 											name="PropertyCategory"
 											onChange={e => onChange(e.target.value)}
-											value="studio"
-											checked={value === 'studio'}
+											value="Studio"
+											checked={value === 'Studio'}
 											disabled={property !== PropertyTypes.RESIDENTIAL ? true : false}
 										/>
 										<Checkbox
 											labelText="Villa"
 											name="PropertyCategory"
 											onChange={e => onChange(e.target.value)}
-											value="villa"
-											checked={value === 'villa'}
+											value="Villa"
+											checked={value === 'Villa'}
 											disabled={property !== PropertyTypes.RESIDENTIAL ? true : false}
 										/>
 										<Checkbox
 											labelText="Plot"
 											name="PropertyCategory"
 											onChange={e => onChange(e.target.value)}
-											value="plot"
-											checked={value === 'plot'}
+											value="Plot"
+											checked={value === 'Plot'}
 											disabled={property !== PropertyTypes.RESIDENTIAL ? true : false}
 										/>
 										<Checkbox
 											labelText="Shop"
 											name="PropertyCategory"
 											onChange={e => onChange(e.target.value)}
-											value="shop"
-											checked={value === 'shop'}
+											value="Shop"
+											checked={value === 'Shop'}
 											disabled={
 												property !== PropertyTypes.COMMERCIAL && property !== PropertyTypes.SPECIAL
 													? true
@@ -628,7 +685,7 @@ const AddPropertyForm = ({
 											name="PropertyCategory"
 											onChange={e => onChange(e.target.value)}
 											value="plaza"
-											checked={value === 'plaza'}
+											checked={value === 'Plaza'}
 											disabled={
 												property !== PropertyTypes.COMMERCIAL && property !== PropertyTypes.SPECIAL
 													? true
@@ -639,8 +696,8 @@ const AddPropertyForm = ({
 											labelText="Agriculture Land"
 											name="PropertyCategory"
 											onChange={e => onChange(e.target.value)}
-											value="agriculture land"
-											checked={value === 'agriculture land'}
+											value="Agriculture land"
+											checked={value === 'Agriculture land'}
 											disabled={
 												property !== PropertyTypes.COMMERCIAL && property !== PropertyTypes.SPECIAL
 													? true
@@ -659,11 +716,19 @@ const AddPropertyForm = ({
 	)
 }
 
-const PropertyDetailsForm = ({ register, errors, control, category }: FormProps) => {
-	const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
-
+const PropertyDetailsForm = ({
+	register,
+	errors,
+	control,
+	category,
+	data,
+	propertyImages,
+	setPropertyImages
+}: FormProps) => {
 	const handleUpload = (files: File[]) => {
-		setUploadedFiles([...uploadedFiles, ...files])
+		if (propertyImages) {
+			setPropertyImages?.([...propertyImages, ...files])
+		}
 	}
 
 	return (
@@ -727,6 +792,8 @@ const PropertyDetailsForm = ({ register, errors, control, category }: FormProps)
 						<div className="space-y-2">
 							<FileUpload
 								onUpload={handleUpload}
+								data={propertyImages}
+								setData={setPropertyImages}
 								name="propertyimages"
 								labelText="Upload Images"
 								error={errors}
@@ -989,19 +1056,24 @@ const AddHistoryForm = ({
 	register,
 	errors,
 	control,
+	resetField,
+	shouldReset,
+	historyImages,
+	setHistoryImages,
 	watch,
 	setValue,
 	showCommission,
 	setShowCommission,
-	getValues
+	getValues,
+	recordCount = 1,
+	setRecordCount,
+	priceCount = 1,
+	setPriceCount
 }: FormProps) => {
-	const [priceCount, setPriceCount] = useState(1)
-	const [recordCount, setRecordCount] = useState(1)
-
-	const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
-
 	const handleUpload = (files: File[]) => {
-		setUploadedFiles([...uploadedFiles, ...files])
+		if (historyImages) {
+			setHistoryImages?.([...historyImages, ...files])
+		}
 	}
 
 	const handleDate = (value: string) => {
@@ -1119,6 +1191,8 @@ const AddHistoryForm = ({
 					<FileUpload
 						onUpload={handleUpload}
 						labelText="Upload Images"
+						data={historyImages}
+						setData={setHistoryImages}
 						name="images"
 						id="historyimage"
 						placeholder="Select upto 10 files, File Type: jpg, png, gif, pdf"
@@ -1151,6 +1225,7 @@ const AddHistoryForm = ({
 								key={index}
 								isFirst={index == 0}
 								recordCount={recordCount}
+								resetField={resetField}
 								setRecordCount={setRecordCount}
 								register={register}
 								control={control}
@@ -1167,6 +1242,7 @@ const AddHistoryForm = ({
 							priceCount={priceCount}
 							setPriceCount={setPriceCount}
 							register={register}
+							resetField={resetField}
 							control={control}
 							errors={errors}
 							watch={watch}
@@ -1180,7 +1256,9 @@ const AddHistoryForm = ({
 				<Commission
 					show={showCommission ?? false}
 					register={register}
+					shouldReset={shouldReset}
 					control={control}
+					resetField={resetField}
 					errors={errors}
 				/>
 			</div>
