@@ -5,14 +5,14 @@ export const enum UserRightTypes {
 }
 
 export const enum ContractTypes {
-	SALE = 'sale',
-	RENT = 'rent'
+	SALE = 'Sale',
+	RENT = 'Rent'
 }
 
 export const enum PropertyTypes {
-	RESIDENTIAL = 'residential',
-	COMMERCIAL = 'commercial',
-	SPECIAL = 'special_commercial'
+	RESIDENTIAL = 'Residential',
+	COMMERCIAL = 'Commercial',
+	SPECIAL = 'Special Commercial'
 }
 
 export enum UnitTypes {
@@ -24,18 +24,15 @@ export enum UnitTypes {
 	MURABBA = 'Murabba'
 }
 
-
-
 export enum CityNames {
-    KARACHI = 'Karachi',
-    LAHORE = 'Lahore',
-    ISLAMABAD = 'Islamabad',
-    RAWALPINDI = 'Rawalpindi',
-    PESHAWAR = 'Peshawar',
-    QUETTA = 'Quetta',
-    FAISALABAD = 'Faisalabad',
-    MULTAN = 'Multan',
-    HYDERABAD = 'Hyderabad',
-    GUJRANWALA = 'Gujranwala'
-  }
-
+	KARACHI = 'Karachi',
+	LAHORE = 'Lahore',
+	ISLAMABAD = 'Islamabad',
+	RAWALPINDI = 'Rawalpindi',
+	PESHAWAR = 'Peshawar',
+	QUETTA = 'Quetta',
+	FAISALABAD = 'Faisalabad',
+	MULTAN = 'Multan',
+	HYDERABAD = 'Hyderabad',
+	GUJRANWALA = 'Gujranwala'
+}
