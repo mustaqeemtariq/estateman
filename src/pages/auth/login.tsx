@@ -12,7 +12,9 @@ import { Checkbox } from 'src/components/app/checkbox'
 import { Input } from 'src/components/app/input'
 import { AppLayout } from 'src/components/app/layout'
 import { ShowHidePassword } from 'src/components/password'
-import authService from 'src/services/login'
+import { useAppDispatch } from 'src/hooks/rtk'
+import { login } from 'src/slices/auth'
+import { User } from 'src/types/typings'
 import * as yup from 'yup'
 
 const schema = yup.object().shape({
@@ -33,22 +35,20 @@ const Login = () => {
 	const router = useRouter()
 	const [isLoading, setLoading] = useState(false)
 	const [togglePassword, setTogglePassword] = useState(false)
+	const dispatch = useAppDispatch()
 
-	const loginUser = async (Username: string, Password: string) => {
-		const response = await authService.login(Username, Password)
-	
-		if (response.success) {
-			toast.success("Successfully Login")
-			router.push('/')
-		} else {
-			toast.error("Invalid Credentials")
-			setLoading(false)
-		}
+	const loginUser = async (user: User) => {
+		dispatch(login(user))
+			.then(() => {
+				toast.success('Successfully Login')
+				router.push('/')
+			})
+			.catch(error => toast.error('Login Failed'))
+			.finally(() => setLoading(false))
 	}
 
 	const handleFormSubmit = (data: any) => {
-		const { Username, Password } = data
-		loginUser(Username, Password)
+		loginUser(data)
 		setLoading(true)
 	}
 
