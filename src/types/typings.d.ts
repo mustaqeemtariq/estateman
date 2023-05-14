@@ -4,14 +4,17 @@ interface User {
 	id: string
 	Username: string
 	Email: string
+	Password: string
 	Contact: string
 }
 
-interface Users {
-	[id: string]: Mother
+interface Auth {
+	username: string
+	accessToken: string
 }
 
 interface RootReducerState {
+	user: { auth: Auth }
 	db: RootDBState
 	users: Users
 }
@@ -20,6 +23,26 @@ interface RootDBState {
 	client_id: string
 	initialized: boolean
 	queue: {}
+}
+
+type RootReducerState = {
+	auth: User
+	db: DbState
+}
+
+type Users = {
+	[id: number]: User
+}
+
+type Properties = {
+	[_id: number]: Property
+}
+
+type DbState = {
+	users: Users
+	properties: Properties
+	connected: boolean
+	lastSyncedOn: number
 }
 
 type UserForm = User & {
@@ -32,6 +55,7 @@ type UserForm = User & {
 }
 
 type AddPropertyForm = {
+	_id: string
 	Title: string
 	ContractType: ContractTypes
 	PropertyType: PropertyTypes
@@ -75,8 +99,18 @@ type AddHistoryForm = {
 	AddDetails?: string
 	images?: string[]
 	CallType?: string
-	CallDetails?: CallRecordForm
-	AddPricingHistory?: PricingHistoryForm
+	SentCallDetails?: CallRecordForm
+	CallDetails?: {
+		name: string
+		from: string
+		to: string
+		date: string
+	}[]
+	SentPricingHistory?: PricingHistoryForm
+	AddPricingHistroy?: {
+		year: string
+		price: string
+	}[]
 }
 
 type CallRecordForm = {
@@ -111,7 +145,7 @@ type Property = AddPropertyForm &
 	CommissionForm & {
 		PropertyDetails: PropertyDetailsForm
 		AddHistory: AddHistoryForm
-		AddCommission: CommissionForm
+		AddCommision: CommissionForm
 	}
 
 type Auction = {
