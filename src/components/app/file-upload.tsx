@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { InputHTMLAttributes, useState } from 'react'
+import { Dispatch, InputHTMLAttributes, SetStateAction, useState } from 'react'
 import { FieldError, FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form'
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -10,6 +10,8 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 	error?: FieldErrors<FieldValues>
 	controllerError?: FieldError | undefined
 	required?: boolean
+	data?: File[]
+	setData?: Dispatch<SetStateAction<File[]>>
 	onUpload: (files: File[]) => void
 }
 
@@ -17,12 +19,14 @@ const FileUpload = ({
 	labelText,
 	required,
 	onUpload,
+	data,
+	setData,
 	name,
 	error,
 	placeholder,
 	...props
 }: InputProps) => {
-	const [files, setFiles] = useState<File[]>([])
+	const [files, setFiles] = useState<File[]>(data ?? [])
 
 	const validFileTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf']
 
@@ -88,6 +92,7 @@ const FileUpload = ({
 									const newFiles = [...files]
 									newFiles.splice(index, 1)
 									setFiles(newFiles)
+									setData?.(newFiles)
 								}}>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"

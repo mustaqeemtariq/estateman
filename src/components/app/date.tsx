@@ -1,5 +1,6 @@
 import { CalendarDaysIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
+import moment from 'moment'
 import { InputHTMLAttributes, useEffect, useState } from 'react'
 import { FieldError, FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form'
 
@@ -14,6 +15,8 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 	renderLabel?: boolean
 	required?: boolean
 	year?: boolean
+	value?: string
+	prevValue?: string
 	onCalendarClick?: (value: string) => void
 }
 
@@ -21,11 +24,13 @@ export const DateInput = ({
 	labelText,
 	index,
 	value,
+	type = 'date',
 	name,
 	placeholder,
 	disabled,
 	register,
 	onCalendarClick,
+	prevValue,
 	year,
 	error,
 	renderLabel = true,
@@ -35,10 +40,12 @@ export const DateInput = ({
 }: InputProps) => {
 	const errorText = error?.[name]?.message as string
 
-	const [date, setDate] = useState<string>('')
+	const [date, setDate] = useState<string>(value ?? '')
 
 	useEffect(() => {
-		setDate('')
+		if (disabled) {
+			setDate('')
+		}
 	}, [disabled])
 
 	const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,10 +57,10 @@ export const DateInput = ({
 			onCalendarClick?.(year.toString())
 			onChange?.(event)
 		} else {
-			const formattedDate = `${dateValue.getDate()} ${dateValue.toLocaleString('default', {
-				month: 'short'
-			})}, ${dateValue.getFullYear()}`
-
+			let formattedDate = moment(value).format('DD MMM, YYYY')
+			if (type === 'datetime-local') {
+				formattedDate = moment(value).format('DD MMM, YYYY  h:mm A')
+			}
 			if (dateValue.toString() === 'Invalid Date') {
 				setDate('')
 				onCalendarClick?.('')
@@ -75,7 +82,7 @@ export const DateInput = ({
 			<div className="mt-1 relative flex items-center">
 				<input
 					{...props}
-					type="date"
+					type={type ?? date}
 					onChange={handleDateChange}
 					placeholder={placeholder}
 					disabled={disabled}
@@ -88,10 +95,9 @@ export const DateInput = ({
 
 				<input
 					type="text"
-					{...(register?.(name) ?? {})}
 					placeholder={placeholder}
 					disabled
-					value={date ?? ''}
+					value={prevValue || date}
 					className={clsx(
 						'block placeholder-gray-500 w-full  bg-[#E6E6E6] rounded-md border border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm'
 					)}
@@ -99,7 +105,7 @@ export const DateInput = ({
 				<div
 					className="absolute right-1"
 					onClick={() => {
-						const dateInput = document.querySelector('input[type="date"]') as HTMLInputElement
+						const dateInput = document.querySelector(`input[type=${type}]`) as HTMLInputElement
 						dateInput.click()
 					}}>
 					<CalendarDaysIcon className="h-5 w-5 stroke-black cursor-pointer" aria-hidden="true" />

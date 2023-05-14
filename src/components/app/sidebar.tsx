@@ -35,8 +35,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 			current: false,
 			children: [
 				{ name: 'View All Properties', href: '/property/list' },
-				{ name: 'Lease (Rental)', href: '/lease' },
-				{ name: 'On Sale', href: '/sale' },
+				{ name: 'Lease (Rental)', href: '/property/lease' },
+				{ name: 'On Sale', href: '/property/sold' },
 				{ name: 'Add Property', href: '/property/new' }
 			]
 		},
@@ -54,13 +54,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 			name: 'Signed Lease (Rental)',
 			icon: BsBuildingFillUp,
 			current: false,
-			href: '/lease'
+			href: '/property/lease'
 		},
 		{
 			name: 'Units Sold',
 			icon: BsBuildingFillLock,
 			current: false,
-			href: '/units'
+			href: '/property/sold'
 		}
 	]
 

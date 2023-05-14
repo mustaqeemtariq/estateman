@@ -30,6 +30,7 @@ export const Select: React.FC<SelectProps> = ({
 	...restProp
 }) => {
 	const errorText = errors?.[name]?.message as string
+
 	return (
 		<div className="relative w-full">
 			<label htmlFor="location" className="block text-gray-900">
