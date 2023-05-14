@@ -9,6 +9,7 @@ import { AppLayout } from 'src/components/app/layout'
 
 import { Search } from 'src/components/app/search-input'
 import { Table } from 'src/components/app/table'
+import { useAppSelector } from 'src/hooks/rtk'
 import userService from 'src/services/user'
 import { User } from 'src/types/typings'
 
@@ -19,6 +20,7 @@ interface UserProps {
 const ListUsers = ({ usersData }: UserProps) => {
 	const [searchText, setSearchText] = useState('')
 
+	const users = useAppSelector(state => state.db.users)
 	const deleteUser = async (id: string) => {
 		const response = await userService.deleteUser(id)
 		if (response.success) {
