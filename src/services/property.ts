@@ -14,9 +14,10 @@ const getLeaseProperties = () => {
 const addProperty = (data: Property) => {
 	return axios
 		.post(`${apiHost}/ADDProperty`, {
-			data
+			...data
 		})
 		.then(response => response.data)
+		.catch(err => err.response.data)
 }
 
 const updateProperty = (id: string, data: Property) => {

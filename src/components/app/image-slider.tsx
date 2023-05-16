@@ -18,7 +18,7 @@ export const ImageSlider = ({ images, type }: ImageSliderProps) => {
 	const visibleImages = images.slice(currentIndex, currentIndex + 5)
 
 	return (
-		<div className="relative flex items-center">
+		<div className="relative flex items-center justify-center">
 			{type === 'slider' && (
 				<Image src={images[currentIndex]} alt="slider" className="h-60 w-full" />
 			)}

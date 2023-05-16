@@ -88,7 +88,7 @@ export const DateInput = ({
 					disabled={disabled}
 					id={index}
 					className={clsx(
-						'block opacity-0 absolute z-50 placeholder-[#0D0C18] w-full  bg-[#E6E6E6] rounded-md border border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm',
+						'block opacity-0 absolute z-50 placeholder-[#0D0C18] w-full bg-[#E6E6E6] rounded-md border border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm',
 						disabled && 'placeholder-gray-500'
 					)}
 				/>
@@ -103,12 +103,12 @@ export const DateInput = ({
 					)}
 				/>
 				<div
-					className="absolute right-1"
+					className="absolute w-full flex justify-end pr-2 cursor-pointer"
 					onClick={() => {
 						const dateInput = document.querySelector(`input[type=${type}]`) as HTMLInputElement
 						dateInput.click()
 					}}>
-					<CalendarDaysIcon className="h-5 w-5 stroke-black cursor-pointer" aria-hidden="true" />
+					<CalendarDaysIcon className={clsx("h-5 w-5 stroke-black cursor-pointer", disabled && 'stroke-gray-500')} aria-hidden="true" />
 				</div>
 			</div>
 

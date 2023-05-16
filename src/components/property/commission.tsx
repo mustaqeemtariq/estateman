@@ -3,7 +3,6 @@ import {
 	Controller,
 	FieldErrors,
 	UseFormRegister,
-	UseFormResetField,
 	UseFormSetValue,
 	UseFormWatch
 } from 'react-hook-form'
@@ -11,7 +10,6 @@ import { CommissionForm, Property } from 'src/types/typings'
 import { Input, InputNumber } from '../app/input'
 
 import clsx from 'clsx'
-import { useEffect } from 'react'
 import * as yup from 'yup'
 
 interface CommissionProps {
@@ -20,30 +18,11 @@ interface CommissionProps {
 	errors?: FieldErrors<Property>
 	control?: Control<Property, any>
 	setValue?: UseFormSetValue<Property>
-	resetField?: UseFormResetField<Property>
 	watch?: UseFormWatch<Property>
-	shouldReset?: boolean
 }
 
-const Commission = ({
-	show,
-	control,
-	register,
-	errors,
-	resetField,
-	shouldReset = false
-}: CommissionProps) => {
+const Commission = ({ show, control, register, errors }: CommissionProps) => {
 	const schema = yup.object<CommissionForm>().shape({})
-
-	useEffect(() => {
-		if (shouldReset) {
-			resetField?.('AddCommision.Amount')
-			resetField?.('AddCommision.AccountNumber')
-			resetField?.('AddCommision.BankDetails')
-			resetField?.('AddCommision.Branch')
-			resetField?.('AddCommision.Cheque')
-		}
-	}, [shouldReset])
 
 	return (
 		<div className={clsx('grid grid-col-2 gap-x-8 gap-y-8', !show && 'hidden')}>

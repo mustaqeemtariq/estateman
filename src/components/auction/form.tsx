@@ -18,21 +18,12 @@ import { Select } from '../app/select'
 const schema = yup.object<Auction>().shape({
 	Title: yup.string().required('Title is required e.g Furnished 2 Bed F 11'),
 	Auctioneer: yup.string().required('Please select at least one option'),
-	ContactPerson: yup.string().required('Name is required'),
-	Location: yup.string().required('Location is required'),
 	LandArea: yup.string().required('Area is required'),
 	Units: yup.string().required('Select a unit'),
-	ReservePrice: yup.string().required('Price is required'),
-	PlaceofAuction: yup.string().required('Place Of Auction is required'),
 	City: yup
 		.string()
 		.min(1, 'Please select at least one city')
 		.required('Please select at least one city'),
-	ContactNumber: yup
-		.string()
-		.required('Contact number is a required field')
-		.min(11, 'Phone number should be 11 digits')
-		.max(11, 'Phone number should be 11 digits')
 })
 
 const AuctionForm = () => {
@@ -62,11 +53,9 @@ const AuctionForm = () => {
 	}
 
 	const handleFormSubmit = (data: Auction) => {
-		console.log(data)
-
+		setUpdating(true)
 		postData(data)
 
-		setUpdating(true)
 	}
 
 	const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
@@ -116,7 +105,9 @@ const AuctionForm = () => {
 								control={control}
 								render={({ field: { onChange, value } }) => (
 									<div className="flex flex-col w-full space-y-4">
-										<label htmlFor="Auctioneer">Auctioneer</label>
+										<label htmlFor="Auctioneer">Auctioneer
+										<span style={{ color: 'red' }}> *</span></label>
+										
 										<div className="flex flex-row items-center gap-x-14">
 											<Radio
 												labelText="Bank"
@@ -166,7 +157,6 @@ const AuctionForm = () => {
 								register={register}
 								name="Society"
 								errors={errors}
-								required={true}
 								className="bg-[#E8E8E8]"
 								autoCapitalize="false">
 								<option value="">Select a Society</option>
@@ -210,18 +200,18 @@ const AuctionForm = () => {
 						/>
 
 						<div className="flex w-full space-x-2 justify-between">
-							<div className="flex flex-col w-full">
-								<label htmlFor="balance">Balance(Pkr) </label>
+							
 								<Controller
 									name={'Balance'}
 									control={control}
 									render={({ field: { onChange, value } }) => (
 										<InputNumber
 											id="balance"
+											labelText='Balance'
 											autoComplete="balance"
 											name="Balance"
 											error={errors}
-											required={true}
+											
 											placeholder="0"
 											onChange={onChange}
 											value={value}
@@ -229,9 +219,8 @@ const AuctionForm = () => {
 										/>
 									)}
 								/>
-							</div>
-							<div className="flex flex-col w-full">
-								<label htmlFor="reservedPrice">Reserve Price(Pkr) </label>
+							
+							
 								<Controller
 									name={'ReservePrice'}
 									control={control}
@@ -240,8 +229,9 @@ const AuctionForm = () => {
 											id="reservedPrice"
 											autoComplete="reservedPrice"
 											name="reservedPrice"
+											labelText='Reserve Price(Pkr)'
 											error={errors}
-											required={true}
+									
 											placeholder="0"
 											onChange={onChange}
 											value={value}
@@ -249,13 +239,13 @@ const AuctionForm = () => {
 										/>
 									)}
 								/>
-							</div>
+							
 						</div>
 					</div>
 					<div className="flex sm:space-x-8 max-sm:flex-col">
 						<div className="flex space-x-2 w-full">
-							<div className="flex flex-col w-full">
-								<label htmlFor="balance">Area</label>
+						
+								
 								<Controller
 									name={'LandArea'}
 									control={control}
@@ -263,7 +253,8 @@ const AuctionForm = () => {
 										<InputNumber
 											id="area"
 											autoComplete="area"
-											name="area"
+											labelText='Area'
+											name="LandArea"
 											error={errors}
 											required={true}
 											placeholder="0"
@@ -272,7 +263,7 @@ const AuctionForm = () => {
 										/>
 									)}
 								/>
-							</div>
+							
 							<Select
 								id="unit"
 								labelText="Unit"

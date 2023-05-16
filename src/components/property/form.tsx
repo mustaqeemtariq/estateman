@@ -6,6 +6,7 @@ import {
 	FieldErrors,
 	UseFormGetValues,
 	UseFormRegister,
+	UseFormReset,
 	UseFormResetField,
 	UseFormSetValue,
 	UseFormWatch,
@@ -16,11 +17,19 @@ import * as yup from 'yup'
 
 import { PlusIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
+import { useRouter } from 'next/router'
+import { toast } from 'react-hot-toast'
 import { Spinner } from 'src/components/animations/spinner'
 import { Button } from 'src/components/app/button'
 import { Input, InputNumber } from 'src/components/app/input'
 import { CityNames, ContractTypes, PropertyTypes, UnitTypes } from 'src/constants/constants'
-import { AddPropertyFormValues, PropertyDetailsFormValues } from 'src/constants/form-defaults'
+import {
+	AddHistoryFormValues,
+	AddPropertyFormValues,
+	CommissionFormValues,
+	PropertyDetailsFormValues
+} from 'src/constants/form-defaults'
+import propertyService from 'src/services/property'
 import { Property } from 'src/types/typings'
 import { Checkbox } from '../app/checkbox'
 import { DateInput } from '../app/date'
@@ -44,11 +53,16 @@ interface PropertyFormProps {
 	data?: Property
 }
 
+export interface HistoryDate {
+	[index: string]: {
+		date: string
+	}
+}
+
 enum FormSteps {
 	ADDPROPERTY = 1,
 	PROPERTYDETAILS = 2,
-	ADDHISTORY = 3,
-	COMPLETE
+	ADDHISTORY = 3
 }
 
 type StateType = {
@@ -202,6 +216,7 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 		control,
 		handleSubmit,
 		watch,
+		reset,
 		setValue,
 		resetField,
 		formState: { errors }
@@ -210,9 +225,9 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 		context: { step: state.step },
 		defaultValues: {
 			...AddPropertyFormValues(data),
-			...PropertyDetailsFormValues(data)
-			// ...AddHistoryFormValues(data),
-			// ...CommissionFormValues(data)
+			...PropertyDetailsFormValues(data),
+			...AddHistoryFormValues(data),
+			...CommissionFormValues(data)
 		},
 		mode: 'all'
 	})
@@ -221,12 +236,13 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 	const [showCommission, setShowCommission] = useState(false)
 	const [propertyImages, setPropertyImages] = useState<File[]>([])
 	const [historyImages, setHistoryImages] = useState<File[]>([])
-	const [shouldReset, setShouldReset] = useState(false)
 	const [priceCount, setPriceCount] = useState(1)
 	const [recordCount, setRecordCount] = useState(1)
 	const [propertyDate, setPropertyDate] = useState<string>('')
 	const [historyDate, setHistoryDate] = useState<string>('')
 	const [leaseDate, setLeaseDate] = useState<string>('')
+	const [callDate, setCallDate] = useState<HistoryDate>({ 0: { date: '' } })
+	const [priceDate, setPriceDate] = useState<HistoryDate>({ 0: { date: '' } })
 
 	let component
 
@@ -264,13 +280,16 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 						register,
 						control,
 						watch,
-						resetField,
-						shouldReset,
 						setValue,
+						reset,
 						historyDate,
 						setHistoryDate,
 						leaseDate,
 						setLeaseDate,
+						callDate,
+						setCallDate,
+						priceDate,
+						setPriceDate,
 						historyImages,
 						setHistoryImages,
 						showCommission,
@@ -290,10 +309,13 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 	const renderComponent = component
 
 	const nextStep = handleSubmit(data => {
-		setState(prevState => ({
-			...prevState,
-			step: prevState.step + 1
-		}))
+		{
+			!showCommission &&
+				setState(prevState => ({
+					...prevState,
+					step: prevState.step + 1
+				}))
+		}
 		setActive(prev => {
 			return {
 				allHistory: prev.addHistory ? true : false,
@@ -333,19 +355,88 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 	}, [currentTab])
 
 	const [isUpdating, setUpdating] = useState(false)
+	const router = useRouter()
+
+	const addProperty = async (data: Property) => {
+		const response = await propertyService.addProperty(data)
+		if (response.success) {
+			toast.success('Property added successfully')
+			router.push('/property/history')
+		} else {
+			toast.error('Property not saved')
+			console.log('dsssssssssss', response)
+		}
+	}
 
 	const onSubmit = handleSubmit(data => {
+		data.PropertyDetails = {
+			City: data.City,
+			Housenumber: data.Housenumber,
+			Streetno: data?.Streetno,
+			Society: data?.Society,
+			places: data.places,
+			Sector: data.Sector,
+			Bed: data.Bed,
+			Bath: data.Bath,
+			Kitchen: data.Kitchen,
+			Gas: data.Gas,
+			Electricity: data.Electricity,
+			images: data.propertyImages
+		}
+
+		data.AddHistory = {
+			Date: data.Date,
+			OccupancyStatus: data.OccupancyStatus,
+			LeaseExpiringOn: data.LeaseExpiringOn,
+			AddDetails: data.AddDetails,
+			images: data.images,
+			CallType: data.CallType
+		}
+
+		Object.values(data?.SentCallDetails || {}).map((item, index) => {
+			if (data.AddHistory) {
+				if (index == 0) {
+					data.AddHistory.CallDetails = [
+						{ Name: item.Name, To: item.To, From: item.From, Date: item.Date }
+					]
+				} else if (data.AddHistory.CallDetails) {
+					data.AddHistory.CallDetails.push({
+						Name: item.Name,
+						To: item.To,
+						From: item.From,
+						Date: item.Date
+					})
+				}
+			}
+		})
+		Object.values(data?.SentPricingHistory || {}).map((item, index) => {
+			if (data.AddHistory) {
+				if (index == 0) {
+					data.AddHistory.AddPricingHistory = [{ year: item.year, price: item.price }]
+				} else if (data.AddHistory.AddPricingHistory) {
+					data.AddHistory.AddPricingHistory.push({ year: item.year, price: item.price })
+				}
+			}
+		})
+
 		console.log('DDDDDD', data)
 
+		// addProperty(data)
 		// setUpdating(true)
 	})
+
+	const handleCommissionReset = () => {
+		reset({
+			AddCommission: undefined
+		})
+	}
 
 	return (
 		<div className="px-4 sm:px-4 lg:px-4">
 			<form
 				className="space-y-2 mb-3 sm:w-full w-full"
 				onSubmit={event => {
-					if (state.step === FormSteps.COMPLETE) {
+					if (state.step === FormSteps.ADDHISTORY) {
 						onSubmit(event)
 					} else {
 						setShowCommission(false)
@@ -358,7 +449,7 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 							<button
 								type="button"
 								onClick={() => {
-									setShouldReset(true)
+									handleCommissionReset()
 									setShowCommission(false)
 								}}
 								className="text-[#485276] px-8 border border-gray-300 rounded-md">
@@ -401,12 +492,16 @@ interface FormProps {
 	setHistoryDate?: Dispatch<SetStateAction<string>>
 	LeaseDate?: string
 	setLeaseDate?: Dispatch<SetStateAction<string>>
+	callDate?: HistoryDate
+	setCallDate?: Dispatch<SetStateAction<HistoryDate>>
+	priceDate?: HistoryDate
+	setPriceDate?: Dispatch<SetStateAction<HistoryDate>>
 	propertyImages?: File[]
+	reset?: UseFormReset<Property>
 	setPropertyImages?: Dispatch<SetStateAction<File[]>>
 	historyImages?: File[]
 	setHistoryImages?: Dispatch<SetStateAction<File[]>>
 	showCommission?: boolean
-	shouldReset?: boolean
 	setShowCommission?: Dispatch<SetStateAction<boolean>>
 	data?: Property
 	priceCount?: number
@@ -684,7 +779,7 @@ const AddPropertyForm = ({
 											labelText="Plaza"
 											name="PropertyCategory"
 											onChange={e => onChange(e.target.value)}
-											value="plaza"
+											value="Plaza"
 											checked={value === 'Plaza'}
 											disabled={
 												property !== PropertyTypes.COMMERCIAL && property !== PropertyTypes.SPECIAL
@@ -794,7 +889,7 @@ const PropertyDetailsForm = ({
 								onUpload={handleUpload}
 								data={propertyImages}
 								setData={setPropertyImages}
-								name="propertyimages"
+								name="propertyImages"
 								labelText="Upload Images"
 								error={errors}
 								placeholder="Upload image file"
@@ -1055,11 +1150,19 @@ const PropertyDetailsForm = ({
 const AddHistoryForm = ({
 	register,
 	errors,
+	reset,
 	control,
 	resetField,
-	shouldReset,
 	historyImages,
 	setHistoryImages,
+	LeaseDate,
+	setLeaseDate,
+	callDate,
+	setCallDate,
+	priceDate,
+	setPriceDate,
+	historyDate,
+	setHistoryDate,
 	watch,
 	setValue,
 	showCommission,
@@ -1076,8 +1179,13 @@ const AddHistoryForm = ({
 		}
 	}
 
+	const handleHistoryDate = (value: string) => {
+		setHistoryDate?.(value)
+	}
+
 	const handleDate = (value: string) => {
 		setValue?.('LeaseExpiringOn', value, { shouldValidate: true })
+		setLeaseDate?.(value)
 	}
 
 	const callRecord = watch?.('CallType')
@@ -1090,8 +1198,10 @@ const AddHistoryForm = ({
 					labelText="Date"
 					type="date"
 					id="historydate"
+					prevValue={historyDate}
 					autoComplete="historydate"
 					name="Date"
+					onCalendarClick={handleHistoryDate}
 					placeholder="2 Jan, 2023"
 					autoCapitalize="false"
 				/>
@@ -1143,6 +1253,7 @@ const AddHistoryForm = ({
 							register={register}
 							onCalendarClick={handleDate}
 							error={errors}
+							prevValue={LeaseDate}
 							labelText="Lease Expiring on"
 							id="leaseexpiry"
 							autoComplete="leaseexpiry"
@@ -1225,8 +1336,11 @@ const AddHistoryForm = ({
 								key={index}
 								isFirst={index == 0}
 								recordCount={recordCount}
+								reset={reset}
 								resetField={resetField}
 								setRecordCount={setRecordCount}
+								callDate={callDate}
+								setCallDate={setCallDate}
 								register={register}
 								control={control}
 								errors={errors}
@@ -1243,6 +1357,8 @@ const AddHistoryForm = ({
 							setPriceCount={setPriceCount}
 							register={register}
 							resetField={resetField}
+							priceDate={priceDate}
+							setPriceDate={setPriceDate}
 							control={control}
 							errors={errors}
 							watch={watch}
@@ -1256,9 +1372,7 @@ const AddHistoryForm = ({
 				<Commission
 					show={showCommission ?? false}
 					register={register}
-					shouldReset={shouldReset}
 					control={control}
-					resetField={resetField}
 					errors={errors}
 				/>
 			</div>

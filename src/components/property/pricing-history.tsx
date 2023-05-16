@@ -3,6 +3,7 @@ import {
 	Controller,
 	FieldErrors,
 	UseFormRegister,
+	UseFormReset,
 	UseFormResetField,
 	UseFormSetValue,
 	UseFormWatch
@@ -13,6 +14,7 @@ import { InputNumber } from '../app/input'
 import { PlusIcon, XMarkIcon } from '@heroicons/react/20/solid'
 import { Dispatch, SetStateAction } from 'react'
 import { DateInput } from '../app/date'
+import { HistoryDate } from './form'
 
 interface PricingHistoryProps {
 	isFirst: boolean
@@ -23,28 +25,34 @@ interface PricingHistoryProps {
 	control?: Control<Property, any>
 	setValue?: UseFormSetValue<Property>
 	resetField?: UseFormResetField<Property>
+	priceDate?: HistoryDate
+	setPriceDate?: Dispatch<SetStateAction<HistoryDate>>
 	watch?: UseFormWatch<Property>
+	reset?: UseFormReset<Property>
 	index: number
 }
 
 const PricingHistory = ({
 	setValue,
 	priceCount,
-	resetField,
 	setPriceCount,
+	priceDate,
+	setPriceDate,
 	isFirst,
 	register,
 	errors,
 	control,
-	watch,
 	index
 }: PricingHistoryProps) => {
 	const handleDate = (value: string) => {
-		setValue?.(`SentPricingHistory.${[index]}.HistoryYear`, value)
+		setValue?.(`SentPricingHistory.${[index]}.year`, value)
+		setPriceDate?.(prevData => ({
+			...prevData,
+			[index]: {
+				date: value
+			}
+		}))
 	}
-
-	const price = watch?.('SentPricingHistory.HistoryPrice')
-	const year = watch?.('SentPricingHistory.HistoryYear')
 
 	const handleAdd = () => {
 		setPriceCount?.(prev => prev + 1)
@@ -52,21 +60,29 @@ const PricingHistory = ({
 
 	const handleRemove = () => {
 		setPriceCount?.(prev => prev - 1)
-		resetField?.(`SentPricingHistory.${[index]}.HistoryPrice`)
-		resetField?.(`SentPricingHistory.${[index]}.HistoryYear`)
+		setPriceDate?.(prevData => ({
+			...prevData,
+			[index]: {
+				date: undefined
+			}
+		}))
+		setValue?.(`SentPricingHistory.${index}.year`, '')
+		setValue?.(`SentPricingHistory.${index}.price`, '')
 	}
+
+	const prevValue = priceDate?.[index]?.date || ''
 
 	return (
 		<div className="flex space-x-2 items-center">
 			<label htmlFor="price">Price(Pkr) </label>
 			<Controller
-				name={`SentPricingHistory.${[index]}.HistoryPrice`}
+				name={`SentPricingHistory.${[index]}.price`}
 				control={control}
 				render={({ field: { onChange, value } }) => (
 					<InputNumber
 						id="price"
 						autoComplete="price"
-						name={`HistoryPrice`}
+						name={`price`}
 						error={errors}
 						required={true}
 						placeholder="0"
@@ -84,9 +100,10 @@ const PricingHistory = ({
 				year={true}
 				placeholder="Year"
 				autoComplete="date"
+				prevValue={prevValue}
 				register={register}
 				onCalendarClick={handleDate}
-				name={`SentPricingHistory.${[index]}.HistoryYear`}
+				name={`SentPricingHistory.${[index]}.year`}
 				required={true}
 				autoCapitalize="false"
 			/>

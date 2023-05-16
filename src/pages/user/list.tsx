@@ -23,6 +23,8 @@ const ListUsers = ({ usersData }: UserProps) => {
 	const users = useAppSelector(state => state.db.users)
 	const deleteUser = async (id: string) => {
 		const response = await userService.deleteUser(id)
+		console.log('ASa', response)
+
 		if (response.success) {
 			toast.success('User deleted successfully')
 		}

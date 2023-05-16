@@ -16,7 +16,7 @@ import Shower from 'src/assets/view/Shower.png'
 import Phone from 'src/assets/view/iPhone X.png'
 import { ImageSlider } from '../app/image-slider'
 
-const ViewCard = () => {
+const ViewPropertyCard = () => {
 	const details = [
 		{ value: 2, image: Bed },
 		{ value: 2, image: Shower },
@@ -132,4 +132,4 @@ const ViewCard = () => {
 	)
 }
 
-export default ViewCard
+export default ViewPropertyCard

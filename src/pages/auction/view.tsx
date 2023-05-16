@@ -2,8 +2,8 @@ import { GetServerSidePropsContext } from 'next'
 import { Container } from 'src/components/app/container'
 import { AppHeader } from 'src/components/app/header'
 import { AppLayout } from 'src/components/app/layout'
+import ViewAuctionCard from 'src/components/auction/view-card'
 import { ListHeader } from 'src/components/property/list-header'
-import ViewPropertyCard from 'src/components/property/view-card'
 import propertyService from 'src/services/property'
 import { Property } from 'src/types/typings'
 
@@ -19,7 +19,7 @@ const ViewProperty = ({ propertyData }: ViewPropertyProps) => {
 			<AppHeader />
 			<Container>
 				<ListHeader heading="View Property" viewButtons={true} />
-				<ViewPropertyCard />
+				<ViewAuctionCard />
 			</Container>
 		</AppLayout>
 	)

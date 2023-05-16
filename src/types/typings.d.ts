@@ -89,7 +89,8 @@ type PropertyDetailsForm = {
 	Kitchen?: string
 	Gas?: string
 	Electricity?: string
-	images?: string[]
+	images?: ImageType[]
+	propertyImages?: ImageType[]
 }
 
 type AddHistoryForm = {
@@ -101,32 +102,31 @@ type AddHistoryForm = {
 	CallType?: string
 	SentCallDetails?: CallRecordForm
 	CallDetails?: {
-		name: string
-		from: string
-		to: string
-		date: string
+		To: string
+		Name: string
+		Date?: string
+		From?: string
 	}[]
 	SentPricingHistory?: PricingHistoryForm
-	AddPricingHistroy?: {
-		year: string
-		price: string
+	AddPricingHistory?: {
+		year?: string
+		price?: string
 	}[]
 }
 
 type CallRecordForm = {
 	[index: string]: {
-		CallerFrom?: string
-		CallerTo?: string
-		CallerDate?: string
-		CallerName?: string
-		type?: string
+		To: string
+		Name: string
+		Date?: string
+		From?: string
 	}
 }
 
 type PricingHistoryForm = {
 	[index: string]: {
-		HistoryPrice?: string
-		HistoryYear?: string
+		price?: string
+		year?: string
 	}
 }
 
@@ -145,7 +145,7 @@ type Property = AddPropertyForm &
 	CommissionForm & {
 		PropertyDetails: PropertyDetailsForm
 		AddHistory: AddHistoryForm
-		AddCommision: CommissionForm
+		AddCommission: CommissionForm
 	}
 
 type Auction = {
@@ -174,4 +174,10 @@ type FilterParameter = {
 	status?: string
 	society?: string
 	auctioneer?: string
+}
+
+type ImageType = {
+	path: string
+	contentType: string
+	_id: string
 }

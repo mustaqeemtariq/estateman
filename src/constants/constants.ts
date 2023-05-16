@@ -1,7 +1,7 @@
 export const enum UserRightTypes {
-	ADD = 'add_property',
-	EDIT = 'edit_property',
-	VIEW = 'view_property'
+	ADD = 'Add Property',
+	EDIT = 'Edit Property',
+	VIEW = 'View Property'
 }
 
 export const enum ContractTypes {

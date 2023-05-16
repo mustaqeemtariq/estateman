@@ -4,6 +4,7 @@ import {
 	FieldErrors,
 	UseFormGetValues,
 	UseFormRegister,
+	UseFormReset,
 	UseFormResetField,
 	UseFormSetValue,
 	UseFormWatch
@@ -14,6 +15,7 @@ import { Input, InputNumber } from '../app/input'
 import { PlusIcon, XMarkIcon } from '@heroicons/react/20/solid'
 import { Dispatch, SetStateAction } from 'react'
 import { DateInput } from '../app/date'
+import { HistoryDate } from './form'
 
 interface CallRecordProps {
 	isFirst: boolean
@@ -23,7 +25,10 @@ interface CallRecordProps {
 	errors?: FieldErrors<Property>
 	control?: Control<Property, any>
 	setValue?: UseFormSetValue<Property>
+	reset?: UseFormReset<Property>
 	resetField?: UseFormResetField<Property>
+	callDate?: HistoryDate
+	setCallDate?: Dispatch<SetStateAction<HistoryDate>>
 	watch?: UseFormWatch<Property>
 	getValues: UseFormGetValues<Property> | undefined
 	index: number
@@ -31,18 +36,26 @@ interface CallRecordProps {
 
 const CallRecord = ({
 	setValue,
-	getValues,
+	reset,
 	resetField,
 	recordCount,
 	setRecordCount,
 	isFirst,
 	errors,
+	callDate,
+	setCallDate,
 	register,
 	control,
 	index
 }: CallRecordProps) => {
 	const handleDate = (value: string) => {
-		setValue?.(`SentCallDetails.${[index]}.CallerDate`, value)
+		setValue?.(`SentCallDetails.${[index]}.Date`, value)
+		setCallDate?.(prevData => ({
+			...prevData,
+			[index]: {
+				date: value
+			}
+		}))
 	}
 
 	const handleAdd = () => {
@@ -51,11 +64,19 @@ const CallRecord = ({
 
 	const handleRemove = () => {
 		setRecordCount?.(prev => prev - 1)
-		resetField?.(`SentCallDetails.${[index]}.CallerDate`)
-		resetField?.(`SentCallDetails.${[index]}.CallerFrom`)
-		resetField?.(`SentCallDetails.${[index]}.CallerName`)
-		resetField?.(`SentCallDetails.${[index]}.CallerTo`)
+		setCallDate?.(prevData => ({
+			...prevData,
+			[index]: {
+				date: undefined
+			}
+		}))
+		setValue?.(`SentCallDetails.${index}.Date`, '')
+		setValue?.(`SentCallDetails.${index}.From`, '')
+		setValue?.(`SentCallDetails.${index}.To`, '')
+		setValue?.(`SentCallDetails.${index}.Name`, '')
 	}
+
+	const prevValue = callDate?.[index]?.date || ''
 
 	return (
 		<div className="flex space-x-2 items-center">
@@ -63,20 +84,21 @@ const CallRecord = ({
 				id="date"
 				placeholder="Date"
 				autoComplete="date"
-				name={`SentCallDetails.${[index]}.CallerDate`}
+				prevValue={prevValue}
+				name={`SentCallDetails.${[index]}.Date`}
 				required={true}
 				autoCapitalize="false"
 				onCalendarClick={handleDate}
 			/>
 			<label htmlFor="phone">From: </label>
 			<Controller
-				name={`SentCallDetails.${[index]}.CallerFrom`}
+				name={`SentCallDetails.${[index]}.From`}
 				control={control}
 				render={({ field: { onChange, value } }) => (
 					<InputNumber
 						id="phone"
 						autoComplete="phone"
-						name={`CallDetails.${[index]}.CallerFrom`}
+						name={`CallDetails.${[index]}.From`}
 						error={errors}
 						required={true}
 						placeholder="123987654321"
@@ -90,7 +112,7 @@ const CallRecord = ({
 				id="callername"
 				autoComplete="callername"
 				register={register}
-				name={`CallDetails.${[index]}.CallerName`}
+				name={`SentCallDetails.${[index]}.Name`}
 				error={errors}
 				required={true}
 				autoCapitalize="false"
@@ -98,13 +120,13 @@ const CallRecord = ({
 			/>
 			<label htmlFor="phone">To: </label>
 			<Controller
-				name={`SentCallDetails.${[index]}.CallerTo`}
+				name={`SentCallDetails.${[index]}.To`}
 				control={control}
 				render={({ field: { onChange, value } }) => (
 					<InputNumber
 						id="phone"
 						autoComplete="phone"
-						name={`CallDetails.${[index]}.CallerTo`}
+						name={`CallDetails.${[index]}.To`}
 						error={errors}
 						required={true}
 						placeholder="923007654321"

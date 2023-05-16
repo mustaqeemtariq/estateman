@@ -1,11 +1,12 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import EmptyImage from 'src/assets/card/emptyImage.png'
+import { ImageType } from 'src/types/typings'
 import { dateDifference } from 'src/utils/date'
 import Alert from '../app/alert'
 
 interface BoxCardProps {
-	image: string[] | undefined
+	image: ImageType[] | undefined
 	contract: string
 	title: string
 	location: string

@@ -1,5 +1,6 @@
 import { ChevronLeftIcon, PlusIcon } from '@heroicons/react/20/solid'
 import { Bars2Icon } from '@heroicons/react/24/outline'
+import { useRouter } from 'next/router'
 import { Dispatch, SetStateAction, useState } from 'react'
 import { BiCheckbox } from 'react-icons/bi'
 import { Button } from '../app/button'
@@ -14,6 +15,7 @@ interface ListHeaderProps {
 
 export const ListHeader = ({ heading, count, setView, viewButtons }: ListHeaderProps) => {
 	const [showTab, setShowTab] = useState(heading)
+	const router = useRouter()
 
 	const tabs = [
 		{
@@ -56,7 +58,9 @@ export const ListHeader = ({ heading, count, setView, viewButtons }: ListHeaderP
 						<PlusIcon className="h-5 w-5" aria-hidden="true" />
 						<span className="whitespace-nowrap">Add History</span>
 					</Button>
-					<Button className="bg-black text-white uppercase flex items-center space-x-1">
+					<Button
+						onClick={() => router.back()}
+						className="bg-black text-white uppercase flex items-center space-x-1">
 						<ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
 						<span>Back</span>
 					</Button>

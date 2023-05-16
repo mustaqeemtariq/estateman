@@ -41,7 +41,6 @@ const Login = () => {
 		dispatch(login(user))
 			.then(() => {
 				toast.success('Successfully Login')
-				router.push('/')
 			})
 			.catch(error => toast.error('Login Failed'))
 			.finally(() => setLoading(false))

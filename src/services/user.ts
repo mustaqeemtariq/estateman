@@ -33,9 +33,12 @@ const editUser = (id: string, data: User) => {
 }
 
 const deleteUser = (id: string) => {
-	return axios.delete(`${apiHost}/USER/${id}`).then(response => response.data).catch(err => {
-		return err.response.data
-	})
+	return axios
+		.delete(`${apiHost}/USER/?id=${id}`)
+		.then(response => response.data)
+		.catch(err => {
+			return err.response.data
+		})
 }
 
 const searchUser = (value: string) => {

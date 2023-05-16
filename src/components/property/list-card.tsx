@@ -61,8 +61,8 @@ export const PropertyListCard = ({ data }: ListCardProps) => {
 								) : null}
 							</div>
 						</td>
-						<td className="z-20 inset-x-0 absolute inset-y-0">
-							<div className="z-20 opacity-0 hover:opacity-100 transition-opacity w-full inset-0 absolute flex justify-center items-center">
+						<td className="z-20 absolute left-0 w-full ">
+							<div className="z-20 opacity-0 h-36 hover:opacity-100 transition-opacity w-full  absolute flex justify-center items-center">
 								<Link href={`/property/view/${item.Title}`}>
 									<button className="mx-2 text-black bg-[#FCFDFF] rounded-md px-9 py-2 uppercase">
 										View
