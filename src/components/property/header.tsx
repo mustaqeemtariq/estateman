@@ -33,7 +33,7 @@ export const PropertyHeader = ({
 		},
 		showHistory && {
 			name: 'All History',
-			current: state === 'All History'
+			current: state === 'All History' ? true : false
 		}
 	].filter(Boolean) as Tab[]
 
