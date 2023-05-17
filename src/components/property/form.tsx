@@ -38,6 +38,10 @@ import { Select } from '../app/select'
 import CallRecord from './call-record'
 import Commission from './commission'
 import PricingHistory from './pricing-history'
+import MapIcon from 'src/assets/view/Place Marker.png'
+import Image from 'next/image'
+import { BiCurrentLocation } from 'react-icons/bi'
+import { MapComponent } from '../app/map'
 
 interface PropertyFormProps {
 	currentTab: string
@@ -539,6 +543,8 @@ const AddPropertyForm = ({
 	const property = watch?.('PropertyType')
 	const category = watch?.('PropertyCategory')
 
+	const [showMap, setShowMap] = useState(false)
+
 	useEffect(() => {
 		setCategory?.(category)
 	}, [category])
@@ -546,6 +552,10 @@ const AddPropertyForm = ({
 	const handleDate = (value: string) => {
 		setValue?.('YearBuilt', value, { shouldValidate: true })
 		setPropertyDate?.(value)
+	}
+
+	const handleMapData = (lat: number, lng: number) => {
+		setValue?.('Location', `lat: ${lat}, lng: ${lng}`, { shouldValidate: true })
 	}
 
 	return (
@@ -632,17 +642,25 @@ const AddPropertyForm = ({
 						{errors && <p className="text-xs text-red-600">{errors?.PropertyType?.message}</p>}
 					</div>
 					<div className="space-y-3">
-						<Input
-							id="location"
-							labelText="Location"
-							autoComplete="location"
-							register={register}
-							name="Location"
-							error={errors}
-							required={true}
-							autoCapitalize="false"
-							placeholder="Google Map Location"
-						/>
+						<div className="relative h-[80px] flex justify-end">
+							<Input
+								id="location"
+								labelText="Location"
+								autoComplete="location"
+								register={register}
+								name="Location"
+								error={errors}
+								required={true}
+								autoCapitalize="false"
+								placeholder="Google Map Location"
+							/>
+							<BiCurrentLocation
+								onClick={() => setShowMap(true)}
+								className="h-5 w-5 absolute bottom-5 right-2 cursor-pointer"
+								aria-hidden="true"
+							/>
+						</div>
+						{<MapComponent onChange={handleMapData} show={showMap} setShow={setShowMap} />}
 						<div className="flex space-x-8">
 							<Controller
 								name={'LandArea'}

@@ -180,7 +180,7 @@ const UserForm = ({ isNew, title, data }: UserFormProps) => {
 						/>
 					</div>
 					<div className="flex sm:space-x-8 max-h-20 max-sm:flex-col">
-						<div className="relative w-full flex items-center ">
+						<div className="relative h-[70px] w-full">
 							<Input
 								labelText="Password"
 								id="password"
@@ -196,12 +196,12 @@ const UserForm = ({ isNew, title, data }: UserFormProps) => {
 							<div
 								onClick={() => setTogglePassword(!togglePassword)}
 								className={clsx(
-									'absolute inset-y-0 top-6 right-2 flex items-center cursor-pointer'
+									'absolute inset-y-0 top-7 right-2 flex items-center cursor-pointer'
 								)}>
 								{<ShowHidePassword open={togglePassword} />}
 							</div>
 						</div>
-						<div className="relative w-full flex items-center">
+						<div className="relative h-[70px] w-full">
 							<Input
 								labelText="Confirm Password"
 								id="confirmPassword"
@@ -217,7 +217,7 @@ const UserForm = ({ isNew, title, data }: UserFormProps) => {
 							<div
 								onClick={() => setToggleConfirmPassword(!toggleConfirmPassword)}
 								className={clsx(
-									'absolute inset-y-0 flex cursor-pointer items-center top-6 right-2'
+									'absolute inset-y-0 flex cursor-pointer items-center top-7 right-2'
 								)}>
 								{<ShowHidePassword open={toggleConfirmPassword} />}
 							</div>
