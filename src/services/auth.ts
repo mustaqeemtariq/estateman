@@ -20,6 +20,13 @@ const logout = () => {
 	indexedStorageDB.clear(() => console.log('store clear'))
 }
 
-const authService = { login, logout }
+const forgotPassword = (Username: string) => {
+	return axios.post(`${apiHost}/users/forgot-password`, {
+		Username
+	}).then(response => response.data)
+	.catch(err => err.response.data)
+}
+
+const authService = { login, logout, forgotPassword }
 
 export default authService
