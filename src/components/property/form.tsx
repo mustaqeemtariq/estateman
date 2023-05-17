@@ -6,8 +6,6 @@ import {
 	FieldErrors,
 	UseFormGetValues,
 	UseFormRegister,
-	UseFormReset,
-	UseFormResetField,
 	UseFormSetValue,
 	UseFormWatch,
 	useForm
@@ -31,6 +29,7 @@ import {
 } from 'src/constants/form-defaults'
 import propertyService from 'src/services/property'
 import { Property } from 'src/types/typings'
+import { convertToBase64 } from 'src/utils/base64'
 import { Checkbox } from '../app/checkbox'
 import { DateInput } from '../app/date'
 import FileUpload from '../app/file-upload'
@@ -62,7 +61,8 @@ export interface HistoryDate {
 enum FormSteps {
 	ADDPROPERTY = 1,
 	PROPERTYDETAILS = 2,
-	ADDHISTORY = 3
+	ADDHISTORY = 3,
+	ALLHISTORY = 4,
 }
 
 type StateType = {
@@ -267,7 +267,7 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 		case FormSteps.PROPERTYDETAILS:
 			component = (
 				<PropertyDetailsForm
-					{...{ errors, register, control, category, data, propertyImages, setPropertyImages }}
+					{...{ errors, register, control, setValue, category, data, propertyImages, setPropertyImages }}
 				/>
 			)
 			break
@@ -281,7 +281,6 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 						control,
 						watch,
 						setValue,
-						reset,
 						historyDate,
 						setHistoryDate,
 						leaseDate,
@@ -346,6 +345,8 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 				...prevState,
 				step: FormSteps.PROPERTYDETAILS
 			}))
+		} else if (currentTab === 'All History') {
+			router.push('/property/history')
 		} else {
 			setState(prevState => ({
 				...prevState,
@@ -368,7 +369,18 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 		}
 	}
 
+	const imageConversion = async (image: Promise<string>[]) => {
+		const base64 = await Promise.all(image)
+		console.log(base64);
+		
+	}
+
 	const onSubmit = handleSubmit(data => {
+		const images = data.sentHistoryImages?.map(image => {
+			return convertToBase64(image)
+		})
+		if (images) imageConversion(images)
+		
 		data.PropertyDetails = {
 			City: data.City,
 			Housenumber: data.Housenumber,
@@ -381,7 +393,6 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 			Kitchen: data.Kitchen,
 			Gas: data.Gas,
 			Electricity: data.Electricity,
-			images: data.propertyImages
 		}
 
 		data.AddHistory = {
@@ -389,7 +400,7 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 			OccupancyStatus: data.OccupancyStatus,
 			LeaseExpiringOn: data.LeaseExpiringOn,
 			AddDetails: data.AddDetails,
-			images: data.images,
+			// images: data.images,
 			CallType: data.CallType
 		}
 
@@ -482,7 +493,6 @@ interface FormProps {
 	control?: Control<Property, any>
 	setValue?: UseFormSetValue<Property>
 	getValues?: UseFormGetValues<Property>
-	resetField?: UseFormResetField<Property>
 	watch?: UseFormWatch<Property>
 	setCategory?: Dispatch<SetStateAction<string | undefined>>
 	category?: string
@@ -497,7 +507,6 @@ interface FormProps {
 	priceDate?: HistoryDate
 	setPriceDate?: Dispatch<SetStateAction<HistoryDate>>
 	propertyImages?: File[]
-	reset?: UseFormReset<Property>
 	setPropertyImages?: Dispatch<SetStateAction<File[]>>
 	historyImages?: File[]
 	setHistoryImages?: Dispatch<SetStateAction<File[]>>
@@ -816,6 +825,7 @@ const PropertyDetailsForm = ({
 	errors,
 	control,
 	category,
+	setValue,
 	data,
 	propertyImages,
 	setPropertyImages
@@ -824,6 +834,7 @@ const PropertyDetailsForm = ({
 		if (propertyImages) {
 			setPropertyImages?.([...propertyImages, ...files])
 		}
+		setValue?.('sentPropertyImages', [...files])
 	}
 
 	return (
@@ -889,7 +900,7 @@ const PropertyDetailsForm = ({
 								onUpload={handleUpload}
 								data={propertyImages}
 								setData={setPropertyImages}
-								name="propertyImages"
+								name="sentPropertyImages"
 								labelText="Upload Images"
 								error={errors}
 								placeholder="Upload image file"
@@ -899,22 +910,16 @@ const PropertyDetailsForm = ({
 					</div>
 					<div className="space-y-2">
 						<div className="flex space-x-8">
-							<Select
+							<Input
 								id="society"
 								labelText="Society (if Any)"
 								autoComplete="society"
 								register={register}
 								name="Society"
-								errors={errors}
-								className="bg-[#E8E8E8]                                                "
-								autoCapitalize="false">
-								<option value="">Select a Society</option>
-								{Object.values(UnitTypes).map(unit => (
-									<option key={unit} value={unit}>
-										{unit}
-									</option>
-								))}
-							</Select>
+								error={errors}
+								autoCapitalize="false"
+								placeholder="Enter a Society"
+							/>
 							<Input
 								id="places"
 								labelText="Nearby Places"
@@ -1150,9 +1155,7 @@ const PropertyDetailsForm = ({
 const AddHistoryForm = ({
 	register,
 	errors,
-	reset,
 	control,
-	resetField,
 	historyImages,
 	setHistoryImages,
 	LeaseDate,
@@ -1177,6 +1180,7 @@ const AddHistoryForm = ({
 		if (historyImages) {
 			setHistoryImages?.([...historyImages, ...files])
 		}
+		setValue?.('sentHistoryImages', [...files])
 	}
 
 	const handleHistoryDate = (value: string) => {
@@ -1304,7 +1308,7 @@ const AddHistoryForm = ({
 						labelText="Upload Images"
 						data={historyImages}
 						setData={setHistoryImages}
-						name="images"
+						name="sentHistoryImages"
 						id="historyimage"
 						placeholder="Select upto 10 files, File Type: jpg, png, gif, pdf"
 					/>
@@ -1336,8 +1340,6 @@ const AddHistoryForm = ({
 								key={index}
 								isFirst={index == 0}
 								recordCount={recordCount}
-								reset={reset}
-								resetField={resetField}
 								setRecordCount={setRecordCount}
 								callDate={callDate}
 								setCallDate={setCallDate}
@@ -1356,7 +1358,6 @@ const AddHistoryForm = ({
 							priceCount={priceCount}
 							setPriceCount={setPriceCount}
 							register={register}
-							resetField={resetField}
 							priceDate={priceDate}
 							setPriceDate={setPriceDate}
 							control={control}

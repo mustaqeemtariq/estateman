@@ -150,22 +150,16 @@ const AuctionForm = () => {
 									</option>
 								))}
 							</Select>
-							<Select
+							<Input
 								id="society"
 								labelText="Society"
 								autoComplete="society"
 								register={register}
-								name="Society"
-								errors={errors}
-								className="bg-[#E8E8E8]"
-								autoCapitalize="false">
-								<option value="">Select a Society</option>
-								{Object.values(UnitTypes).map(unit => (
-									<option key={unit} value={unit}>
-										{unit}
-									</option>
-								))}
-							</Select>
+								name="society"
+								error={errors}
+								autoCapitalize="false"
+								placeholder="Enter a Society"
+							/>
 						</div>
 						<div className="flex flex-col w-full">
 							<label htmlFor="date" className="whitespace-nowrap">
