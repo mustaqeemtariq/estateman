@@ -1,8 +1,7 @@
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
 import moment from 'moment'
-import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import EmptyImage from 'src/assets/card/emptyImage.png'
 import Image1 from 'src/assets/card/pexels-binyamin-mellish-1500459 1.png'
 import { Container } from 'src/components/app/container'
@@ -22,18 +21,10 @@ const PropertyHistory = ({ propertiesHistory }: PropertyHistoryProps) => {
 	const [expand, setExpand] = useState<{ [key: string]: boolean }>({})
 	const [state, setState] = useState('All History')
 	const [active, setActive] = useState({
-		propertyDetails: true,
-		addHistory: true,
+		propertyDetails: false,
+		addHistory: false,
 		allHistory: true
 	})
-
-	const router = useRouter()
-
-	useEffect(() => {
-		if (state !== 'All History') {
-			router.push(`/property/edit/?state=${state}`)
-		}
-	}, [state])
 
 	const renderPeopleTBody = (data: Property[]) => {
 		const images = [
@@ -78,7 +69,7 @@ const PropertyHistory = ({ propertiesHistory }: PropertyHistoryProps) => {
 							<td></td>
 							<td className="space-x-2 flex items-center mt-2">
 								<div className="border-4 border-blue-400 h-3 w-3 rounded-full text-medium text-medium"></div>
-								<p className="text-medium">{item.AddHistory.CallType}Incoming Call Details</p>
+								<p className="text-medium">{item.AddHistory.CallType}</p>
 							</td>
 							<td></td>
 							<td></td>
@@ -95,10 +86,10 @@ const PropertyHistory = ({ propertiesHistory }: PropertyHistoryProps) => {
 									{item?.AddHistory.CallDetails?.map(detail => {
 										return (
 											<>
-												<p className="text-medium text-black">{detail.name}</p>
-												<p className="text-medium text-red-500">{detail.from}</p>
-												<p className="text-medium">{detail.to}</p>
-												<p>{detail.date}</p>
+												<p className="text-medium text-black">{detail.Name}</p>
+												<p className="text-medium text-red-500">{detail.From}</p>
+												<p className="text-medium">{detail.To}</p>
+												<p>{detail.Date}</p>
 											</>
 										)
 									})}
@@ -126,7 +117,7 @@ const PropertyHistory = ({ propertiesHistory }: PropertyHistoryProps) => {
 									<p>Price(Pkr):</p>
 								</div>
 								<div className="flex flex-col mb-6 px-2 space-y-2 mt-3">
-									{item?.AddHistory.AddPricingHistroy?.map(detail => {
+									{item?.AddHistory.AddPricingHistory?.map(detail => {
 										return (
 											<div className="flex justify-between">
 												<p className="text-medium text-black">{detail.year}</p>
@@ -150,20 +141,20 @@ const PropertyHistory = ({ propertiesHistory }: PropertyHistoryProps) => {
 									<div className="flex justify-between">
 										<span className="flex space-x-1">
 											<p>Pkr.</p>
-											<p className="text-black">{item.AddCommision?.Amount}</p>
+											<p className="text-black">{item.AddCommission?.Amount}</p>
 										</span>
 										<span className="flex space-x-1">
 											<p>Cheque#</p>
-											<p className="text-black">{item.AddCommision?.Cheque}</p>
+											<p className="text-black">{item.AddCommission?.Cheque}</p>
 										</span>
 									</div>
 									<span className="flex space-x-1">
 										<p>Account#</p>
-										<p className="text-black">{item.AddCommision?.AccountNumber}</p>
+										<p className="text-black">{item.AddCommission?.AccountNumber}</p>
 									</span>
 									<span className="flex space-x-1">
 										<p>Bank Details:</p>
-										<p className="text-black">{item.AddCommision?.BankDetails}</p>
+										<p className="text-black">{item.AddCommission?.BankDetails}</p>
 									</span>
 								</div>
 							</td>
