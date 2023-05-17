@@ -12,7 +12,7 @@ interface ViewPropertyProps {
 }
 
 const ViewProperty = ({ propertyData }: ViewPropertyProps) => {
-	console.log(propertyData)
+
 
 	return (
 		<AppLayout>
