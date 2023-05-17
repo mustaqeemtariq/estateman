@@ -11,6 +11,8 @@ import Phone from 'src/assets/view/iPhone X.png'
 import { ImageSlider } from '../app/image-slider'
 import { Auction } from 'src/types/typings'
 import moment from 'moment'
+import { useState } from 'react'
+import { MapComponent } from '../app/map'
 
 interface ViewAuctionCardProps {
 	data: Auction[]
@@ -18,6 +20,7 @@ interface ViewAuctionCardProps {
 
 const ViewAuctionCard = ({data}: ViewAuctionCardProps) => {
 	const images = [Image1, EmptyImage, Image1, EmptyImage, Image1, EmptyImage]
+	const [showMap, setShowMap] = useState(false)
 	return (
 		<div className="grid grid-cols-2 gap-x-6 gap-y-3">
 			<div className="space-y-4">
@@ -36,10 +39,11 @@ const ViewAuctionCard = ({data}: ViewAuctionCardProps) => {
 						<MapPinIcon className="h-4 w-4 fill-[#717B9D]" aria-hidden="true" />
 						<p className="text-[#0D0C18]">{data[0].Location}</p>
 					</div>
-					<div className="flex items-center space-x-1 text-base">
+					<div className="flex items-center space-x-1 text-base cursor-pointer" onClick={() => setShowMap(true)}>
 						<BiCurrentLocation className="h-4 w-4" />
 						<p className="text-[#0057FF] uppercase">View Map</p>
 					</div>
+					<MapComponent show={showMap} setShow={setShowMap} />
 				</div>
 				<div className="flex items-center space-x-1 text-base">
 					<Image src={Area} alt="area" />
@@ -48,7 +52,10 @@ const ViewAuctionCard = ({data}: ViewAuctionCardProps) => {
 				<div className="flex items-center space-x-1 text-base">
 					<CalendarIcon className="h-4 w-4 fill-[#DC4200]" aria-hidden="true" />
 					<p>
-						Auction On: <span className="text-[#DC4200]">{moment(data[0].AuctionDateandTime).format('MMMM DD, YYYY h:mm A')}</span>
+						Auction On:{' '}
+						<span className="text-[#DC4200]">
+							{moment(data[0].AuctionDateandTime).format('MMMM DD, YYYY h:mm A')}
+						</span>
 					</p>
 				</div>
 				<div className="flex items-center space-x-1 text-base">
