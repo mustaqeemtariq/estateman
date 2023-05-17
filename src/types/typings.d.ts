@@ -38,9 +38,14 @@ type Properties = {
 	[_id: number]: Property
 }
 
+type Auctions = {
+	[_id: number]: Auction
+}
+
 type DbState = {
 	users: Users
 	properties: Properties
+	auctions: Auctions
 	connected: boolean
 	lastSyncedOn: number
 }
@@ -89,8 +94,8 @@ type PropertyDetailsForm = {
 	Kitchen?: string
 	Gas?: string
 	Electricity?: string
-	images?: ImageType[]
-	propertyImages?: ImageType[]
+	imagePath?: string[]
+	sentPropertyImages?: File[]
 }
 
 type AddHistoryForm = {
@@ -98,7 +103,7 @@ type AddHistoryForm = {
 	OccupancyStatus?: string
 	LeaseExpiringOn?: string
 	AddDetails?: string
-	images?: string[]
+	sentHistoryImages?: File[]
 	CallType?: string
 	SentCallDetails?: CallRecordForm
 	CallDetails?: {
@@ -112,6 +117,7 @@ type AddHistoryForm = {
 		year?: string
 		price?: string
 	}[]
+	imagePath?: string[]
 }
 
 type CallRecordForm = {
@@ -145,10 +151,12 @@ type Property = AddPropertyForm &
 	CommissionForm & {
 		PropertyDetails: PropertyDetailsForm
 		AddHistory: AddHistoryForm
+		OwnerDetails: OwnerDetails
 		AddCommission: CommissionForm
 	}
 
 type Auction = {
+	_id: string
 	Title: string
 	Auctioneer: string
 	City: CityNames
