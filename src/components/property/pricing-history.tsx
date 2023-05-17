@@ -3,8 +3,6 @@ import {
 	Controller,
 	FieldErrors,
 	UseFormRegister,
-	UseFormReset,
-	UseFormResetField,
 	UseFormSetValue,
 	UseFormWatch
 } from 'react-hook-form'
@@ -24,11 +22,9 @@ interface PricingHistoryProps {
 	errors?: FieldErrors<Property>
 	control?: Control<Property, any>
 	setValue?: UseFormSetValue<Property>
-	resetField?: UseFormResetField<Property>
 	priceDate?: HistoryDate
 	setPriceDate?: Dispatch<SetStateAction<HistoryDate>>
 	watch?: UseFormWatch<Property>
-	reset?: UseFormReset<Property>
 	index: number
 }
 
