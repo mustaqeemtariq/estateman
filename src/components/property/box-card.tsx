@@ -1,12 +1,11 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import EmptyImage from 'src/assets/card/emptyImage.png'
-import { ImageType } from 'src/types/typings'
 import { dateDifference } from 'src/utils/date'
 import Alert from '../app/alert'
 
 interface BoxCardProps {
-	image: ImageType[] | undefined
+	image: string[] | undefined
 	contract: string
 	title: string
 	location: string
@@ -31,6 +30,26 @@ const PropertyBoxCard = ({
 	} else if (difference <= 1) {
 		type = 'warning'
 	}
+
+	// const [images, setImages] = useState([])
+
+	// useEffect(() => {
+	// 	const getPropertyImages = async() => {
+	// 		const response = await axios.get('http://localhost:3000/getimageurl?id=645ca4727246afdcb9afd2db')
+	// 		setImages(response.data.data)
+	// 	}
+	// 	getPropertyImages()
+	// }, [])
+
+	// let im;
+	// useEffect(() => {
+	// 	if (images.propertyDetails) {
+	// 		im = images.propertyDetails[0]
+	// 		console.log(im);
+			
+	// 	}
+	// }, [images])
+	
 
 	return (
 		<div className="rounded-md border border-gray-300 hover:bg-[#0D0C18]/[85%] hover:shadow-lg relative">
