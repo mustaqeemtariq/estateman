@@ -15,15 +15,21 @@ import Location from 'src/assets/view/Place Marker.png'
 import Shower from 'src/assets/view/Shower.png'
 import Phone from 'src/assets/view/iPhone X.png'
 import { ImageSlider } from '../app/image-slider'
+import { Property } from 'src/types/typings'
+import moment from 'moment'
 
-const ViewPropertyCard = () => {
+interface ViewPropertyCardProps {
+	data: Property
+}
+
+const ViewPropertyCard = ({data}: ViewPropertyCardProps) => {
 	const details = [
-		{ value: 2, image: Bed },
-		{ value: 2, image: Shower },
-		{ value: 1, image: Kitchen },
-		{ value: 'Yes', image: Gas },
-		{ value: 'Yes', image: Electricity },
-		{ value: 'Grocers', image: Places }
+		{ value: data.PropertyDetails?.Bed, image: Bed },
+		{ value: data.PropertyDetails?.Bath, image: Shower },
+		{ value: data.PropertyDetails?.Kitchen, image: Kitchen },
+		{ value: data.PropertyDetails?.Gas, image: Gas },
+		{ value: data.PropertyDetails?.Electricity, image: Electricity },
+		{ value: data.PropertyDetails?.places, image: Places }
 	]
 
 	const images = [Image1, EmptyImage, Image1, EmptyImage, Image1, EmptyImage]
@@ -35,25 +41,25 @@ const ViewPropertyCard = () => {
 						<div className="grid grid-cols-4 gap-x-2">
 							<div className="space-y-1">
 								<p className="text-xs text-[#CED1DC]">Title</p>
-								<p className="whitespace-nowrap">3 bed basement</p>
+								<p>{data.Title}</p>
 							</div>
 							<div className="space-y-1">
 								<p className="text-xs text-[#CED1DC]">Type</p>
-								<p className="text-[#0038FF]">Residential</p>
+								<p className="text-[#0038FF]">{data.PropertyType}</p>
 							</div>
 							<div className="space-y-1">
 								<p className="text-xs text-[#CED1DC]">Category</p>
-								<p className="text-[#0038FF]">House</p>
+								<p className="text-[#0038FF]">{data.PropertyCategory}</p>
 							</div>
 							<div className="space-y-1">
 								<p className="text-xs text-[#CED1DC]">Contract Type</p>
-								<p className="text-[#0038FF]">For Rent</p>
+								<p className="text-[#0038FF]">{data.ContractType}</p>
 							</div>
 						</div>
 						<div className="flex justify-between">
 							<div className="flex items-center space-x-1 text-base">
 								<MapPinIcon className="h-4 w-4 fill-[#131128]" aria-hidden="true" />
-								<p className="text-[#0D0C18]">06, Str 27, Park Towers, phase2, DHA</p>
+								<p className="text-[#0D0C18]">{data.Location}</p>
 							</div>
 							<div className="flex items-center space-x-1 text-base">
 								<BiCurrentLocation className="h-4 w-4" />
@@ -61,16 +67,16 @@ const ViewPropertyCard = () => {
 							</div>
 						</div>
 						<div className="flex items-center space-x-1 text-sm">
-							<ExclamationTriangleIcon className="h-3.5 w-3.5 fill-[#DC4200]" aria-hidden="true" />
+							<ExclamationTriangleIcon className="h-4 w-4 fill-[#DC4200]" aria-hidden="true" />
 							<p>
-								Lease Expiring on: <span className="text-[#DC4200]">31 January, 2023</span>
+								Lease Expiring on: <span className="text-[#DC4200]">{moment(data.AddHistory.LeaseExpiringOn).format('DD MMMM, YYYY')}</span>
 							</p>
 						</div>
 					</div>
 
 					<div className="grid grid-cols-3 gap-x-5 gap-y-2 mt-12">
-						{details.map(detail => (
-							<div className="flex items-center space-x-1">
+						{details.map((detail,index) => (
+							<div key={index} className="flex items-center space-x-1">
 								<Image src={detail.image} alt="detail-image" />
 								<p>{detail.value}</p>
 							</div>
@@ -80,9 +86,7 @@ const ViewPropertyCard = () => {
 				<div className="space-y-1 pt-4">
 					<p className="text-[#717B9D] uppercase">Description</p>
 					<p className="text-sm">
-						First Owner, New building A budget-friendly 5 Marla basement for rent in E-11,
-						Islamabad. It consists of 2 bedrooms, 2 washrooms, a TV lounge, a kitchen, a dining and
-						drawing room and a car parking space. The neighboring sectors are F-10 and F-11.
+						{data.AddHistory.AddDetails}
 					</p>
 				</div>
 			</div>
@@ -94,34 +98,34 @@ const ViewPropertyCard = () => {
 							<p className="text-[#717B9D] uppercase">Owner:</p>
 							<div className="flex items-center space-x-1">
 								<Image src={Contact} alt="contact" />
-								<p>Ahmad Ali</p>
+								<p>{data.OwnerDetails?.Name}</p>
 							</div>
 						</div>
 						<div className="flex flex-col space-y-2">
 							<p className="text-[#717B9D] uppercase">Area:</p>
 							<div className="flex items-center space-x-1">
 								<Image src={Area} alt="area" />
-								<p>10000 sqft</p>
+								<p>{data.LandArea}</p>
 							</div>
 						</div>
 					</div>
 					<div>
 						<div className="flex items-center space-x-1">
 							<Image src={Phone} alt="phone" />
-							<p className="text-[#0078FF]">0300 7652145</p>
+							<p className="text-[#0078FF]">{data.OwnerDetails?.ContactNumber}</p>
 						</div>
 					</div>
 					<div>
 						<div className="flex justify-between items-center">
 							<div className="flex items-center space-x-1">
 								<Image src={Location} alt="location" />
-								<p className="text-sm">H# 203, st 12, NPF, E 11/2, Islamabad</p>
+								<p className="text-sm">{data.OwnerDetails?.Address}</p>
 							</div>
 							<div className="flex flex-col space-y-2">
 								<p className="text-[#717B9D] uppercase">Price (Pkr)</p>
 								<div className="flex items-center space-x-1">
 									<Image src={Money} alt="money" />
-									<p>50,000</p>
+									<p>{data.Price}</p>
 								</div>
 							</div>
 						</div>
