@@ -647,6 +647,7 @@ const AddPropertyForm = ({
 								id="location"
 								labelText="Location"
 								autoComplete="location"
+								disabled
 								register={register}
 								name="Location"
 								error={errors}
