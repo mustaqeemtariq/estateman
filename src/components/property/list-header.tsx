@@ -54,7 +54,7 @@ export const ListHeader = ({ heading, count, setView, viewButtons }: ListHeaderP
 				</div>
 			) : (
 				<div className="flex space-x-5">
-					<Button className="bg-black text-white uppercase flex items-center space-x-5">
+					<Button className="bg-black text-white uppercase flex items-center space-x-2">
 						<PlusIcon className="h-5 w-5" aria-hidden="true" />
 						<span className="whitespace-nowrap">Add History</span>
 					</Button>
