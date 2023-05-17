@@ -12,14 +12,14 @@ interface ViewPropertyProps {
 }
 
 const ViewProperty = ({ propertyData }: ViewPropertyProps) => {
-	console.log(process.env.REACT_APP_GOOGLE_MAPS_API_KEY)
+	console.log(propertyData)
 
 	return (
 		<AppLayout>
 			<AppHeader />
 			<Container>
 				<ListHeader heading="View Property" viewButtons={true} />
-				<ViewPropertyCard />
+				<ViewPropertyCard data={propertyData} />
 			</Container>
 		</AppLayout>
 	)
