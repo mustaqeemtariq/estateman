@@ -25,9 +25,9 @@ export const DashboardHeader = () => {
 			<div className="flex space-x-2">
 				<Select name="period" labelText="SELECT" renderLabel={true}>
 					<option value="">Select Period</option>
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
+					<option value="period">Period</option>
+					<option value="month">Month</option>
+					<option value="year">Year</option>
 				</Select>
 				<Select name="period" labelText="FROM" renderLabel={true}>
 					<option value="">Select Period</option>

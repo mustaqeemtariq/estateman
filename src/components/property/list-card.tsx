@@ -22,7 +22,7 @@ export const PropertyListCard = ({ data }: ListCardProps) => {
 						className={clsx('relative hover:bg-[#0D0C18]/[85%]', index % 2 === 0 && 'bg-gray-100')}>
 						<td className="tw-table-td pr-0 col-span-2">
 							<Image
-								src={EmptyImage}
+								src={item?.PropertyDetails?.imagePath?.[0] ?? EmptyImage}
 								alt="propertyImage"
 								className="w-full object-stretch rounded-md max-w-50"
 							/>

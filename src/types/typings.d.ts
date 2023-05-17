@@ -30,6 +30,11 @@ type RootReducerState = {
 	db: DbState
 }
 
+type ImagePath = {
+	propertyDetails: string[]
+	addHistory: string[]
+}
+
 type Users = {
 	[id: number]: User
 }
@@ -170,7 +175,7 @@ type Auction = {
 	PlaceofAuction: string
 	ContactPerson?: string
 	ContactNumber?: string
-	images?: string[]
+	imagePath?: string[]
 }
 
 type FilterParameter = {

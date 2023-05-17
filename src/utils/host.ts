@@ -1,9 +1,9 @@
-let fallbackHost: string | undefined = 'localhost:4000'
+let fallbackHost: string | undefined = 'localhost:3000'
 let host = fallbackHost
 
 let schemeForHttp = 'https://'
 
-if (host === 'localhost:4000') {
+if (host === 'localhost:3000') {
 	schemeForHttp = 'http://'
 }
 

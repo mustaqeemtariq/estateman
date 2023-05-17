@@ -41,7 +41,7 @@ const AuctionList = ({ auctionsData }: AuctionListProps) => {
 					<tr onClick={() => router.push(`/auction/view/${item._id}`)} key={item.Title + index} className={clsx('cursor-pointer', index % 2 === 0 && 'bg-gray-100')}>
 						<td className="tw-table-td col-span-2">
 							<Image
-								src={item.images?.[0] ?? EmptyImage}
+								src={item.imagePath?.[0] ?? EmptyImage}
 								width={20}
 								height={20}
 								alt="propertyImage"

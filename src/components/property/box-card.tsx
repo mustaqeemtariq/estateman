@@ -3,8 +3,13 @@ import Link from 'next/link'
 import EmptyImage from 'src/assets/card/emptyImage.png'
 import { dateDifference } from 'src/utils/date'
 import Alert from '../app/alert'
+import { useEffect, useState } from 'react'
+import propertyService from 'src/services/property'
+import imageService from 'src/services/images'
+import { ImagePath } from 'src/types/typings'
 
 interface BoxCardProps {
+	id: string
 	image: string[] | undefined
 	contract: string
 	title: string
@@ -15,6 +20,7 @@ interface BoxCardProps {
 }
 
 const PropertyBoxCard = ({
+	id,
 	image,
 	contract,
 	title,
@@ -30,27 +36,18 @@ const PropertyBoxCard = ({
 	} else if (difference <= 1) {
 		type = 'warning'
 	}
-
-	// const [images, setImages] = useState([])
-
-	// useEffect(() => {
-	// 	const getPropertyImages = async() => {
-	// 		const response = await axios.get('http://localhost:3000/getimageurl?id=645ca4727246afdcb9afd2db')
-	// 		setImages(response.data.data)
-	// 	}
-	// 	getPropertyImages()
-	// }, [])
-
-	// let im;
-	// useEffect(() => {
-	// 	if (images.propertyDetails) {
-	// 		im = images.propertyDetails[0]
-	// 		console.log(im);
-			
-	// 	}
-	// }, [images])
 	
+	const [images, setImages] = useState<ImagePath>()
 
+	useEffect(() => {
+		const getImages = async() => {
+			const response = await imageService.getAllImages(id)
+			setImages(response)
+		}
+		getImages()
+	}, [])
+
+	
 	return (
 		<div className="rounded-md border border-gray-300 hover:bg-[#0D0C18]/[85%] hover:shadow-lg relative">
 			<div className="relative">

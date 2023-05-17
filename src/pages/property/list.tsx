@@ -89,7 +89,8 @@ const BoxView = ({ data }: ViewProps) => {
 			{data.map((item, index) => (
 				<PropertyBoxCard
 					key={item.Title + index}
-					image={item.PropertyDetails?.images}
+					id={item._id}
+					image={item.PropertyDetails?.imagePath}
 					contract={item.ContractType}
 					title={item.Title}
 					location={item.Location}

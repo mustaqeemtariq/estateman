@@ -4,7 +4,7 @@ import Image, { StaticImageData } from 'next/image'
 import { useState } from 'react'
 
 interface ImageSliderProps {
-	images: StaticImageData[]
+	images: string[] | undefined
 	type: string
 }
 
@@ -15,12 +15,12 @@ export const ImageSlider = ({ images, type }: ImageSliderProps) => {
 		setCurrentIndex(index)
 	}
 
-	const visibleImages = images.slice(currentIndex, currentIndex + 5)
+	const visibleImages = images?.slice(currentIndex, currentIndex + 5)
 
 	return (
 		<div className="relative flex items-center justify-center">
 			{type === 'slider' && (
-				<Image src={images[currentIndex]} alt="slider" className="h-60 w-full" />
+				<img src={images?.[currentIndex]} alt="slider" className="h-60 w-full" />
 			)}
 			<div className="flex items-center space-x-1">
 				{type === 'arrow' && (
@@ -38,7 +38,7 @@ export const ImageSlider = ({ images, type }: ImageSliderProps) => {
 
 				<div className="flex space-x-2 justify-center ">
 					{type === 'arrow' &&
-						visibleImages.map(image => (
+						visibleImages?.map(image => (
 							<Image src={image} alt="card-image" className="h-20 w-20 " />
 						))}
 				</div>
@@ -46,12 +46,12 @@ export const ImageSlider = ({ images, type }: ImageSliderProps) => {
 					<ChevronRightIcon
 						onClick={() =>
 							setCurrentIndex(
-								currentIndex + 5 < images.length - 1 ? currentIndex + 1 : currentIndex
+								images ? (currentIndex + 5 < images?.length - 1 ? currentIndex + 1 : currentIndex) : currentIndex
 							)
 						}
 						className={clsx(
 							'h-6 w-6 fill-[#717B9D] opacity-0',
-							currentIndex + 5 < images.length - 1 && 'opacity-100 cursor-pointer'
+							images && (currentIndex + 5 < images?.length - 1) && 'opacity-100 cursor-pointer'
 						)}
 						aria-hidden="true"
 					/>
@@ -59,7 +59,7 @@ export const ImageSlider = ({ images, type }: ImageSliderProps) => {
 			</div>
 			{type === 'slider' && (
 				<div className="bg-[#0D0C18]/[75%] w-fit absolute rounded-[30px] flex items-center space-x-2 px-4 py-2 mx-auto bottom-2">
-					{images.map((image, index) => (
+					{images?.map((image, index) => (
 						<div
 							key={index}
 							className={clsx(

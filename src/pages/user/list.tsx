@@ -6,6 +6,7 @@ import { toast } from 'react-hot-toast'
 import { Container } from 'src/components/app/container'
 import { AppHeader } from 'src/components/app/header'
 import { AppLayout } from 'src/components/app/layout'
+import { Map } from 'src/components/app/map'
 
 import { Search } from 'src/components/app/search-input'
 import { Table } from 'src/components/app/table'
@@ -54,6 +55,10 @@ const ListUsers = ({ usersData }: UserProps) => {
 		return { filteredUsers }
 	}, [usersData, searchText])
 
+	const handleChange = () => {
+
+	}
+
 	const renderPeopleTBody = (userData: User[]) => {
 		return (
 			<tbody className="bg-white">
@@ -84,7 +89,8 @@ const ListUsers = ({ usersData }: UserProps) => {
 		<AppLayout>
 			<AppHeader />
 			<Container>
-				<div className="flex justify-between items-center">
+				<Map onChange={handleChange}/>
+				{/* <div className="flex justify-between items-center">
 					<div className="sm:flex sm:items-centertext-base">
 						<div className="sm:flex-auto">
 							<h1 className="font-semibold leading-6 text-[#0038FF] text-xl uppercase">
@@ -113,7 +119,7 @@ const ListUsers = ({ usersData }: UserProps) => {
 							</div>
 						</div>
 					</div>
-				</div>
+				</div> */}
 			</Container>
 		</AppLayout>
 	)

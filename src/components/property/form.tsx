@@ -395,12 +395,21 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 			Electricity: data.Electricity,
 		}
 
+		data.OwnerDetails = {
+			Name: data.Name,
+			ContactNumber: data.ContactNumber,
+			AlternateNumber: data.AlternateNumber,
+			CNIC: data.CNIC,
+			OwnerDescription: data.OwnerDescription,
+			Address: data.Address,
+			Ligitation: data.Ligitation
+		}
+
 		data.AddHistory = {
 			Date: data.Date,
 			OccupancyStatus: data.OccupancyStatus,
 			LeaseExpiringOn: data.LeaseExpiringOn,
 			AddDetails: data.AddDetails,
-			// images: data.images,
 			CallType: data.CallType
 		}
 
@@ -429,11 +438,8 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 				}
 			}
 		})
-
-		console.log('DDDDDD', data)
-
-		// addProperty(data)
-		// setUpdating(true)
+		addProperty(data)
+		setUpdating(true)
 	})
 
 	const handleCommissionReset = () => {

@@ -32,7 +32,6 @@ const ViewPropertyCard = ({data}: ViewPropertyCardProps) => {
 		{ value: data.PropertyDetails?.places, image: Places }
 	]
 
-	const images = [Image1, EmptyImage, Image1, EmptyImage, Image1, EmptyImage]
 	return (
 		<div className="grid grid-cols-2 gap-x-6 gap-y-3">
 			<div>
@@ -91,7 +90,7 @@ const ViewPropertyCard = ({data}: ViewPropertyCardProps) => {
 				</div>
 			</div>
 			<div>
-				<ImageSlider type="slider" images={images} />
+				<ImageSlider type="slider" images={data.PropertyDetails.imagePath} />
 				<div className="flex flex-col mt-4 space-y-2">
 					<div className="flex justify-between">
 						<div className="flex flex-col space-y-2">

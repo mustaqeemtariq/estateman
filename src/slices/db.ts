@@ -5,6 +5,7 @@ const initialState: DbState = {
 	users: {},
 	properties: {},
 	auctions: {},
+	// images: {},
 	connected: false,
 	lastSyncedOn: new Date().getTime()
 }
@@ -53,7 +54,7 @@ const queueSlice = createSlice({
 		},
 		saveAuctions(state: DbState, action: PayloadAction<Auction[]>) {
 			const auctions = action.payload.reduce<Auctions>((agg, curr) => {
-				return { ...agg, [curr._id ?? 0]: curr}
+				return { ...agg, [curr._id ?? 0]: curr }
 			}, {})
 
 			return {
@@ -63,7 +64,20 @@ const queueSlice = createSlice({
 					...auctions
 				}
 			}
-		}
+		},
+		// saveImages(state: DbState, action: PayloadAction<AllImage[]>) {
+		// 	const image = action.payload.reduce<AllImages>((agg, curr) => {
+		// 		return { ...agg, [curr._id ?? 0]: curr }
+		// 	}, {})
+
+		// 	return {
+		// 		...state,
+		// 		images: {
+		// 			...state.images,
+		// 			...image
+		// 		}
+		// 	}
+		// }
 	},
 	extraReducers: {}
 })

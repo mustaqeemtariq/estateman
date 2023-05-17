@@ -74,8 +74,8 @@ export const AppFilter = ({
 							onChange={handleData}
 							className="mt-1 block w-full rounded-md border-0 py-3 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 sm:text-sm sm:leading-6 outline-none">
 							<option value="">Contract</option>
-							<option value="rent">For Rent</option>
-							<option value="sale">For Sale</option>
+							<option value="Rent">For Rent</option>
+							<option value="Sale">For Sale</option>
 						</select>
 					)}
 					{showStatus && (

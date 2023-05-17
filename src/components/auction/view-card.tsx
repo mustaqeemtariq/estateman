@@ -93,7 +93,7 @@ const ViewAuctionCard = ({data}: ViewAuctionCardProps) => {
 				</div>
 			</div>
 			<div className="h-full">
-				<ImageSlider type="slider" images={images} />
+				<ImageSlider type="slider" images={data[0].imagePath} />
 			</div>
 		</div>
 	)
