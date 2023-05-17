@@ -48,6 +48,7 @@ export const Input = ({
 					{...(register?.(name) ?? {})}
 					onChange={onChange}
 					placeholder={placeholder}
+					disabled={disabled && true}
 					id={index}
 					className={clsx(
 						'block placeholder-gray-500 w-full  bg-[#E6E6E6] rounded-md border border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm'
