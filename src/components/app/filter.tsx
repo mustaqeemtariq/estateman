@@ -1,6 +1,7 @@
 import clsx from 'clsx'
 import { Dispatch, SetStateAction } from 'react'
 import { CityNames } from 'src/constants/constants'
+import { useAppSelector } from 'src/hooks/rtk'
 import { FilterParameter } from 'src/types/typings'
 
 interface AppFilterProps {
@@ -22,6 +23,8 @@ export const AppFilter = ({
 		const { name, value } = event.target
 		setFilterData(prev => ({ ...prev, [name]: value }))
 	}
+
+	const auctions = useAppSelector(state => state.db.auctions)
 
 	return (
 		<div className={clsx(!auction && 'flex space-x-2 my-4')}>
@@ -116,8 +119,18 @@ export const AppFilter = ({
 							onChange={handleData}
 							className="mt-1 block w-full rounded-md border-0 py-3 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 sm:text-sm sm:leading-6 outline-none">
 							<option value="">Society</option>
-							<option value="vacant">For Rent</option>
-							<option value="occupied">For Sale</option>
+							{Object.values(auctions)
+								.reduce((uniqueOptions: string[], auction) => {
+									if (auction.Society && !uniqueOptions.includes(auction.Society)) {
+										uniqueOptions.push(auction.Society)
+									}
+									return uniqueOptions
+								}, [])
+								.map((option: string, index) => (
+									<option key={index} value={option}>
+										{option}
+									</option>
+								))}
 						</select>
 					</div>
 				</div>
