@@ -63,8 +63,8 @@ export const ImageSlider = ({ images, type }: ImageSliderProps) => {
 						<div
 							key={index}
 							className={clsx(
-								'h-3 w-3 rounded-full bg-[#D9D9D9]/[75%] cursor-pointer',
-								index === currentIndex && 'bg-[#D9D9D9]'
+								'h-3 w-3 rounded-full cursor-pointer',
+								index === currentIndex ? 'bg-[#D9D9D9]' : "bg-[#D9D9D9]/[75%]"
 							)}
 							onClick={() => handleSlider(index)}></div>
 					))}
