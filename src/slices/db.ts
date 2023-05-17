@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { DbState, Properties, Property, User, Users } from 'src/types/typings'
+import { Auction, Auctions, DbState, Properties, Property, User, Users } from 'src/types/typings'
 
 const initialState: DbState = {
 	users: {},
 	properties: {},
+	auctions: {},
 	connected: false,
 	lastSyncedOn: new Date().getTime()
 }
@@ -49,6 +50,19 @@ const queueSlice = createSlice({
 					...properties
 				}
 			}
+		},
+		saveAuctions(state: DbState, action: PayloadAction<Auction[]>) {
+			const auctions = action.payload.reduce<Auctions>((agg, curr) => {
+				return { ...agg, [curr._id ?? 0]: curr}
+			}, {})
+
+			return {
+				...state,
+				auctions: {
+					...state.auctions,
+					...auctions
+				}
+			}
 		}
 	},
 	extraReducers: {}
@@ -56,7 +70,7 @@ const queueSlice = createSlice({
 
 const { reducer } = queueSlice
 
-export const { saveUsers, updateLastSyncOn, saveProperties, toggleNetworkConnectivity } =
+export const { saveUsers, saveAuctions, updateLastSyncOn, saveProperties, toggleNetworkConnectivity } =
 	queueSlice.actions
 
 export default reducer
