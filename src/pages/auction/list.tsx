@@ -1,6 +1,7 @@
 import clsx from 'clsx'
 import moment from 'moment'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import EmptyImage from 'src/assets/card/emptyImage.png'
 import { Container } from 'src/components/app/container'
@@ -31,11 +32,13 @@ const AuctionList = ({ auctionsData }: AuctionListProps) => {
 		setData(filteredData)
 	}, [filterParams])
 
+	const router = useRouter()
+
 	const renderPeopleTBody = (data: Auction[]) => {
 		return (
 			<tbody className="bg-white">
 				{data.map((item, index) => (
-					<tr key={item.Title + index} className={clsx(index % 2 === 0 && 'bg-gray-100')}>
+					<tr onClick={() => router.push(`/auction/view/${item._id}`)} key={item.Title + index} className={clsx('cursor-pointer', index % 2 === 0 && 'bg-gray-100')}>
 						<td className="tw-table-td col-span-2">
 							<Image
 								src={item.images?.[0] ?? EmptyImage}
