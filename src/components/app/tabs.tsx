@@ -16,6 +16,7 @@ interface TabsProps {
 	active?: {
 		propertyDetails: boolean
 		addHistory: boolean
+		allHistory: boolean
 	}
 }
 
@@ -49,6 +50,7 @@ export const Tabs = ({
 									index == 0 && setShowTab(tab.name)
 									index == 1 && active?.propertyDetails && setShowTab(tab.name)
 									index == 2 && active?.addHistory && setShowTab(tab.name)
+									index == 3 && active?.allHistory && setShowTab(tab.name)
 								}}
 								key={tab.name}
 								className={clsx(
