@@ -13,6 +13,7 @@ import { Input } from 'src/components/app/input'
 import { AppLayout } from 'src/components/app/layout'
 import { ShowHidePassword } from 'src/components/password'
 import { useAppDispatch } from 'src/hooks/rtk'
+import authService from 'src/services/auth'
 import { login } from 'src/slices/auth'
 import { User } from 'src/types/typings'
 import * as yup from 'yup'
@@ -49,6 +50,10 @@ const Login = () => {
 	const handleFormSubmit = (data: any) => {
 		loginUser(data)
 		setLoading(true)
+	}
+
+	const handleForgetPassword = async() => {
+		authService.forgotPassword("admin")
 	}
 
 	const bgImage = `url(${background.src})`
@@ -120,7 +125,7 @@ const Login = () => {
 							</Button>
 						</div>
 						<div className="flex justify-between">
-							<span>Forgot Password</span>
+							<span className='cursor-pointer' onClick={handleForgetPassword}>Forgot Password</span>
 							<span>Surveyor Login</span>
 						</div>
 					</form>
