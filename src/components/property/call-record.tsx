@@ -4,8 +4,6 @@ import {
 	FieldErrors,
 	UseFormGetValues,
 	UseFormRegister,
-	UseFormReset,
-	UseFormResetField,
 	UseFormSetValue,
 	UseFormWatch
 } from 'react-hook-form'
@@ -25,8 +23,6 @@ interface CallRecordProps {
 	errors?: FieldErrors<Property>
 	control?: Control<Property, any>
 	setValue?: UseFormSetValue<Property>
-	reset?: UseFormReset<Property>
-	resetField?: UseFormResetField<Property>
 	callDate?: HistoryDate
 	setCallDate?: Dispatch<SetStateAction<HistoryDate>>
 	watch?: UseFormWatch<Property>
@@ -36,8 +32,6 @@ interface CallRecordProps {
 
 const CallRecord = ({
 	setValue,
-	reset,
-	resetField,
 	recordCount,
 	setRecordCount,
 	isFirst,
