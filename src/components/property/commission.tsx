@@ -54,7 +54,6 @@ const Commission = ({ show, control, register, errors }: CommissionProps) => {
 							autoComplete="accountnumber"
 							name="AddCommission.AccountNumber"
 							error={errors}
-							currency={true}
 							placeholder="Enter account number"
 							onChange={onChange}
 							value={value}
