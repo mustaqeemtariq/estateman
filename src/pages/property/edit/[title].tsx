@@ -26,7 +26,8 @@ const UpdateProperty = ({ propertyData }: UpdatePropertyProps) => {
 			<Container>
 				<PropertyHeader showHistory={true} setState={setState} active={active} state={state} />
 				<PropertyForm
-					data={propertyData}
+					editData={propertyData}
+					isNew={false}
 					currentTab={state}
 					setCurrentTab={setState}
 					setActive={setActive}
@@ -38,6 +39,7 @@ const UpdateProperty = ({ propertyData }: UpdatePropertyProps) => {
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 	const { title } = ctx.query
+
 	const response = await propertyService.searchProperty(typeof title == 'string' ? title : '')
 	return {
 		props: {
