@@ -4,6 +4,7 @@ interface User {
 	id: string
 	Username: string
 	Email: string
+	Role: string
 	Password: string
 	Contact: string
 }
@@ -11,6 +12,7 @@ interface User {
 interface Auth {
 	username: string
 	accessToken: string
+	role: string
 }
 
 interface RootReducerState {
