@@ -6,7 +6,11 @@ interface User {
 	Email: string
 	Role: string
 	Password: string
+	ConfirmPassword: string
+	Address: string
+	CNIC: string
 	Contact: string
+	rights: UserRightTypes[]
 }
 
 interface Auth {
