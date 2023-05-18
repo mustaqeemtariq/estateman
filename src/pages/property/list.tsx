@@ -73,7 +73,7 @@ const PropertyList = ({ propertiesData }: PropertyListProps) => {
 			<AppHeader />
 			<Container>
 				<ListHeader heading="All Properties" count={data.length} setView={setView} />
-				<AppFilter showContract={true} setFilterData={setFilterParams} />
+				<AppFilter count={data.length} showContract={true} setFilterData={setFilterParams} />
 				{view === 'box' ? <BoxView data={data} /> : <ListView data={data} />}
 			</Container>
 		</AppLayout>
