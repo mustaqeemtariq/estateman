@@ -1,8 +1,10 @@
 import { ChevronLeftIcon, PlusIcon } from '@heroicons/react/20/solid'
 import { Bars2Icon } from '@heroicons/react/24/outline'
+import clsx from 'clsx'
 import { useRouter } from 'next/router'
 import { Dispatch, SetStateAction, useState } from 'react'
 import { BiCheckbox } from 'react-icons/bi'
+import { useAppSelector } from 'src/hooks/rtk'
 import { Button } from '../app/button'
 import { Tabs } from '../app/tabs'
 
@@ -14,6 +16,8 @@ interface ListHeaderProps {
 }
 
 export const ListHeader = ({ heading, count, setView, viewButtons }: ListHeaderProps) => {
+	const { role } = useAppSelector(state => state.auth)
+
 	const [showTab, setShowTab] = useState(heading)
 	const router = useRouter()
 
@@ -35,7 +39,7 @@ export const ListHeader = ({ heading, count, setView, viewButtons }: ListHeaderP
 			/>
 			{!viewButtons ? (
 				<div className="text-[#717B9D] flex space-x-8 text-lg items-center ">
-					<div className="space-x-1 flex">
+					<div className={clsx('space-x-1 flex', role === 'surveyor' && 'hidden')}>
 						<h3>{count}</h3>
 						<h3>Properties</h3>
 					</div>
@@ -54,10 +58,14 @@ export const ListHeader = ({ heading, count, setView, viewButtons }: ListHeaderP
 				</div>
 			) : (
 				<div className="flex space-x-5">
-					<Button className="bg-black text-white uppercase flex items-center space-x-2">
-						<PlusIcon className="h-5 w-5" aria-hidden="true" />
-						<span className="whitespace-nowrap">Add History</span>
-					</Button>
+					{heading !== 'Auction Details' && (
+						<Button
+							className="bg-black text-white uppercase flex items-center space-x-2"
+							onClick={() => router.push('/property/history')}>
+							<PlusIcon className="h-5 w-5" aria-hidden="true" />
+							<span className="whitespace-nowrap">Add History</span>
+						</Button>
+					)}
 					<Button
 						onClick={() => router.back()}
 						className="bg-black text-white uppercase flex items-center space-x-1">
