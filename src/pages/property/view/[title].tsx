@@ -12,8 +12,6 @@ interface ViewPropertyProps {
 }
 
 const ViewProperty = ({ propertyData }: ViewPropertyProps) => {
-
-
 	return (
 		<AppLayout>
 			<AppHeader />
