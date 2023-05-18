@@ -26,7 +26,7 @@ const schema = yup.object<UserForm>().shape({
 		.min(8, 'Password must be at least 8 characters long')
 		.matches(
 			/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/,
-			'Password must contain one uppercase letter, one number, and one special character'
+			'Password contain one uppercase, one number, and one special character'
 		),
 	ConfirmPassword: yup
 		.string()
@@ -104,7 +104,7 @@ const UserForm = ({ isNew, title, data }: UserFormProps) => {
 		isNew ? postData(data) : updateData(data)
 	}
 
-	const [selectedRights, setSelectedRights] = useState<UserRightTypes[]>([])
+	const [selectedRights, setSelectedRights] = useState<UserRightTypes[]>(data?.rights ?? [])
 
 	const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { value, checked } = e.target
