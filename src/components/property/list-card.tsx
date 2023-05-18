@@ -1,14 +1,13 @@
 import { ExclamationTriangleIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
 import moment from 'moment'
-import Image from 'next/image'
 import Link from 'next/link'
-import EmptyImage from 'src/assets/card/emptyImage.png'
+import { useEffect, useState } from 'react'
+import { useAppSelector } from 'src/hooks/rtk'
+import imageService from 'src/services/images'
 import { ImagePath, Property } from 'src/types/typings'
 import { dateDifference } from 'src/utils/date'
 import { Table } from '../app/table'
-import { useEffect, useState } from 'react'
-import imageService from 'src/services/images'
 
 interface ListCardProps {
 	data: Property[]
@@ -16,16 +15,17 @@ interface ListCardProps {
 
 export const PropertyListCard = ({ data }: ListCardProps) => {
 	const renderPeopleTBody = (data: Property[]) => {
+		const [images, setImages] = useState<ImagePath>()
 
-	const [images, setImages] = useState<ImagePath>()
+		useEffect(() => {
+			const getImages = async () => {
+				const response = await imageService.getPropertyImages('64649dcec2f9388d7c103db6')
+				setImages(response)
+			}
+			getImages()
+		}, [])
 
-	useEffect(() => {
-		const getImages = async () => {
-			const response = await imageService.getPropertyImages('64649dcec2f9388d7c103db6')
-			setImages(response)
-		}
-		getImages()
-	}, [])
+		const { role } = useAppSelector(state => state.auth)
 
 		return (
 			<tbody className="bg-white">
@@ -83,11 +83,13 @@ export const PropertyListCard = ({ data }: ListCardProps) => {
 										View
 									</button>
 								</Link>
-								<Link href={`/property/edit/${item.Title}`}>
-									<button className="mx-2 text-white bg-[#DC4200] rounded-md px-10 py-2 uppercase">
-										Edit
-									</button>
-								</Link>
+								{role !== 'surveyor' && (
+									<Link href={`/property/edit/${item.Title}`}>
+										<button className="mx-2 text-white bg-[#DC4200] rounded-md px-10 py-2 uppercase">
+											Edit
+										</button>
+									</Link>
+								)}
 								<Link href={'/property/history'}>
 									<button className="mx-2 text-white bg-[#0038FF] rounded-md px-8 py-2">
 										Add History
