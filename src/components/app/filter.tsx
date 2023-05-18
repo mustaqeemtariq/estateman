@@ -8,6 +8,7 @@ interface AppFilterProps {
 	showContract?: boolean
 	showStatus?: boolean
 	auction?: boolean
+	count?: number
 	length?: number
 	setFilterData: Dispatch<SetStateAction<FilterParameter>>
 }
@@ -16,6 +17,7 @@ export const AppFilter = ({
 	showContract = false,
 	showStatus = false,
 	auction = false,
+	count,
 	length,
 	setFilterData
 }: AppFilterProps) => {
@@ -24,71 +26,81 @@ export const AppFilter = ({
 		setFilterData(prev => ({ ...prev, [name]: value }))
 	}
 
+	const { role } = useAppSelector(state => state.auth)
 	const auctions = useAppSelector(state => state.db.auctions)
 
 	return (
 		<div className={clsx(!auction && 'flex space-x-2 my-4')}>
 			{!auction && (
-				<>
-					<select
-						name="period"
-						onChange={handleData}
-						className="mt-1 block w-full rounded-md border-0 py-3 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 sm:text-sm sm:leading-6 outline-none">
-						<option value="newest">Newest</option>
-						<option value="oldest">Oldest</option>
-					</select>
-					<select
-						name="city"
-						onChange={handleData}
-						className="mt-1 block w-full rounded-md border-0 py-3 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 sm:text-sm sm:leading-6 outline-none">
-						<option value="">City</option>
-						{Object.values(CityNames).map(unit => (
-							<option key={unit} value={unit}>
-								{unit}
-							</option>
-						))}
-					</select>
-					<select
-						name="type"
-						onChange={handleData}
-						className="mt-1 block w-full rounded-md border-0 py-3 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 sm:text-sm sm:leading-6 outline-none">
-						<option value="">Type</option>
-						<option value="residential">Residential</option>
-						<option value="commercial">Commercial</option>
-					</select>
-					<select
-						name="category"
-						onChange={handleData}
-						className="mt-1 block w-full rounded-md border-0 py-3 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 sm:text-sm sm:leading-6 outline-none">
-						<option value="house">House</option>
-						<option value="penthouse">PentHouse</option>
-						<option value="apartment">Apartment</option>
-						<option value="studio">Studio</option>
-						<option value="villa">Villa</option>
-						<option value="plot">Plot</option>
-						<option value="land">Agricultural Land</option>
-					</select>
-					{showContract && (
+				<div
+					className={clsx(role === 'surveyor' ? 'flex items-center space-x-5 w-full' : 'contents')}>
+					<div className={clsx(role !== 'surveyor' && 'hidden', 'space-x-1 flex text-[#717B9D]')}>
+						<h3>{count}</h3>
+						<h3>Properties</h3>
+					</div>
+					<div className="flex space-x-2 w-full">
 						<select
-							name="contract"
+							name="period"
 							onChange={handleData}
 							className="mt-1 block w-full rounded-md border-0 py-3 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 sm:text-sm sm:leading-6 outline-none">
-							<option value="">Contract</option>
-							<option value="Rent">For Rent</option>
-							<option value="Sale">For Sale</option>
+							<option value="newest">Newest</option>
+							<option value="oldest">Oldest</option>
 						</select>
-					)}
-					{showStatus && (
 						<select
-							name="status"
+							name="city"
 							onChange={handleData}
 							className="mt-1 block w-full rounded-md border-0 py-3 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 sm:text-sm sm:leading-6 outline-none">
-							<option value="">Status</option>
-							<option value="vacant">Vacant</option>
-							<option value="occupied">Occupied</option>
+							<option value="">City</option>
+							{Object.values(CityNames).map(unit => (
+								<option key={unit} value={unit}>
+									{unit}
+								</option>
+							))}
 						</select>
-					)}
-				</>
+						<select
+							name="type"
+							onChange={handleData}
+							className="mt-1 block w-full rounded-md border-0 py-3 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 sm:text-sm sm:leading-6 outline-none">
+							<option value="">Type</option>
+							<option value="residential">Residential</option>
+							<option value="commercial">Commercial</option>
+						</select>
+						<select
+							name="category"
+							onChange={handleData}
+							className="mt-1 block w-full rounded-md border-0 py-3 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 sm:text-sm sm:leading-6 outline-none">
+							<option value="house">House</option>
+							<option value="penthouse">PentHouse</option>
+							<option value="apartment">Apartment</option>
+							<option value="studio">Studio</option>
+							<option value="villa">Villa</option>
+							<option value="plot">Plot</option>
+							<option value="land">Agricultural Land</option>
+						</select>
+
+						{showContract && (
+							<select
+								name="contract"
+								onChange={handleData}
+								className="mt-1 block w-full rounded-md border-0 py-3 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 sm:text-sm sm:leading-6 outline-none">
+								<option value="">Contract</option>
+								<option value="Rent">For Rent</option>
+								<option value="Sale">For Sale</option>
+							</select>
+						)}
+
+						{showStatus && (
+							<select
+								name="status"
+								onChange={handleData}
+								className="mt-1 block w-full rounded-md border-0 py-3 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 sm:text-sm sm:leading-6 outline-none">
+								<option value="">Status</option>
+								<option value="vacant">Vacant</option>
+								<option value="occupied">Occupied</option>
+							</select>
+						)}
+					</div>
+				</div>
 			)}
 
 			{auction && (

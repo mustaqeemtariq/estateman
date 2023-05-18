@@ -10,59 +10,80 @@ import { AiFillHome } from 'react-icons/ai'
 import { BsBuildingFillLock, BsBuildingFillUp, BsFillBuildingFill } from 'react-icons/bs'
 import { ImUsers } from 'react-icons/im'
 import Logo from 'src/assets/logo/em-logo.png'
+import { useAppSelector } from 'src/hooks/rtk'
 
 interface SidebarProps {
 	children: React.ReactNode
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
-	const navigation = [
-		{ name: 'Home', icon: AiFillHome, current: true, href: '/' },
-		{
-			name: 'User',
-			icon: ImUsers,
-			href: '/user',
-			current: false,
-			children: [
-				{ name: 'All Users', href: '/user/list' },
-				{ name: 'Add User', href: '/user/new' }
-			]
-		},
-		{
-			name: 'Property Listing',
-			icon: BsFillBuildingFill,
-			href: '/property',
-			current: false,
-			children: [
-				{ name: 'View All Properties', href: '/property/list' },
-				{ name: 'Lease (Rental)', href: '/property/lease' },
-				{ name: 'On Sale', href: '/property/sold' },
-				{ name: 'Add Property', href: '/property/new' }
-			]
-		},
-		{
-			name: 'Auctions',
-			icon: BsFillBuildingFill,
-			href: '/auction',
-			current: false,
-			children: [
-				{ name: 'View All Auctions', href: '/auction/list' },
-				{ name: 'Add Auction', href: '/auction/new' }
-			]
-		},
-		{
-			name: 'Signed Lease (Rental)',
-			icon: BsBuildingFillUp,
-			current: false,
-			href: '/property/lease'
-		},
-		{
-			name: 'Units Sold',
-			icon: BsBuildingFillLock,
-			current: false,
-			href: '/property/sold'
-		}
-	]
+	const { role } = useAppSelector(state => state.auth)
+	let navigation
+	if (role === 'surveyor') {
+		navigation = [
+			{ name: 'Home', icon: AiFillHome, current: true, href: '/' },
+			{
+				name: 'Property Listing',
+				icon: BsFillBuildingFill,
+				href: '/property',
+				current: false,
+				children: [
+					{ name: 'View All Properties', href: '/property/list' },
+					{ name: 'Lease (Rental)', href: '/property/lease' },
+					{ name: 'On Sale', href: '/property/sold' },
+					{ name: 'Add Property', href: '/property/new' }
+				]
+			}
+		]
+	} else {
+		navigation = [
+			{ name: 'Home', icon: AiFillHome, current: true, href: '/' },
+			{
+				name: 'User',
+				icon: ImUsers,
+				href: '/user',
+				current: false,
+				children: [
+					{ name: 'All Users', href: '/user/list' },
+					{ name: 'Add User', href: '/user/new' }
+				]
+			},
+			{
+				name: 'Property Listing',
+				icon: BsFillBuildingFill,
+				href: '/property',
+				current: false,
+				children: [
+					{ name: 'View All Properties', href: '/property/list' },
+					{ name: 'Lease (Rental)', href: '/property/lease' },
+					{ name: 'On Sale', href: '/property/sold' },
+					{ name: 'Add Property', href: '/property/new' }
+				]
+			},
+			{
+				name: 'Auctions',
+				icon: BsFillBuildingFill,
+				href: '/auction',
+				current: false,
+				children: [
+					{ name: 'View All Auctions', href: '/auction/list' },
+					{ name: 'Add Auction', href: '/auction/new' }
+				]
+			},
+			{
+				name: 'Signed Lease (Rental)',
+				icon: BsBuildingFillUp,
+				current: false,
+				href: '/property/lease'
+			},
+			{
+				name: 'Units Sold',
+				icon: BsBuildingFillLock,
+				current: false,
+				href: '/property/sold'
+			}
+		]
+	}
 
 	const { pathname } = useRouter()
 
