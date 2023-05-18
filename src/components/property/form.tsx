@@ -17,6 +17,7 @@ import { PlusIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
 import { useRouter } from 'next/router'
 import { toast } from 'react-hot-toast'
+import { BiCurrentLocation } from 'react-icons/bi'
 import { Spinner } from 'src/components/animations/spinner'
 import { Button } from 'src/components/app/button'
 import { Input, InputNumber } from 'src/components/app/input'
@@ -27,22 +28,19 @@ import {
 	CommissionFormValues,
 	PropertyDetailsFormValues
 } from 'src/constants/form-defaults'
+import { useAppSelector } from 'src/hooks/rtk'
+import imageService from 'src/services/images'
 import propertyService from 'src/services/property'
 import { Property } from 'src/types/typings'
-import { convertToBase64 } from 'src/utils/base64'
 import { Checkbox } from '../app/checkbox'
 import { DateInput } from '../app/date'
 import FileUpload from '../app/file-upload'
+import { MapComponent } from '../app/map'
 import { Radio } from '../app/radio'
 import { Select } from '../app/select'
 import CallRecord from './call-record'
 import Commission from './commission'
 import PricingHistory from './pricing-history'
-import MapIcon from 'src/assets/view/Place Marker.png'
-import Image from 'next/image'
-import { BiCurrentLocation } from 'react-icons/bi'
-import { MapComponent } from '../app/map'
-import imageService from 'src/services/images'
 
 interface PropertyFormProps {
 	currentTab: string
@@ -54,7 +52,8 @@ interface PropertyFormProps {
 		}>
 	>
 	setCurrentTab: Dispatch<SetStateAction<string>>
-	data?: Property
+	editData?: Property
+	isNew?: boolean
 }
 
 export interface HistoryDate {
@@ -67,14 +66,20 @@ enum FormSteps {
 	ADDPROPERTY = 1,
 	PROPERTYDETAILS = 2,
 	ADDHISTORY = 3,
-	ALLHISTORY = 4,
+	ALLHISTORY = 4
 }
 
 type StateType = {
 	step: FormSteps
 }
 
-const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFormProps) => {
+const PropertyForm = ({
+	currentTab,
+	setActive,
+	setCurrentTab,
+	editData,
+	isNew
+}: PropertyFormProps) => {
 	const [state, setState] = useState<StateType>({
 		step: FormSteps.ADDPROPERTY
 	})
@@ -223,16 +228,15 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 		watch,
 		reset,
 		setValue,
-		resetField,
 		formState: { errors }
 	} = useForm<Property>({
 		resolver: yupResolver(schema as any),
 		context: { step: state.step },
 		defaultValues: {
-			...AddPropertyFormValues(data),
-			...PropertyDetailsFormValues(data),
-			...AddHistoryFormValues(data),
-			...CommissionFormValues(data)
+			...AddPropertyFormValues(editData),
+			...PropertyDetailsFormValues(editData),
+			...AddHistoryFormValues(editData),
+			...CommissionFormValues(editData)
 		},
 		mode: 'all'
 	})
@@ -262,7 +266,7 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 						watch,
 						setCategory,
 						setValue,
-						data,
+						editData,
 						propertyDate,
 						setPropertyDate
 					}}
@@ -272,7 +276,16 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 		case FormSteps.PROPERTYDETAILS:
 			component = (
 				<PropertyDetailsForm
-					{...{ errors, register, control, setValue, category, data, propertyImages, setPropertyImages }}
+					{...{
+						errors,
+						register,
+						control,
+						setValue,
+						category,
+						editData,
+						propertyImages,
+						setPropertyImages
+					}}
 				/>
 			)
 			break
@@ -281,7 +294,7 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 				<AddHistoryForm
 					{...{
 						errors,
-						data,
+						editData,
 						register,
 						control,
 						watch,
@@ -372,18 +385,30 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 			router.push('/property/history')
 		} else {
 			toast.error('Property not saved')
-			console.log(response.message);
+			console.log(response.message)
 			setUpdating(false)
 		}
 	}
 
-	const addImage = async (data: {propertyDetails: FormData, addHistory: FormData}) => {
+	const updateProperty = async (id: string, data: Property) => {
+		const response = await propertyService.updateProperty(id, data)
+		if (response.success) {
+			toast.success('Property updated successfully')
+			router.push('/property/history')
+		} else {
+			toast.error('Property not updated')
+			console.log(response.message)
+			setUpdating(false)
+		}
+	}
+
+	const addImage = async (data: { propertyDetails: FormData; addHistory: FormData }) => {
 		const response = await imageService.uploadPropertyImages(data)
-			if (response.success) {
-				toast.success('Images added successfully')
-			} else {
-				toast.error('Images not added')
-			}
+		if (response.success) {
+			toast.success('Images added successfully')
+		} else {
+			toast.error('Images not added')
+		}
 	}
 
 	const onSubmit = handleSubmit(data => {
@@ -398,7 +423,7 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 				propertyFormData.append(`image${index}`, image)
 			})
 		}
-		
+
 		data.PropertyDetails = {
 			City: data.City,
 			Housenumber: data.Housenumber,
@@ -410,7 +435,7 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 			Bath: data.Bath,
 			Kitchen: data.Kitchen,
 			Gas: data.Gas,
-			Electricity: data.Electricity,
+			Electricity: data.Electricity
 		}
 
 		data.OwnerDetails = {
@@ -456,9 +481,14 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 				}
 			}
 		})
-		const images = {propertyDetails: propertyFormData, addHistory: historyFormData}
-		addProperty(data)
-		addImage(images)
+		const images = { propertyDetails: propertyFormData, addHistory: historyFormData }
+		if (isNew) {
+			addProperty(data)
+			addImage(images)
+		} else if (editData) {
+			updateProperty(editData?._id, data)
+			addImage(images)
+		}
 		setUpdating(true)
 	})
 
@@ -550,7 +580,7 @@ interface FormProps {
 	setHistoryImages?: Dispatch<SetStateAction<File[]>>
 	showCommission?: boolean
 	setShowCommission?: Dispatch<SetStateAction<boolean>>
-	data?: Property
+	editData?: Property
 	priceCount?: number
 	setPriceCount?: Dispatch<SetStateAction<number>>
 	recordCount?: number
@@ -565,7 +595,7 @@ const AddPropertyForm = ({
 	setCategory,
 	propertyDate,
 	setPropertyDate,
-	data,
+	editData,
 	setValue
 }: FormProps) => {
 	const property = watch?.('PropertyType')
@@ -751,7 +781,7 @@ const AddPropertyForm = ({
 								render={({ field: { onChange, value } }) => (
 									<DateInput
 										id="year"
-										value={data?.YearBuilt}
+										value={editData?.YearBuilt}
 										register={register}
 										onCalendarClick={handleDate}
 										placeholder="Enter year"
@@ -879,7 +909,7 @@ const PropertyDetailsForm = ({
 	control,
 	category,
 	setValue,
-	data,
+	editData,
 	propertyImages,
 	setPropertyImages
 }: FormProps) => {
@@ -1229,6 +1259,7 @@ const AddHistoryForm = ({
 	priceCount = 1,
 	setPriceCount
 }: FormProps) => {
+	const { role } = useAppSelector(state => state.auth)
 	const handleUpload = (files: File[]) => {
 		if (historyImages) {
 			setHistoryImages?.([...historyImages, ...files])
@@ -1250,7 +1281,7 @@ const AddHistoryForm = ({
 	const occupancy = watch?.('OccupancyStatus')
 
 	return (
-		<div className="grid grid-cols-4 gap-x-8 gap-y-4">
+		<div className={clsx('grid grid-cols-4 gap-x-8 gap-y-4')}>
 			<div className={clsx('space-y-6', showCommission && 'hidden')}>
 				<DateInput
 					labelText="Date"
@@ -1323,14 +1354,16 @@ const AddHistoryForm = ({
 					)}
 				/>
 
-				<div
-					className={clsx(
-						'bg-[#0D0C18] text-white py-2 px-2 justify-center space-x-4 font-semibold rounded-md flex items-center cursor-pointer'
-					)}
-					onClick={() => setShowCommission?.(true)}>
-					<PlusIcon className="h-5 w-5 stroke-white" aria-hidden="true" />
-					<span className="uppercase">Commision</span>
-				</div>
+				{role !== 'surveyor' && (
+					<div
+						className={clsx(
+							'bg-[#0D0C18] text-white py-2 px-2 justify-center space-x-4 font-semibold rounded-md flex items-center cursor-pointer'
+						)}
+						onClick={() => setShowCommission?.(true)}>
+						<PlusIcon className="h-5 w-5 stroke-white" aria-hidden="true" />
+						<span className="uppercase">Commision</span>
+					</div>
+				)}
 			</div>
 			<div className={clsx('col-span-3 space-y-2', showCommission && 'hidden')}>
 				<div className="space-y-4">
@@ -1349,7 +1382,7 @@ const AddHistoryForm = ({
 										onChange={onChange}
 										placeholder="Enter Details"
 										value={value ?? ''}
-										rows={2}
+										rows={role === 'surveyor' ? 6 : 2}
 										className="block placeholder-gray-500 w-full appearance-none bg-[#E6E6E6] rounded-md border border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
 									/>
 									{error && <span className="text-xs text-red-600">{error.message}</span>}
@@ -1366,29 +1399,32 @@ const AddHistoryForm = ({
 						id="historyimage"
 						placeholder="Select upto 10 files, File Type: jpg, png, gif, pdf"
 					/>
-					<Controller
-						name={'CallType'}
-						control={control}
-						render={({ field: { onChange, value } }) => (
-							<div className="flex space-x-6">
-								<Radio
-									labelText="Incoming Call Record"
-									name="CallType"
-									onChange={e => onChange(e.target.value)}
-									value="incoming"
-									checked={value === 'incoming'}
-								/>
-								<Radio
-									labelText="Outgoing Call Record"
-									name="CallType"
-									onChange={e => onChange(e.target.value)}
-									value="outgoing"
-									checked={value === 'outgoing'}
-								/>
-							</div>
-						)}
-					/>
-					{callRecord &&
+					{role !== 'surveyor' && (
+						<Controller
+							name={'CallType'}
+							control={control}
+							render={({ field: { onChange, value } }) => (
+								<div className="flex space-x-6">
+									<Radio
+										labelText="Incoming Call Record"
+										name="CallType"
+										onChange={e => onChange(e.target.value)}
+										value="incoming"
+										checked={value === 'incoming'}
+									/>
+									<Radio
+										labelText="Outgoing Call Record"
+										name="CallType"
+										onChange={e => onChange(e.target.value)}
+										value="outgoing"
+										checked={value === 'outgoing'}
+									/>
+								</div>
+							)}
+						/>
+					)}
+					{role !== 'surveyor' &&
+						callRecord &&
 						Array.from({ length: recordCount }, (_, index) => (
 							<CallRecord
 								key={index}
@@ -1405,32 +1441,35 @@ const AddHistoryForm = ({
 								index={index}
 							/>
 						))}
-					{Array.from({ length: priceCount }, (_, index) => (
-						<PricingHistory
-							key={index}
-							isFirst={index == 0}
-							priceCount={priceCount}
-							setPriceCount={setPriceCount}
-							register={register}
-							priceDate={priceDate}
-							setPriceDate={setPriceDate}
-							control={control}
-							errors={errors}
-							watch={watch}
-							setValue={setValue}
-							index={index}
-						/>
-					))}
+					{role !== 'surveyor' &&
+						Array.from({ length: priceCount }, (_, index) => (
+							<PricingHistory
+								key={index}
+								isFirst={index == 0}
+								priceCount={priceCount}
+								setPriceCount={setPriceCount}
+								register={register}
+								priceDate={priceDate}
+								setPriceDate={setPriceDate}
+								control={control}
+								errors={errors}
+								watch={watch}
+								setValue={setValue}
+								index={index}
+							/>
+						))}
 				</div>
 			</div>
-			<div className="col-span-4">
-				<Commission
-					show={showCommission ?? false}
-					register={register}
-					control={control}
-					errors={errors}
-				/>
-			</div>
+			{role !== 'surveyor' && (
+				<div className="col-span-4">
+					<Commission
+						show={showCommission ?? false}
+						register={register}
+						control={control}
+						errors={errors}
+					/>
+				</div>
+			)}
 		</div>
 	)
 }
