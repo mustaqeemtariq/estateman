@@ -3,29 +3,34 @@ import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import * as yup from 'yup'
 
+import { useRouter } from 'next/router'
 import { toast } from 'react-hot-toast'
 import { Spinner } from 'src/components/animations/spinner'
 import { Button } from 'src/components/app/button'
 import { Input, InputNumber } from 'src/components/app/input'
 import { CityNames, UnitTypes } from 'src/constants/constants'
 import auctionService from 'src/services/auction'
+import imageService from 'src/services/images'
 import { Auction } from 'src/types/typings'
 import { DateInput } from '../app/date'
 import FileUpload from '../app/file-upload'
 import { Radio } from '../app/radio'
 import { Select } from '../app/select'
-import imageService from 'src/services/images'
-import { useRouter } from 'next/router'
 
 const schema = yup.object<Auction>().shape({
 	Title: yup.string().required('Title is required e.g Furnished 2 Bed F 11'),
 	Auctioneer: yup.string().required('Please select at least one option'),
 	LandArea: yup.string().required('Area is required'),
 	Units: yup.string().required('Select a unit'),
+	ContactNumber: yup
+		.string()
+		.required('Contact number is a required field')
+		.min(11, 'Phone number should be 11 digits')
+		.max(11, 'Phone number should be 11 digits'),
 	City: yup
 		.string()
 		.min(1, 'Please select at least one city')
-		.required('Please select at least one city'),
+		.required('Please select at least one city')
 })
 
 const AuctionForm = () => {
@@ -61,8 +66,7 @@ const AuctionForm = () => {
 		const response = await imageService.uploadAuctionImages(data)
 		if (response.success) {
 			toast.success(`Images uploaded successfully`)
-		}
-		else {
+		} else {
 			toast.error('Error uploading images')
 			console.log(response.message)
 			setUpdating(false)
@@ -131,9 +135,11 @@ const AuctionForm = () => {
 								control={control}
 								render={({ field: { onChange, value } }) => (
 									<div className="flex flex-col w-full space-y-4">
-										<label htmlFor="Auctioneer">Auctioneer
-										<span style={{ color: 'red' }}> *</span></label>
-										
+										<label htmlFor="Auctioneer">
+											Auctioneer
+											<span style={{ color: 'red' }}> *</span>
+										</label>
+
 										<div className="flex flex-row items-center gap-x-14">
 											<Radio
 												labelText="Bank"
@@ -220,67 +226,63 @@ const AuctionForm = () => {
 						/>
 
 						<div className="flex w-full space-x-2 justify-between">
-							
-								<Controller
-									name={'Balance'}
-									control={control}
-									render={({ field: { onChange, value } }) => (
-										<InputNumber
-											id="balance"
-											labelText='Balance'
-											autoComplete="balance"
-											name="Balance"
-											error={errors}
-											
-											placeholder="0"
-											onChange={onChange}
-											value={value}
-											currency={true}
-										/>
-									)}
-								/>
-									
-								<Controller
-									name={'ReservePrice'}
-									control={control}
-									render={({ field: { onChange, value } }) => (
-										<InputNumber
-											id="reservedPrice"
-											autoComplete="reservedPrice"
-											name="reservedPrice"
-											labelText='Reserve Price(Pkr)'
-											error={errors}
-									
-											placeholder="0"
-											onChange={onChange}
-											value={value}
-											currency={true}
-										/>
-									)}
-								/>
-							
+							<Controller
+								name={'Balance'}
+								control={control}
+								render={({ field: { onChange, value } }) => (
+									<InputNumber
+										id="balance"
+										labelText="Balance"
+										autoComplete="balance"
+										name="Balance"
+										error={errors}
+										placeholder="0"
+										onChange={onChange}
+										value={value}
+										currency={true}
+									/>
+								)}
+							/>
+
+							<Controller
+								name={'ReservePrice'}
+								control={control}
+								render={({ field: { onChange, value } }) => (
+									<InputNumber
+										id="reservedPrice"
+										autoComplete="reservedPrice"
+										name="reservedPrice"
+										labelText="Reserve Price(Pkr)"
+										error={errors}
+										placeholder="0"
+										onChange={onChange}
+										value={value}
+										currency={true}
+									/>
+								)}
+							/>
 						</div>
 					</div>
 					<div className="flex sm:space-x-8 max-sm:flex-col">
-						<div className="flex space-x-2 w-full">	
-								<Controller
-									name={'LandArea'}
-									control={control}
-									render={({ field: { onChange, value } }) => (
-										<InputNumber
-											id="area"
-											autoComplete="area"
-											labelText='Area'
-											name="LandArea"
-											error={errors}
-											required={true}
-											placeholder="0"
-											onChange={onChange}
-											value={value}
-										/>
-									)}
-								/>
-							
+						<div className="flex space-x-2 w-full">
+							<Controller
+								name={'LandArea'}
+								control={control}
+								render={({ field: { onChange, value } }) => (
+									<InputNumber
+										id="area"
+										autoComplete="area"
+										labelText="Area"
+										name="LandArea"
+										error={errors}
+										required={true}
+										placeholder="0"
+										onChange={onChange}
+										value={value}
+									/>
+								)}
+							/>
+
 							<Select
 								id="unit"
 								labelText="Unit"
