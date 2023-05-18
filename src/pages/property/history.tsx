@@ -1,9 +1,8 @@
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
 import moment from 'moment'
+import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import EmptyImage from 'src/assets/card/emptyImage.png'
-import Image1 from 'src/assets/card/pexels-binyamin-mellish-1500459 1.png'
 import { Container } from 'src/components/app/container'
 import { AppHeader } from 'src/components/app/header'
 import { ImageSlider } from 'src/components/app/image-slider'
@@ -22,24 +21,20 @@ const PropertyHistory = ({ propertiesHistory }: PropertyHistoryProps) => {
 	const [expand, setExpand] = useState<{ [key: string]: boolean }>({})
 	const [state, setState] = useState('All History')
 	const [active, setActive] = useState({
-		propertyDetails: false,
-		addHistory: false,
+		propertyDetails: true,
+		addHistory: true,
 		allHistory: true
 	})
 
-	const renderPeopleTBody = (data: Property[]) => {
-		// const images = [
-		// 	Image1,
-		// 	EmptyImage,
-		// 	Image1,
-		// 	EmptyImage,
-		// 	Image1,
-		// 	EmptyImage,
-		// 	Image1,
-		// 	Image1,
-		// 	EmptyImage
-		// ]
+	const router = useRouter()
 
+	useEffect(() => {
+		if (state !== 'All History') {
+			router.push(`/property/new`)
+		}
+	}, [state])
+
+	const renderPeopleTBody = (data: Property[]) => {
 		const [images, setImages] = useState<ImagePath>()
 
 		useEffect(() => {
@@ -89,7 +84,7 @@ const PropertyHistory = ({ propertiesHistory }: PropertyHistoryProps) => {
 						<tr className={clsx(!expand[index] && 'hidden')}>
 							<td></td>
 							<td>
-								<div className='sm:flex sm:justify-between sm:border-b sm:border-gray-300'>
+								<div className="sm:flex sm:justify-between sm:border-b sm:border-gray-300">
 									<div className="grid max-sm:grid-cols-4 gap-x-1 text-gray-500 max-sm:border-b max-sm:border-gray-300 sm:grid-rows-4 sm:grid-flow-col">
 										<p className="text-medium col-span-2 sm:row-span-2">From:</p>
 										<p>To:</p>
