@@ -1,12 +1,8 @@
-import Image from 'next/image'
+import clsx from 'clsx'
 import Link from 'next/link'
-import EmptyImage from 'src/assets/card/emptyImage.png'
+import { useAppSelector } from 'src/hooks/rtk'
 import { dateDifference } from 'src/utils/date'
 import Alert from '../app/alert'
-import { useEffect, useState } from 'react'
-import propertyService from 'src/services/property'
-import imageService from 'src/services/images'
-import { ImagePath } from 'src/types/typings'
 
 interface BoxCardProps {
 	id: string
@@ -36,10 +32,9 @@ const PropertyBoxCard = ({
 	} else if (difference <= 1) {
 		type = 'warning'
 	}
-	
 
+	const { role } = useAppSelector(state => state.auth)
 
-	
 	return (
 		<div className="rounded-md border border-gray-300 hover:bg-[#0D0C18]/[85%] hover:shadow-lg relative">
 			<div className="relative">
@@ -63,7 +58,16 @@ const PropertyBoxCard = ({
 				<p className="whitespace-nowrap">{location}</p>
 				<div className="flex justify-between">
 					<p>{category}</p>
-					<p className="">{occupancy}</p>
+					<p
+						className={clsx(
+							'font-semibold',
+							occupancy === 'Not Sold' && 'text-[#058019]',
+							occupancy === 'Sold' && 'text-[#0B124D]',
+							occupancy === 'Vacant' && 'text-[#DC4200]',
+							occupancy === 'Occupied' && 'text-[#000000]'
+						)}>
+						{occupancy}
+					</p>
 				</div>
 			</div>
 
@@ -73,11 +77,13 @@ const PropertyBoxCard = ({
 						View
 					</button>
 				</Link>
-				<Link href={`/property/edit/${title}`}>
-					<button className="mx-2 text-white bg-[#DC4200] rounded-md px-10 py-2 uppercase">
-						Edit
-					</button>
-				</Link>
+				{role !== 'surveyor' && (
+					<Link href={`/property/edit/${title}`}>
+						<button className="mx-2 text-white bg-[#DC4200] rounded-md px-10 py-2 uppercase">
+							Edit
+						</button>
+					</Link>
+				)}
 				<Link href={'/property/history'}>
 					<button className="mx-2 text-white bg-[#0038FF] rounded-md px-8 py-2">Add History</button>
 				</Link>

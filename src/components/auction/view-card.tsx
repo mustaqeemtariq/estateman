@@ -1,27 +1,23 @@
 import { CalendarIcon, ExclamationTriangleIcon, MapPinIcon } from '@heroicons/react/20/solid'
+import moment from 'moment'
 import Image from 'next/image'
+import { useEffect, useState } from 'react'
 import { BiCurrentLocation } from 'react-icons/bi'
-import EmptyImage from 'src/assets/card/emptyImage.png'
-import Image1 from 'src/assets/card/pexels-binyamin-mellish-1500459 1.png'
 import Area from 'src/assets/view/Area.png'
 import Contact from 'src/assets/view/Contacts.png'
 import Money from 'src/assets/view/Dollar Place Marker.png'
 import Place from 'src/assets/view/Place Marker.png'
 import Phone from 'src/assets/view/iPhone X.png'
-import { ImageSlider } from '../app/image-slider'
-import { Auction } from 'src/types/typings'
-import moment from 'moment'
-import { useEffect, useState } from 'react'
-import { MapComponent } from '../app/map'
 import imageService from 'src/services/images'
+import { Auction } from 'src/types/typings'
+import { ImageSlider } from '../app/image-slider'
+import { MapComponent } from '../app/map'
 
 interface ViewAuctionCardProps {
 	data: Auction[]
 }
 
-const ViewAuctionCard = ({data}: ViewAuctionCardProps) => {
-	// const images = [Image1, EmptyImage, Image1, EmptyImage, Image1, EmptyImage]
-
+const ViewAuctionCard = ({ data }: ViewAuctionCardProps) => {
 	const [images, setImages] = useState<string[]>()
 
 	useEffect(() => {
@@ -41,7 +37,7 @@ const ViewAuctionCard = ({data}: ViewAuctionCardProps) => {
 						<p className="text-xs text-[#CED1DC]">Title</p>
 						<p className="whitespace-nowrap text-semibold">{data[0].Title}</p>
 					</div>
-					<div className="space-y-1">
+					<div className="space-y-1 pr-14">
 						<p className="text-xs text-[#CED1DC]">Society</p>
 						<p className="text-semibold">{data[0].Society}</p>
 					</div>
@@ -51,7 +47,9 @@ const ViewAuctionCard = ({data}: ViewAuctionCardProps) => {
 						<MapPinIcon className="h-4 w-4 fill-[#717B9D]" aria-hidden="true" />
 						<p className="text-[#0D0C18]">{data[0].Location}</p>
 					</div>
-					<div className="flex items-center space-x-1 text-base cursor-pointer" onClick={() => setShowMap(true)}>
+					<div
+						className="flex items-center space-x-1 text-base cursor-pointer"
+						onClick={() => setShowMap(true)}>
 						<BiCurrentLocation className="h-4 w-4" />
 						<p className="text-[#0057FF] uppercase">View Map</p>
 					</div>
@@ -112,7 +110,7 @@ const ViewAuctionCard = ({data}: ViewAuctionCardProps) => {
 				</div>
 			</div>
 			<div className="h-full">
-				<ImageSlider type="slider" images={images} page="auction"/>
+				<ImageSlider type="slider" images={images} page="auction" />
 			</div>
 		</div>
 	)
