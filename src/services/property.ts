@@ -21,9 +21,12 @@ const addProperty = (data: Property) => {
 }
 
 const updateProperty = (id: string, data: Property) => {
-	return axios.put(`${apiHost}/UpdateProperty?id=${id}`, {
-		data
-	})
+	return axios
+		.put(`${apiHost}/UpdateProperty?id=${id}`, {
+			...data
+		})
+		.then(response => response.data)
+		.catch(err => err.response.data)
 }
 
 const getHistory = () => {
