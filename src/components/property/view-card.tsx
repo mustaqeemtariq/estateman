@@ -1,8 +1,8 @@
 import { ExclamationTriangleIcon, MapPinIcon } from '@heroicons/react/20/solid'
+import moment from 'moment'
 import Image from 'next/image'
+import { useEffect, useState } from 'react'
 import { BiCurrentLocation } from 'react-icons/bi'
-import EmptyImage from 'src/assets/card/emptyImage.png'
-import Image1 from 'src/assets/card/pexels-binyamin-mellish-1500459 1.png'
 import Area from 'src/assets/view/Area.png'
 import Bed from 'src/assets/view/Bedroom.png'
 import Places from 'src/assets/view/Cart.png'
@@ -14,18 +14,16 @@ import Kitchen from 'src/assets/view/Kitchen Light.png'
 import Location from 'src/assets/view/Place Marker.png'
 import Shower from 'src/assets/view/Shower.png'
 import Phone from 'src/assets/view/iPhone X.png'
-import { ImageSlider } from '../app/image-slider'
-import { ImagePath, Property } from 'src/types/typings'
-import moment from 'moment'
-import { useEffect, useState } from 'react'
-import { MapComponent } from '../app/map'
 import imageService from 'src/services/images'
+import { ImagePath, Property } from 'src/types/typings'
+import { ImageSlider } from '../app/image-slider'
+import { MapComponent } from '../app/map'
 
 interface ViewPropertyCardProps {
 	data: Property
 }
 
-const ViewPropertyCard = ({data}: ViewPropertyCardProps) => {
+const ViewPropertyCard = ({ data }: ViewPropertyCardProps) => {
 	const details = [
 		{ value: data.PropertyDetails?.Bed, image: Bed },
 		{ value: data.PropertyDetails?.Bath, image: Shower },
@@ -38,11 +36,11 @@ const ViewPropertyCard = ({data}: ViewPropertyCardProps) => {
 	const [images, setImages] = useState<ImagePath>()
 
 	useEffect(() => {
-			const getImages = async () => {
-				const response = await imageService.getPropertyImages('64649dcec2f9388d7c103db6')
-				setImages(response)
-			}
-			getImages()
+		const getImages = async () => {
+			const response = await imageService.getPropertyImages('64649dcec2f9388d7c103db6')
+			setImages(response)
+		}
+		getImages()
 	}, [])
 
 	const [showMap, setShowMap] = useState(false)
@@ -75,7 +73,7 @@ const ViewPropertyCard = ({data}: ViewPropertyCardProps) => {
 								<p className="text-[#0D0C18]">{data.Location}</p>
 							</div>
 							<div
-								className="flex items-center space-x-1 text-base cursor-pointer"
+								className="flex items-center space-x-1 text-base cursor-pointer pr-2"
 								onClick={() => setShowMap(true)}>
 								<BiCurrentLocation className="h-4 w-4" />
 								<p className="text-[#0057FF] uppercase">View Map</p>
