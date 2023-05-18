@@ -6,9 +6,10 @@ import { useState } from 'react'
 interface ImageSliderProps {
 	images: string[] | undefined
 	type: string
+	page?: string
 }
 
-export const ImageSlider = ({ images, type }: ImageSliderProps) => {
+export const ImageSlider = ({ images, type, page }: ImageSliderProps) => {
 	const [currentIndex, setCurrentIndex] = useState(0)
 
 	const handleSlider = (index: number) => {
@@ -20,7 +21,7 @@ export const ImageSlider = ({ images, type }: ImageSliderProps) => {
 	return (
 		<div className="relative flex items-center justify-center">
 			{type === 'slider' && (
-				<img src={images?.[currentIndex]} alt="slider" className="h-60 w-full" />
+				<img src={images?.[currentIndex]} alt="slider" className={clsx("w-full", page === 'auction' ? 'h-screen' : 'h-60')} />
 			)}
 			<div className="flex items-center space-x-1">
 				{type === 'arrow' && (
@@ -39,7 +40,7 @@ export const ImageSlider = ({ images, type }: ImageSliderProps) => {
 				<div className="flex space-x-2 justify-center ">
 					{type === 'arrow' &&
 						visibleImages?.map(image => (
-							<Image src={image} alt="card-image" className="h-20 w-20 " />
+							<img src={image} alt="card-image" className="h-20 w-20 " />
 						))}
 				</div>
 				{type === 'arrow' && (

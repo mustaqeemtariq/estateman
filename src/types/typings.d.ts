@@ -177,7 +177,7 @@ type Auction = {
 	PlaceofAuction: string
 	ContactPerson?: string
 	ContactNumber?: string
-	imagePath?: string[]
+	images?: File[]
 }
 
 type FilterParameter = {

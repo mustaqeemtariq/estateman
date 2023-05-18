@@ -4,9 +4,11 @@ import moment from 'moment'
 import Image from 'next/image'
 import Link from 'next/link'
 import EmptyImage from 'src/assets/card/emptyImage.png'
-import { Property } from 'src/types/typings'
+import { ImagePath, Property } from 'src/types/typings'
 import { dateDifference } from 'src/utils/date'
 import { Table } from '../app/table'
+import { useEffect, useState } from 'react'
+import imageService from 'src/services/images'
 
 interface ListCardProps {
 	data: Property[]
@@ -14,6 +16,17 @@ interface ListCardProps {
 
 export const PropertyListCard = ({ data }: ListCardProps) => {
 	const renderPeopleTBody = (data: Property[]) => {
+
+	const [images, setImages] = useState<ImagePath>()
+
+	useEffect(() => {
+		const getImages = async () => {
+			const response = await imageService.getPropertyImages('64649dcec2f9388d7c103db6')
+			setImages(response)
+		}
+		getImages()
+	}, [])
+
 		return (
 			<tbody className="bg-white">
 				{data.map((item, index) => (
@@ -21,10 +34,12 @@ export const PropertyListCard = ({ data }: ListCardProps) => {
 						key={item.Title + index}
 						className={clsx('relative hover:bg-[#0D0C18]/[85%]', index % 2 === 0 && 'bg-gray-100')}>
 						<td className="tw-table-td pr-0 col-span-2">
-							<Image
-								src={item?.PropertyDetails?.imagePath?.[0] ?? EmptyImage}
+							<img
+								src={images?.propertyDetails?.[index]}
+								width={30}
+								height={30}
 								alt="propertyImage"
-								className="w-full object-stretch rounded-md max-w-50"
+								className="w-full object-stretch rounded-md max-w-28 max-h-28"
 							/>
 						</td>
 						<td className="tw-table-td">

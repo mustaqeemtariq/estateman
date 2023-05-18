@@ -10,7 +10,7 @@ import { ImagePath } from 'src/types/typings'
 
 interface BoxCardProps {
 	id: string
-	image: string[] | undefined
+	image: string | undefined
 	contract: string
 	title: string
 	location: string
@@ -37,26 +37,18 @@ const PropertyBoxCard = ({
 		type = 'warning'
 	}
 	
-	const [images, setImages] = useState<ImagePath>()
 
-	useEffect(() => {
-		const getImages = async() => {
-			const response = await imageService.getAllImages(id)
-			setImages(response)
-		}
-		getImages()
-	}, [])
 
 	
 	return (
 		<div className="rounded-md border border-gray-300 hover:bg-[#0D0C18]/[85%] hover:shadow-lg relative">
 			<div className="relative">
-				<Image
-					src={EmptyImage}
+				<img
+					src={image}
 					width={30}
 					height={30}
 					alt="cardImage"
-					className="w-full max-h-30 max-w-30"
+					className="w-full max-h-48 max-w-48"
 				/>
 				{type && (
 					<div className="absolute w-full bottom-0">

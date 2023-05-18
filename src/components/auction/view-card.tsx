@@ -11,15 +11,27 @@ import Phone from 'src/assets/view/iPhone X.png'
 import { ImageSlider } from '../app/image-slider'
 import { Auction } from 'src/types/typings'
 import moment from 'moment'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { MapComponent } from '../app/map'
+import imageService from 'src/services/images'
 
 interface ViewAuctionCardProps {
 	data: Auction[]
 }
 
 const ViewAuctionCard = ({data}: ViewAuctionCardProps) => {
-	const images = [Image1, EmptyImage, Image1, EmptyImage, Image1, EmptyImage]
+	// const images = [Image1, EmptyImage, Image1, EmptyImage, Image1, EmptyImage]
+
+	const [images, setImages] = useState<string[]>()
+
+	useEffect(() => {
+		const getImages = async () => {
+			const response = await imageService.getAuctionImages('6465d41f36cdb83e3ac8050d')
+			setImages(response)
+		}
+		getImages()
+	}, [])
+
 	const [showMap, setShowMap] = useState(false)
 	return (
 		<div className="grid grid-cols-2 gap-x-6 gap-y-3">
@@ -52,7 +64,7 @@ const ViewAuctionCard = ({data}: ViewAuctionCardProps) => {
 				<div className="flex items-center space-x-1 text-base">
 					<CalendarIcon className="h-4 w-4 fill-[#DC4200]" aria-hidden="true" />
 					<p>
-						Auction On:{' '}
+						Auction On:
 						<span className="text-[#DC4200]">
 							{moment(data[0].AuctionDateandTime).format('MMMM DD, YYYY h:mm A')}
 						</span>
@@ -100,7 +112,7 @@ const ViewAuctionCard = ({data}: ViewAuctionCardProps) => {
 				</div>
 			</div>
 			<div className="h-full">
-				<ImageSlider type="slider" images={data[0].imagePath} />
+				<ImageSlider type="slider" images={images} page="auction"/>
 			</div>
 		</div>
 	)

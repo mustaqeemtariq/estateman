@@ -42,6 +42,7 @@ import MapIcon from 'src/assets/view/Place Marker.png'
 import Image from 'next/image'
 import { BiCurrentLocation } from 'react-icons/bi'
 import { MapComponent } from '../app/map'
+import imageService from 'src/services/images'
 
 interface PropertyFormProps {
 	currentTab: string
@@ -361,6 +362,8 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 
 	const [isUpdating, setUpdating] = useState(false)
 	const router = useRouter()
+	const historyFormData = new FormData()
+	const propertyFormData = new FormData()
 
 	const addProperty = async (data: Property) => {
 		const response = await propertyService.addProperty(data)
@@ -369,21 +372,32 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 			router.push('/property/history')
 		} else {
 			toast.error('Property not saved')
-			console.log('dsssssssssss', response)
+			console.log(response.message);
+			setUpdating(false)
 		}
 	}
 
-	const imageConversion = async (image: Promise<string>[]) => {
-		const base64 = await Promise.all(image)
-		console.log(base64);
-		
+	const addImage = async (data: {propertyDetails: FormData, addHistory: FormData}) => {
+		const response = await imageService.uploadPropertyImages(data)
+			if (response.success) {
+				toast.success('Images added successfully')
+			} else {
+				toast.error('Images not added')
+			}
 	}
 
 	const onSubmit = handleSubmit(data => {
-		const images = data.sentHistoryImages?.map(image => {
-			return convertToBase64(image)
-		})
-		if (images) imageConversion(images)
+		if (data.sentHistoryImages) {
+			data.sentHistoryImages.forEach((image, index) => {
+				historyFormData.append(`image${index}`, image)
+			})
+		}
+
+		if (data.sentPropertyImages) {
+			data.sentPropertyImages.forEach((image, index) => {
+				propertyFormData.append(`image${index}`, image)
+			})
+		}
 		
 		data.PropertyDetails = {
 			City: data.City,
@@ -442,7 +456,9 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 				}
 			}
 		})
+		const images = {propertyDetails: propertyFormData, addHistory: historyFormData}
 		addProperty(data)
+		addImage(images)
 		setUpdating(true)
 	})
 
@@ -460,24 +476,36 @@ const PropertyForm = ({ currentTab, setActive, setCurrentTab, data }: PropertyFo
 					if (state.step === FormSteps.ADDHISTORY) {
 						onSubmit(event)
 					} else {
-						setShowCommission(false)
 						nextStep(event)
 					}
 				}}>
 				<div className="flex items-center justify-end text-base ">
 					<div className="flex space-x-3">
 						{showCommission && (
-							<button
-								type="button"
-								onClick={() => {
-									handleCommissionReset()
-									setShowCommission(false)
-								}}
-								className="text-[#485276] px-8 border border-gray-300 rounded-md">
-								<span className="uppercase">Close</span>
-							</button>
+							<>
+								<button
+									type="button"
+									onClick={() => {
+										handleCommissionReset()
+										setShowCommission(false)
+									}}
+									className="text-[#485276] px-8 border border-gray-300 rounded-md">
+									<span className="uppercase">Close</span>
+								</button>
+								<button
+									type="button"
+									onClick={() => {
+										setShowCommission(false)
+									}}
+									className="flex w-full justify-center border border-transparent py-3 text-white bg-black px-6 rounded-md">
+									<span className="uppercase">Save & Add to History</span>
+								</button>
+							</>
 						)}
-						<Button type="submit" disabled={isUpdating} className="bg-black px-6">
+						<Button
+							type="submit"
+							disabled={isUpdating}
+							className={clsx('bg-black px-6', showCommission && 'hidden')}>
 							{isUpdating ? (
 								<>
 									<Spinner className="w-5 h-5" />
@@ -1209,6 +1237,7 @@ const AddHistoryForm = ({
 	}
 
 	const handleHistoryDate = (value: string) => {
+		setValue?.('Date', value)
 		setHistoryDate?.(value)
 	}
 

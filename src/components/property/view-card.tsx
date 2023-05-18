@@ -15,10 +15,11 @@ import Location from 'src/assets/view/Place Marker.png'
 import Shower from 'src/assets/view/Shower.png'
 import Phone from 'src/assets/view/iPhone X.png'
 import { ImageSlider } from '../app/image-slider'
-import { Property } from 'src/types/typings'
+import { ImagePath, Property } from 'src/types/typings'
 import moment from 'moment'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { MapComponent } from '../app/map'
+import imageService from 'src/services/images'
 
 interface ViewPropertyCardProps {
 	data: Property
@@ -33,6 +34,16 @@ const ViewPropertyCard = ({data}: ViewPropertyCardProps) => {
 		{ value: data.PropertyDetails?.Electricity, image: Electricity },
 		{ value: data.PropertyDetails?.places, image: Places }
 	]
+
+	const [images, setImages] = useState<ImagePath>()
+
+	useEffect(() => {
+			const getImages = async () => {
+				const response = await imageService.getPropertyImages('64649dcec2f9388d7c103db6')
+				setImages(response)
+			}
+			getImages()
+	}, [])
 
 	const [showMap, setShowMap] = useState(false)
 	return (
@@ -74,7 +85,7 @@ const ViewPropertyCard = ({data}: ViewPropertyCardProps) => {
 						<div className="flex items-center space-x-1 text-sm">
 							<ExclamationTriangleIcon className="h-4 w-4 fill-[#DC4200]" aria-hidden="true" />
 							<p>
-								Lease Expiring on:{' '}
+								Lease Expiring on:
 								<span className="text-[#DC4200]">
 									{moment(data?.AddHistory?.LeaseExpiringOn).format('DD MMMM, YYYY')}
 								</span>
@@ -97,9 +108,9 @@ const ViewPropertyCard = ({data}: ViewPropertyCardProps) => {
 				</div>
 			</div>
 			<div>
-				<ImageSlider type="slider" images={data.PropertyDetails?.imagePath} />
+				<ImageSlider type="slider" images={images?.propertyDetails} />
 				<div className="flex flex-col mt-4 space-y-2">
-					<div className="flex justify-between">
+					<div className="flex justify-between pr-16">
 						<div className="flex flex-col space-y-2">
 							<p className="text-[#717B9D] uppercase">Owner:</p>
 							<div className="flex items-center space-x-1">
@@ -122,7 +133,7 @@ const ViewPropertyCard = ({data}: ViewPropertyCardProps) => {
 						</div>
 					</div>
 					<div>
-						<div className="flex justify-between items-center">
+						<div className="flex justify-between items-center pr-8">
 							<div className="flex items-center space-x-1">
 								<Image src={Location} alt="location" />
 								<p className="text-sm">{data.OwnerDetails?.Address}</p>

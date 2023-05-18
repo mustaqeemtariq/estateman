@@ -14,6 +14,8 @@ import { DateInput } from '../app/date'
 import FileUpload from '../app/file-upload'
 import { Radio } from '../app/radio'
 import { Select } from '../app/select'
+import imageService from 'src/services/images'
+import { useRouter } from 'next/router'
 
 const schema = yup.object<Auction>().shape({
 	Title: yup.string().required('Title is required e.g Furnished 2 Bed F 11'),
@@ -40,10 +42,13 @@ const AuctionForm = () => {
 		mode: 'all'
 	})
 
+	const router = useRouter()
+
 	const postData = async (data: Auction) => {
 		const response = await auctionService.addAuction(data)
 		if (response.success) {
 			toast.success('Auction addded successfully')
+			router.push('/auction/list')
 		} else {
 			toast.error('Something went wrong')
 			console.log(response.message)
@@ -52,16 +57,37 @@ const AuctionForm = () => {
 		}
 	}
 
+	const postImages = async (data: FormData) => {
+		const response = await imageService.uploadAuctionImages(data)
+		if (response.success) {
+			toast.success(`Images uploaded successfully`)
+		}
+		else {
+			toast.error('Error uploading images')
+			console.log(response.message)
+			setUpdating(false)
+		}
+	}
+
+	const auctionFormData = new FormData()
+
 	const handleFormSubmit = (data: Auction) => {
+		if (data.images) {
+			data.images.forEach((imageData, index) => {
+				auctionFormData.append(`image${index}`, imageData)
+			})
+		}
+
 		setUpdating(true)
 		postData(data)
-
+		postImages(auctionFormData)
 	}
 
 	const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
 
 	const handleUpload = (files: File[]) => {
 		setUploadedFiles([...uploadedFiles, ...files])
+		setValue?.('images', [...files])
 	}
 
 	const handleDate = (value: string) => {
@@ -113,15 +139,15 @@ const AuctionForm = () => {
 												labelText="Bank"
 												name="Bank"
 												onChange={e => onChange(e.target.value)}
-												value="bank"
-												checked={value === 'bank'}
+												value="Bank"
+												checked={value === 'Bank'}
 											/>
 											<Radio
 												labelText="Government"
 												name="Government"
 												onChange={e => onChange(e.target.value)}
-												value="government"
-												checked={value === 'government'}
+												value="Government"
+												checked={value === 'Government'}
 											/>
 										</div>
 									</div>
@@ -213,8 +239,7 @@ const AuctionForm = () => {
 										/>
 									)}
 								/>
-							
-							
+									
 								<Controller
 									name={'ReservePrice'}
 									control={control}
@@ -237,9 +262,7 @@ const AuctionForm = () => {
 						</div>
 					</div>
 					<div className="flex sm:space-x-8 max-sm:flex-col">
-						<div className="flex space-x-2 w-full">
-						
-								
+						<div className="flex space-x-2 w-full">	
 								<Controller
 									name={'LandArea'}
 									control={control}

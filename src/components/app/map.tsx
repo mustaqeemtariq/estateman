@@ -39,7 +39,7 @@ export const MapComponent = ({
   return (
     <div className={clsx(!show && 'hidden')} style={{ height: '400px', width: '100%' }}>
       <GoogleMapReact
-        bootstrapURLKeys={{ key: 'API_KEY' }}
+        bootstrapURLKeys={{ key: 'AIzaSyCbOobz-eShsFo7BaB4BkwOafME7TC2vCc' }}
         yesIWantToUseGoogleMapApiInternals
         defaultCenter={{ lat: 37.7749, lng: -122.4194 }}
         defaultZoom={12}

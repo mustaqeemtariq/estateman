@@ -11,7 +11,8 @@ import { AppLayout } from 'src/components/app/layout'
 import { Table } from 'src/components/app/table'
 import { AuctionHeader } from 'src/components/auction/header'
 import auctionService from 'src/services/auction'
-import { Auction, FilterParameter } from 'src/types/typings'
+import imageService from 'src/services/images'
+import { Auction, FilterParameter, ImagePath } from 'src/types/typings'
 import { ApplyAuctionFilter } from 'src/utils/filter'
 
 interface AuctionListProps {
@@ -32,7 +33,19 @@ const AuctionList = ({ auctionsData }: AuctionListProps) => {
 		setData(filteredData)
 	}, [filterParams])
 
+	const [images, setImages] = useState<string[]>()
+
+	useEffect(() => {
+		const getImages = async () => {
+			const response = await imageService.getAuctionImages('6465d41f36cdb83e3ac8050d')
+			setImages(response)
+		}
+		getImages()
+	}, [])
+
 	const router = useRouter()
+
+
 
 	const renderPeopleTBody = (data: Auction[]) => {
 		return (
@@ -40,10 +53,11 @@ const AuctionList = ({ auctionsData }: AuctionListProps) => {
 				{data.map((item, index) => (
 					<tr onClick={() => router.push(`/auction/view/${item._id}`)} key={item.Title + index} className={clsx('cursor-pointer', index % 2 === 0 && 'bg-gray-100')}>
 						<td className="tw-table-td col-span-2">
-							<Image
-								src={item.imagePath?.[0] ?? EmptyImage}
-								width={20}
-								height={20}
+							<img
+								src={images?.[index]}
+								width={130}
+								height={130}
+								className="max-w-36 max-h-36"
 								alt="propertyImage"
 							/>
 						</td>

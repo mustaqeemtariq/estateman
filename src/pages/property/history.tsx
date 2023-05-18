@@ -1,7 +1,7 @@
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
 import moment from 'moment'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import EmptyImage from 'src/assets/card/emptyImage.png'
 import Image1 from 'src/assets/card/pexels-binyamin-mellish-1500459 1.png'
 import { Container } from 'src/components/app/container'
@@ -10,8 +10,9 @@ import { ImageSlider } from 'src/components/app/image-slider'
 import { AppLayout } from 'src/components/app/layout'
 import { Table } from 'src/components/app/table'
 import { PropertyHeader } from 'src/components/property/header'
+import imageService from 'src/services/images'
 import propertyService from 'src/services/property'
-import { Property } from 'src/types/typings'
+import { ImagePath, Property } from 'src/types/typings'
 
 interface PropertyHistoryProps {
 	propertiesHistory: Property[]
@@ -27,17 +28,28 @@ const PropertyHistory = ({ propertiesHistory }: PropertyHistoryProps) => {
 	})
 
 	const renderPeopleTBody = (data: Property[]) => {
-		const images = [
-			Image1,
-			EmptyImage,
-			Image1,
-			EmptyImage,
-			Image1,
-			EmptyImage,
-			Image1,
-			Image1,
-			EmptyImage
-		]
+		// const images = [
+		// 	Image1,
+		// 	EmptyImage,
+		// 	Image1,
+		// 	EmptyImage,
+		// 	Image1,
+		// 	EmptyImage,
+		// 	Image1,
+		// 	Image1,
+		// 	EmptyImage
+		// ]
+
+		const [images, setImages] = useState<ImagePath>()
+
+		useEffect(() => {
+			const getImages = async () => {
+				const response = await imageService.getPropertyImages('64649dcec2f9388d7c103db6')
+				setImages(response)
+			}
+			getImages()
+		}, [])
+
 		return (
 			<tbody className="bg-gray-100">
 				{data.map((item, index) => (
@@ -60,7 +72,7 @@ const PropertyHistory = ({ propertiesHistory }: PropertyHistoryProps) => {
 						<tr className={clsx(!expand[index] && 'hidden')}>
 							<td></td>
 							<td>
-								<ImageSlider images={images} type="arrow" />
+								<ImageSlider images={images?.addHistory} type="arrow" />
 							</td>
 							<td></td>
 							<td></td>
@@ -77,22 +89,24 @@ const PropertyHistory = ({ propertiesHistory }: PropertyHistoryProps) => {
 						<tr className={clsx(!expand[index] && 'hidden')}>
 							<td></td>
 							<td>
-								<div className="grid grid-cols-4 gap-x-3 text-gray-500 border-b border-gray-300">
-									<p className="text-medium col-span-2">From:</p>
-									<p>To:</p>
-									<p>On:</p>
-								</div>
-								<div className="grid grid-cols-4 gap-x-3 mb-6 gap-y-3 mt-3">
-									{item?.AddHistory.CallDetails?.map(detail => {
-										return (
-											<>
-												<p className="text-medium text-black">{detail.Name}</p>
-												<p className="text-medium text-red-500">{detail.From}</p>
-												<p className="text-medium">{detail.To}</p>
-												<p>{detail.Date}</p>
-											</>
-										)
-									})}
+								<div className='sm:flex sm:justify-between sm:border-b sm:border-gray-300'>
+									<div className="grid max-sm:grid-cols-4 gap-x-1 text-gray-500 max-sm:border-b max-sm:border-gray-300 sm:grid-rows-4 sm:grid-flow-col">
+										<p className="text-medium col-span-2 sm:row-span-2">From:</p>
+										<p>To:</p>
+										<p>On:</p>
+									</div>
+									<div className="grid max-sm:grid-cols-4 gap-x-1 mb-6 gap-y-3 mt-3 sm:grid-rows-4 sm:grid-flow-col sm:mt-0 sm:mb-3">
+										{item?.AddHistory.CallDetails?.map((detail, index) => {
+											return (
+												<>
+													<p className="text-medium text-black">{detail.Name}</p>
+													<p className="text-medium text-red-500">{detail.From}</p>
+													<p className="text-medium">{detail.To}</p>
+													<p>{moment(detail.Date).format('DD MMM, YYYY')}</p>
+												</>
+											)
+										})}
+									</div>
 								</div>
 							</td>
 							<td></td>
