@@ -36,6 +36,7 @@ const Login = () => {
 	const router = useRouter()
 	const [isLoading, setLoading] = useState(false)
 	const [togglePassword, setTogglePassword] = useState(false)
+	const [role, setRole] = useState('admin')
 	const dispatch = useAppDispatch()
 
 	const loginUser = async (user: User) => {
@@ -48,7 +49,7 @@ const Login = () => {
 	}
 
 	const handleFormSubmit = (data: any) => {
-		loginUser(data)
+		loginUser({...data, role})
 		setLoading(true)
 	}
 
@@ -56,6 +57,11 @@ const Login = () => {
 		authService.forgotPassword("admin")
 	}
 
+	const handleRoleChange = () => {
+		if (role === 'admin') setRole('surveyor')
+		else setRole('admin')
+	}
+	
 	const bgImage = `url(${background.src})`
 
 	return (
@@ -126,7 +132,7 @@ const Login = () => {
 						</div>
 						<div className="flex justify-between">
 							<span className='cursor-pointer' onClick={handleForgetPassword}>Forgot Password</span>
-							<span>Surveyor Login</span>
+							<span className='cursor-pointer' onClick={handleRoleChange}>{role === 'admin' ? 'Surveyor Login' : 'Admin Login'}</span>
 						</div>
 					</form>
 				</div>

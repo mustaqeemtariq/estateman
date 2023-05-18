@@ -4,11 +4,11 @@ import { Auth } from 'src/types/typings'
 
 export const login = createAsyncThunk(
 	'auth/login',
-	async (user: { Username: string; Password: string }, thunkAPI) => {
+	async (user: { Username: string; Password: string; Role: string }, thunkAPI) => {
 		try {
 			const response = await authService.login(user.Username, user.Password)
 			if (response.success) {
-				return thunkAPI.fulfillWithValue({ ...response.data })
+				return thunkAPI.fulfillWithValue({ ...response.data, ...user })
 			}
 		} catch (error: any) {
 			return thunkAPI.rejectWithValue(false)
@@ -28,10 +28,11 @@ const authSlice = createSlice({
 	},
 	extraReducers: builder => {
 		builder.addCase(login.fulfilled, (state: Auth, action: PayloadAction<any>) => {
-			const { username, accessToken } = action.payload
+			const { username, accessToken, role } = action.payload
 			return {
 				username,
-				accessToken
+				accessToken,
+				role
 			}
 		}),
 			builder.addCase(login.rejected, (state: Auth, action: PayloadAction<any>) => {
