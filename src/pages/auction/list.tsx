@@ -1,9 +1,7 @@
 import clsx from 'clsx'
 import moment from 'moment'
-import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import EmptyImage from 'src/assets/card/emptyImage.png'
 import { Container } from 'src/components/app/container'
 import { AppFilter } from 'src/components/app/filter'
 import { AppHeader } from 'src/components/app/header'
@@ -12,7 +10,7 @@ import { Table } from 'src/components/app/table'
 import { AuctionHeader } from 'src/components/auction/header'
 import auctionService from 'src/services/auction'
 import imageService from 'src/services/images'
-import { Auction, FilterParameter, ImagePath } from 'src/types/typings'
+import { Auction, FilterParameter } from 'src/types/typings'
 import { ApplyAuctionFilter } from 'src/utils/filter'
 
 interface AuctionListProps {
@@ -45,13 +43,14 @@ const AuctionList = ({ auctionsData }: AuctionListProps) => {
 
 	const router = useRouter()
 
-
-
 	const renderPeopleTBody = (data: Auction[]) => {
 		return (
 			<tbody className="bg-white">
 				{data.map((item, index) => (
-					<tr onClick={() => router.push(`/auction/view/${item._id}`)} key={item.Title + index} className={clsx('cursor-pointer', index % 2 === 0 && 'bg-gray-100')}>
+					<tr
+						onClick={() => router.push(`/auction/view/${item._id}`)}
+						key={item.Title + index}
+						className={clsx('cursor-pointer hover:bg-gray-200', index % 2 === 0 && 'bg-gray-100')}>
 						<td className="tw-table-td col-span-2">
 							<img
 								src={images?.[index]}
