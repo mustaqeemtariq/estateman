@@ -43,16 +43,20 @@ export const Rent = ({ data, filterData }: RentProps) => {
 		const itemYear = item.year
 
 		if (filterData.period === 'period') {
-			const fromDate = moment(filterData.fromDate)
-			const toDate = moment(filterData.toDate)
+			const fromDate = moment(filterData.fromDate).startOf('year')
+			const toDate = moment(filterData.toDate).endOf('year')
 
 			const yearStart = moment(itemYear).startOf('year')
 			const yearEnd = moment(itemYear).endOf('year')
-			return fromDate.isSameOrBefore(yearEnd) && toDate.isSameOrAfter(yearStart)
+			return (
+				itemYear >= fromDate.format('YYYY') &&
+				itemYear <= toDate.format('YYYY') &&
+				fromDate.isSameOrBefore(yearEnd) &&
+				toDate.isSameOrAfter(yearStart)
+			)
 		} else {
 			const currentYear = moment().format('YYYY')
-
-			if (filterData.period === 'year') {
+			if (filterData.period === 'year' || filterData.period === 'month') {
 				return itemYear === currentYear
 			} else {
 				return false
@@ -73,37 +77,6 @@ export const Rent = ({ data, filterData }: RentProps) => {
 		</div>
 	)
 }
-
-// const data = [
-// 	{
-// 		year: 2020,
-// 		sales: 12
-// 	},
-// 	{
-// 		year: 2020.5,
-// 		sales: 29
-// 	},
-// 	{
-// 		year: 2021,
-// 		sales: 50
-// 	},
-// 	{
-// 		year: 2021.5,
-// 		sales: 70
-// 	},
-// 	{
-// 		year: 2022,
-// 		sales: 24
-// 	},
-// 	{
-// 		year: 2022.5,
-// 		sales: 35
-// 	},
-// 	{
-// 		year: 2023,
-// 		sales: 55
-// 	}
-// ]
 
 interface RentChartProps {
 	data: {

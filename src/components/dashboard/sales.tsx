@@ -43,16 +43,21 @@ export const Sales = ({ data, filterData }: SalesProps) => {
 		const itemYear = item.year
 
 		if (filterData.period === 'period') {
-			const fromDate = moment(filterData.fromDate)
-			const toDate = moment(filterData.toDate)
+			const fromDate = moment(filterData.fromDate).startOf('year')
+			const toDate = moment(filterData.toDate).endOf('year')
 
 			const yearStart = moment(itemYear).startOf('year')
 			const yearEnd = moment(itemYear).endOf('year')
-			return fromDate.isSameOrBefore(yearEnd) && toDate.isSameOrAfter(yearStart)
+			return (
+				itemYear >= fromDate.format('YYYY') &&
+				itemYear <= toDate.format('YYYY') &&
+				fromDate.isSameOrBefore(yearEnd) &&
+				toDate.isSameOrAfter(yearStart)
+			)
 		} else {
 			const currentYear = moment().format('YYYY')
 
-			if (filterData.period === 'year') {
+			if (filterData.period === 'year' || filterData.period === 'month') {
 				return itemYear === currentYear
 			} else {
 				return false
@@ -61,6 +66,7 @@ export const Sales = ({ data, filterData }: SalesProps) => {
 	})
 
 	const result = Object.values(filteredData)
+	console.log('S', result)
 
 	return (
 		<div className="w-full">
@@ -73,41 +79,6 @@ export const Sales = ({ data, filterData }: SalesProps) => {
 		</div>
 	)
 }
-
-// const data = [
-// 	{
-// 		year: 2020,
-// 		sales: 15
-// 	},
-// 	{
-// 		year: 2020.5,
-// 		sales: 22
-// 	},
-// 	{
-// 		year: 2021,
-// 		sales: 25
-// 	},
-// 	{
-// 		year: 2021.5,
-// 		sales: 30
-// 	},
-// 	{
-// 		year: 2021.6,
-// 		sales: 60
-// 	},
-// 	{
-// 		year: 2022,
-// 		sales: 20
-// 	},
-// 	{
-// 		year: 2022.5,
-// 		sales: 51
-// 	},
-// 	{
-// 		year: 2023,
-// 		sales: 60
-// 	}
-// ]
 
 interface SalesChartProps {
 	data: {
