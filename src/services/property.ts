@@ -20,10 +20,21 @@ const addProperty = (data: Property) => {
 		.catch(err => err.response.data)
 }
 
-const updateProperty = (id: string, data: Property) => {
+const updateProperty = (
+	id: string,
+	PropertyDetails: Property,
+	OwnerDetails: Property,
+	AddHistory: Property,
+	AddCommission: Property
+) => {
+	console.log('s', PropertyDetails, OwnerDetails, AddHistory, AddCommission)
+
 	return axios
 		.put(`${apiHost}/UpdateProperty?id=${id}`, {
-			...data
+			PropertyDetails,
+			OwnerDetails,
+			AddHistory,
+			AddCommission
 		})
 		.then(response => response.data)
 		.catch(err => err.response.data)
