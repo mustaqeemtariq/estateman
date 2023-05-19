@@ -13,6 +13,11 @@ import { Property } from 'src/types/typings'
 
 interface RentProps {
 	data: Property[]
+	filterData: {
+		fromDate: string
+		toDate: string
+		period: string
+	}
 }
 
 interface ChartData {
@@ -22,7 +27,7 @@ interface ChartData {
 	}
 }
 
-export const Rent = ({ data }: RentProps) => {
+export const Rent = ({ data, filterData }: RentProps) => {
 	const groupedData = data.reduce((acc: ChartData, curr) => {
 		const year = moment(curr.AddHistory.Date).format('YYYY')
 		if (year) {
@@ -34,7 +39,28 @@ export const Rent = ({ data }: RentProps) => {
 		return acc
 	}, {})
 
-	const result = Object.values(groupedData)
+	const filteredData = Object.values(groupedData).filter(item => {
+		const itemYear = item.year
+
+		if (filterData.period === 'period') {
+			const fromDate = moment(filterData.fromDate)
+			const toDate = moment(filterData.toDate)
+
+			const yearStart = moment(itemYear).startOf('year')
+			const yearEnd = moment(itemYear).endOf('year')
+			return fromDate.isSameOrBefore(yearEnd) && toDate.isSameOrAfter(yearStart)
+		} else {
+			const currentYear = moment().format('YYYY')
+
+			if (filterData.period === 'year') {
+				return itemYear === currentYear
+			} else {
+				return false
+			}
+		}
+	})
+
+	const result = Object.values(filteredData)
 
 	return (
 		<div className="w-full">

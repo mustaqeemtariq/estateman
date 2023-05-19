@@ -1,13 +1,21 @@
-import { useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { DateInput } from '../app/date'
 import { Select } from '../app/select'
 import { Tabs } from '../app/tabs'
 
-export const DashboardHeader = () => {
+interface DashboardHeaderProps {
+	setData: Dispatch<
+		SetStateAction<{
+			fromDate: string
+			toDate: string
+			period: string
+		}>
+	>
+}
+
+export const DashboardHeader = ({ setData }: DashboardHeaderProps) => {
 	const [showTab, setShowTab] = useState('Dashboard')
 	const [duration, setDuration] = useState<string>()
-	const [from, setFrom] = useState<string>()
-	const [to, setTo] = useState<string>()
 
 	const tabs = [
 		{
@@ -18,14 +26,15 @@ export const DashboardHeader = () => {
 
 	const handleDropdown = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		setDuration(event.target.value)
+		setData(prev => ({ ...prev, period: event.target.value }))
 	}
 
 	const handleFrom = (value: string) => {
-		setFrom(value)
+		setData(prev => ({ ...prev, fromDate: value }))
 	}
 
 	const handleTo = (value: string) => {
-		setTo(value)
+		setData(prev => ({ ...prev, toDate: value }))
 	}
 
 	return (
