@@ -16,7 +16,7 @@ const ViewProperty = ({ propertyData }: ViewPropertyProps) => {
 		<AppLayout>
 			<AppHeader />
 			<Container>
-				<ListHeader heading="View Property" viewButtons={true} />
+				<ListHeader title={propertyData.Title} heading="View Property" viewButtons={true} />
 				<ViewPropertyCard data={propertyData} />
 			</Container>
 		</AppLayout>
