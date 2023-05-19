@@ -43,6 +43,7 @@ export const AppHeader = () => {
 
 	const handleLogout = () => {
 		dispatch(logOut())
+		router.push('/')
 		toast.success('Successfully Logout')
 	}
 
