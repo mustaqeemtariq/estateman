@@ -54,6 +54,7 @@ const AuctionForm = () => {
 		if (response.success) {
 			toast.success('Auction addded successfully')
 			router.push('/auction/list')
+			setUpdating(false)
 		} else {
 			toast.error('Something went wrong')
 			console.log(response.message)
@@ -62,7 +63,7 @@ const AuctionForm = () => {
 		}
 	}
 
-	const postImages = async (data: FormData) => {
+	const postImages = async (data: { imagePath: FormData }) => {
 		const response = await imageService.uploadAuctionImages(data)
 		if (response.success) {
 			toast.success(`Images uploaded successfully`)
@@ -84,7 +85,7 @@ const AuctionForm = () => {
 
 		setUpdating(true)
 		postData(data)
-		postImages(auctionFormData)
+		postImages({ imagePath: auctionFormData })
 	}
 
 	const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
