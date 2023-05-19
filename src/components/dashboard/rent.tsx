@@ -64,7 +64,7 @@ export const Rent = ({ data, filterData }: RentProps) => {
 		}
 	})
 
-	const result = Object.values(filteredData)
+	const result = Object.values(filteredData.length === 0 ? groupedData : filteredData)
 
 	return (
 		<div className="w-full">

@@ -65,8 +65,7 @@ export const Sales = ({ data, filterData }: SalesProps) => {
 		}
 	})
 
-	const result = Object.values(filteredData)
-	console.log('S', result)
+	const result = Object.values(filteredData.length === 0 ? groupedData : filteredData)
 
 	return (
 		<div className="w-full">
