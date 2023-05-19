@@ -429,13 +429,13 @@ const PropertyForm = ({
 	const onSubmit = handleSubmit(data => {
 		if (data.sentHistoryImages) {
 			data.sentHistoryImages.forEach((image, index) => {
-				historyFormData.append(`image${index}`, image)
+				historyFormData.append(`imagePath`, image)
 			})
 		}
 
 		if (data.sentPropertyImages) {
 			data.sentPropertyImages.forEach((image, index) => {
-				propertyFormData.append(`image${index}`, image)
+				propertyFormData.append(`imagePath`, image)
 			})
 		}
 
@@ -943,7 +943,6 @@ const PropertyDetailsForm = ({
 	control,
 	category,
 	setValue,
-	editData,
 	propertyImages,
 	setPropertyImages
 }: FormProps) => {
@@ -1381,7 +1380,7 @@ const AddHistoryForm = ({
 							id="leaseexpiry"
 							autoComplete="leaseexpiry"
 							name="LeaseexpiringOn"
-							disabled={occupancy !== 'occupied'}
+							disabled={occupancy !== 'Occupied'}
 							placeholder="31 Jan, 2025"
 							autoCapitalize="false"
 						/>
