@@ -18,7 +18,12 @@ const newProperty = () => {
 			<AppHeader />
 			<Container>
 				<PropertyHeader setState={setState} active={active} state={state} />
-				<PropertyForm currentTab={state} setCurrentTab={setState} setActive={setActive} />
+				<PropertyForm
+					isNew={true}
+					currentTab={state}
+					setCurrentTab={setState}
+					setActive={setActive}
+				/>
 			</Container>
 		</AppLayout>
 	)
