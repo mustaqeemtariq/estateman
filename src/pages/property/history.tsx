@@ -30,7 +30,7 @@ const PropertyHistory = ({ propertiesHistory }: PropertyHistoryProps) => {
 
 	useEffect(() => {
 		if (state !== 'All History') {
-			router.push(`/property/new`)
+			router.push(`/property/edit/?tab=${state}`)
 		}
 	}, [state])
 
