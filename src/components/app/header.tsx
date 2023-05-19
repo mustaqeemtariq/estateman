@@ -47,13 +47,13 @@ export const AppHeader = () => {
 		toast.success('Successfully Logout')
 	}
 
-	const { role } = useAppSelector(state => state.auth)
+	const { username, role } = useAppSelector(state => state.auth)
 
 	return (
 		<header>
 			<div className="flex justify-between mb-4">
 				<h4>
-					<span className="text-gray-500">Welcome</span> John Smith
+					<span className="font-bold">Welcome</span> {username}
 				</h4>
 				<div className="flex space-x-2 items-center cursor-pointer" onClick={handleLogout}>
 					<LockClosedIcon className="h-5 w-5" />
@@ -76,13 +76,13 @@ export const AppHeader = () => {
 						/>
 					</form>
 				</div>
-				<div className="flex w-full items-center space-x-4 bg-white px-2 rounded-md border border-slate-300">
+				<div className="flex w-full items-center space-x-4 bg-white px-2 font-bold rounded-md border border-slate-300">
 					<ExclamationTriangleIcon className="text-[#DC4200] h-5 w-5" />
 					<p className="uppercase">Lease Due</p>
 					<span className="text-[#DC4200]">{totalLease}</span>
 				</div>
 				{role !== 'surveyor' && (
-					<div className="flex w-full items-center space-x-2 bg-white px-2 rounded-md border border-slate-300">
+					<div className="flex w-full items-center space-x-2 bg-white px-2 font-bold rounded-md border border-slate-300">
 						<BanknotesIcon className="text-[#0038FF] h-5 w-5" />
 						<span className="uppercase">Total Sales</span>
 					</div>
