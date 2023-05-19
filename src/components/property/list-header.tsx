@@ -10,12 +10,13 @@ import { Tabs } from '../app/tabs'
 
 interface ListHeaderProps {
 	count?: number
+	title?: string
 	heading: string
 	setView?: Dispatch<SetStateAction<string>>
 	viewButtons?: boolean
 }
 
-export const ListHeader = ({ heading, count, setView, viewButtons }: ListHeaderProps) => {
+export const ListHeader = ({ title, heading, count, setView, viewButtons }: ListHeaderProps) => {
 	const { role } = useAppSelector(state => state.auth)
 
 	const [showTab, setShowTab] = useState(heading)
@@ -61,7 +62,7 @@ export const ListHeader = ({ heading, count, setView, viewButtons }: ListHeaderP
 					{heading !== 'Auction Details' && (
 						<Button
 							className="bg-black text-white uppercase flex items-center space-x-2"
-							onClick={() => router.push('/property/history')}>
+							onClick={() => router.push(`/property/edit/?title=${title}&tab=Add History`)}>
 							<PlusIcon className="h-5 w-5" aria-hidden="true" />
 							<span className="whitespace-nowrap">Add History</span>
 						</Button>
