@@ -99,7 +99,8 @@ export const DateInput = ({
 					disabled
 					value={prevValue || date}
 					className={clsx(
-						'block placeholder-gray-500 w-full  bg-[#E6E6E6] rounded-md border border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm'
+						'block placeholder-gray-500 w-full  bg-[#E6E6E6] rounded-md border border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm',
+						props.className
 					)}
 				/>
 				<div
@@ -108,7 +109,10 @@ export const DateInput = ({
 						const dateInput = document.querySelector(`input[type=${type}]`) as HTMLInputElement
 						dateInput.click()
 					}}>
-					<CalendarDaysIcon className={clsx("h-5 w-5 stroke-black cursor-pointer", disabled && 'stroke-gray-500')} aria-hidden="true" />
+					<CalendarDaysIcon
+						className={clsx('h-5 w-5 stroke-black cursor-pointer', disabled && 'stroke-gray-500')}
+						aria-hidden="true"
+					/>
 				</div>
 			</div>
 
