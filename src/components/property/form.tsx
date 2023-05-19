@@ -332,6 +332,7 @@ const PropertyForm = ({
 					...prevState,
 					step: prevState.step + 1
 				}))
+			handleStepChange()
 		}
 		setActive(prev => {
 			return {
@@ -342,15 +343,15 @@ const PropertyForm = ({
 		})
 	})
 
-	useEffect(() => {
-		if (state.step === FormSteps.ADDPROPERTY) {
-			setCurrentTab('Add Property')
-		} else if (state.step === FormSteps.PROPERTYDETAILS) {
+	const handleStepChange = () => {
+		if (currentTab === 'Add Property') {
 			setCurrentTab('Property Details')
-		} else {
+		} else if (currentTab === 'Property Details') {
 			setCurrentTab('Add History')
+		} else {
+			router.push('/property/history')
 		}
-	}, [state])
+	}
 
 	useEffect(() => {
 		if (currentTab === 'Add Property') {
@@ -374,15 +375,16 @@ const PropertyForm = ({
 	}, [currentTab])
 
 	const [isUpdating, setUpdating] = useState(false)
+	const [propertyId, setPropertyId] = useState('')
 	const router = useRouter()
 	const historyFormData = new FormData()
 	const propertyFormData = new FormData()
 
-	const addProperty = async (data: Property) => {
+	const addProperty = async (data: any) => {
 		const response = await propertyService.addProperty(data)
 		if (response.success) {
-			toast.success('Property added successfully')
-			router.push('/property/history')
+			setPropertyId(response.data._id)
+			setUpdating(false)
 		} else {
 			toast.error('Property not saved')
 			console.log(response.message)
@@ -390,13 +392,26 @@ const PropertyForm = ({
 		}
 	}
 
-	const updateProperty = async (id: string, data: Property) => {
-		const response = await propertyService.updateProperty(id, data)
+	const updateProperty = async (
+		id: string,
+		PropertyDetails: any,
+		OwnerDetails: any,
+		AddHistory: any,
+		AddCommission: any
+	) => {
+		const response = await propertyService.updateProperty(
+			id,
+			PropertyDetails,
+			OwnerDetails,
+			AddHistory,
+			AddCommission
+		)
 		if (response.success) {
-			toast.success('Property updated successfully')
-			router.push('/property/history')
+			toast.success('Property added successfully')
+			setUpdating(false)
+			// router.push('/property/history')
 		} else {
-			toast.error('Property not updated')
+			toast.error('Property not added')
 			console.log(response.message)
 			setUpdating(false)
 		}
@@ -481,13 +496,30 @@ const PropertyForm = ({
 				}
 			}
 		})
+
+		const addPropertyData = {
+			Units: data.Units,
+			Location: data.Location,
+			ContractType: data.ContractType,
+			PropertyType: data.PropertyType,
+			PropertyCategory: data.PropertyCategory,
+			LandArea: data.LandArea,
+			Price: data.Price,
+			YearBuilt: data.YearBuilt,
+			Title: data.Title
+		}
 		const images = { propertyDetails: propertyFormData, addHistory: historyFormData }
-		if (isNew) {
-			addProperty(data)
-			addImage(images)
-		} else if (editData) {
-			updateProperty(editData?._id, data)
-			addImage(images)
+		addProperty(addPropertyData)
+		addImage(images)
+
+		if (propertyId !== '') {
+			updateProperty(
+				propertyId,
+				data.PropertyDetails,
+				data.OwnerDetails,
+				data.AddHistory,
+				data.AddCommission
+			)
 		}
 		setUpdating(true)
 	})
@@ -613,7 +645,9 @@ const AddPropertyForm = ({
 	}
 
 	const handleMapData = (lat: number, lng: number) => {
-		setValue?.('Location', `lat: ${lat}, lng: ${lng}`, { shouldValidate: true })
+		setValue?.('Location', `lat: ${lat.toFixed(2)}, lng: ${lng.toFixed(2)}`, {
+			shouldValidate: true
+		})
 	}
 
 	return (
@@ -1305,29 +1339,29 @@ const AddHistoryForm = ({
 									labelText="Occupied"
 									name="OccupancyStatus"
 									onChange={e => onChange(e.target.value)}
-									value="occupied"
-									checked={value === 'occupied'}
+									value="Occupied"
+									checked={value === 'Occupied'}
 								/>
 								<Radio
 									labelText="Vacant"
 									name="OccupancyStatus"
 									onChange={e => onChange(e.target.value)}
-									value="vacant"
-									checked={value === 'vacant'}
+									value="Vacant"
+									checked={value === 'Vacant'}
 								/>
 								<Radio
 									labelText="Sold"
 									name="OccupancyStatus"
 									onChange={e => onChange(e.target.value)}
-									value="sold"
-									checked={value === 'sold'}
+									value="Sold"
+									checked={value === 'Sold'}
 								/>
 								<Radio
 									labelText="Not Sold"
 									name="OccupancyStatus"
 									onChange={e => onChange(e.target.value)}
-									value="notsold"
-									checked={value === 'notsold'}
+									value="NotSold"
+									checked={value === 'NotSold'}
 								/>
 							</div>
 						)}
