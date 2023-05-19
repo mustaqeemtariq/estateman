@@ -69,13 +69,13 @@ export const AppFilter = ({
 							name="category"
 							onChange={handleData}
 							className="mt-1 block w-full rounded-md border-0 py-3 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 sm:text-sm sm:leading-6 outline-none">
-							<option value="house">House</option>
-							<option value="penthouse">PentHouse</option>
-							<option value="apartment">Apartment</option>
-							<option value="studio">Studio</option>
-							<option value="villa">Villa</option>
-							<option value="plot">Plot</option>
-							<option value="land">Agricultural Land</option>
+							<option value="House">House</option>
+							<option value="Penthouse">PentHouse</option>
+							<option value="Apartment">Apartment</option>
+							<option value="Studio">Studio</option>
+							<option value="Villa">Villa</option>
+							<option value="Plot">Plot</option>
+							<option value="Land">Agricultural Land</option>
 						</select>
 
 						{showContract && (
