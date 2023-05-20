@@ -23,6 +23,7 @@ export const Input = ({
 	labelText,
 	index,
 	name,
+	value,
 	placeholder,
 	disabled,
 	register,
@@ -30,7 +31,6 @@ export const Input = ({
 	error,
 	renderLabel = true,
 	required,
-	onChange,
 	...props
 }: InputProps) => {
 	const errorText = error?.[name]?.message as string
@@ -46,7 +46,6 @@ export const Input = ({
 				<input
 					{...props}
 					{...(register?.(name) ?? {})}
-					onChange={onChange}
 					placeholder={placeholder}
 					disabled={disabled && true}
 					id={index}
