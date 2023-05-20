@@ -83,7 +83,7 @@ const ListUsers = ({ usersData }: UserProps) => {
 		<AppLayout>
 			<AppHeader />
 			<Container>
-			<div className="flex justify-between items-center">
+				<div className="flex justify-between items-center">
 					<div className="sm:flex sm:items-centertext-base">
 						<div className="sm:flex-auto">
 							<h1 className="font-semibold leading-6 text-[#0038FF] text-xl uppercase">
@@ -120,6 +120,8 @@ const ListUsers = ({ usersData }: UserProps) => {
 
 export const getStaticProps = async () => {
 	const response = await userService.getAllUsers()
+	console.log('list', response)
+
 	return {
 		props: {
 			usersData: response

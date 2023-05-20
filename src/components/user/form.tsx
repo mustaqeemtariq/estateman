@@ -90,6 +90,8 @@ const UserForm = ({ isNew, title, data }: UserFormProps) => {
 
 	const updateData = async (data: User) => {
 		const response = await userService.editUser(id as string, data)
+		console.log('response', response)
+
 		if (response.success) {
 			toast.success('User updated successfully')
 			router.push('/user/list')
