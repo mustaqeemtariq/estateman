@@ -375,16 +375,20 @@ const PropertyForm = ({
 	}, [currentTab])
 
 	const [isUpdating, setUpdating] = useState(false)
-	const [propertyId, setPropertyId] = useState('')
 	const router = useRouter()
 	const historyFormData = new FormData()
 	const propertyFormData = new FormData()
 
-	const addProperty = async (data: any) => {
+	const addProperty = async (
+		data: any,
+		PropertyDetails: any,
+		OwnerDetails: any,
+		AddHistory: any,
+		AddCommission: any
+	) => {
 		const response = await propertyService.addProperty(data)
 		if (response.success) {
-			setPropertyId(response.data._id)
-			setUpdating(false)
+			updateProperty(response.data._id, PropertyDetails, OwnerDetails, AddHistory, AddCommission)
 		} else {
 			toast.error('Property not saved')
 			console.log(response.message)
@@ -419,6 +423,7 @@ const PropertyForm = ({
 
 	const addImage = async (data: { propertyDetails: FormData; addHistory: FormData }) => {
 		const response = await imageService.uploadPropertyImages(data)
+
 		if (response.success) {
 			toast.success('Images added successfully')
 		} else {
@@ -509,18 +514,14 @@ const PropertyForm = ({
 			Title: data.Title
 		}
 		const images = { propertyDetails: propertyFormData, addHistory: historyFormData }
-		addProperty(addPropertyData)
+		addProperty(
+			addPropertyData,
+			data.PropertyDetails,
+			data.OwnerDetails,
+			data.AddHistory,
+			data.AddCommission
+		)
 		addImage(images)
-
-		if (propertyId !== '') {
-			updateProperty(
-				propertyId,
-				data.PropertyDetails,
-				data.OwnerDetails,
-				data.AddHistory,
-				data.AddCommission
-			)
-		}
 		setUpdating(true)
 	})
 
