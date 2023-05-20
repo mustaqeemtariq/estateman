@@ -19,8 +19,8 @@ import { User } from 'src/types/typings'
 import * as yup from 'yup'
 
 const schema = yup.object().shape({
-	Username: yup.string().required('Username is missing'),
-	Password: yup.string().required('Password is missing')
+	Username: yup.string().required('Please enter valid username'),
+	Password: yup.string().required('Please enter valid password')
 })
 
 const Login = () => {
@@ -30,7 +30,13 @@ const Login = () => {
 		control,
 		formState: { errors }
 	} = useForm({
-		resolver: yupResolver(schema)
+		resolver: yupResolver(schema as any),
+		defaultValues: {
+			Username: '',
+			Password: '',
+			RememberMe: ''
+		},
+		mode: 'all'
 	})
 
 	const router = useRouter()
@@ -49,19 +55,19 @@ const Login = () => {
 	}
 
 	const handleFormSubmit = (data: any) => {
-		loginUser({...data, role})
+		loginUser({ ...data, role })
 		setLoading(true)
 	}
 
-	const handleForgetPassword = async() => {
-		authService.forgotPassword("admin")
+	const handleForgetPassword = async () => {
+		authService.forgotPassword('admin')
 	}
 
 	const handleRoleChange = () => {
 		if (role === 'admin') setRole('surveyor')
 		else setRole('admin')
 	}
-	
+
 	const bgImage = `url(${background.src})`
 
 	return (
@@ -102,7 +108,7 @@ const Login = () => {
 
 						<div className="flex items-center">
 							<Controller
-								name="property"
+								name="RememberMe"
 								control={control}
 								render={({ field: { onChange, value } }) => (
 									<Checkbox
@@ -131,8 +137,12 @@ const Login = () => {
 							</Button>
 						</div>
 						<div className="flex justify-between">
-							<span className='cursor-pointer' onClick={handleForgetPassword}>Forgot Password</span>
-							<span className='cursor-pointer' onClick={handleRoleChange}>{role === 'admin' ? 'Surveyor Login' : 'Admin Login'}</span>
+							<span className="cursor-pointer" onClick={handleForgetPassword}>
+								Forgot Password
+							</span>
+							<span className="cursor-pointer" onClick={handleRoleChange}>
+								{role === 'admin' ? 'Surveyor Login' : 'Admin Login'}
+							</span>
 						</div>
 					</form>
 				</div>
