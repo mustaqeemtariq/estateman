@@ -413,7 +413,7 @@ const PropertyForm = ({
 		if (response.success) {
 			toast.success('Property added successfully')
 			setUpdating(false)
-			// router.push('/property/history')
+			router.push('/property/history')
 		} else {
 			toast.error('Property not added')
 			console.log(response.message)
