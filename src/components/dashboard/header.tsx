@@ -58,6 +58,7 @@ export const DashboardHeader = ({ setData }: DashboardHeaderProps) => {
 					onCalendarClick={handleFrom}
 					type="date"
 					name="from"
+					placeholder="Start Date"
 					disabled={duration !== 'period'}
 					labelText="FROM"
 					className="bg-white"
@@ -66,6 +67,7 @@ export const DashboardHeader = ({ setData }: DashboardHeaderProps) => {
 					onCalendarClick={handleTo}
 					type="date"
 					name="to"
+					placeholder="End Date"
 					disabled={duration !== 'period'}
 					labelText="TO"
 					className="bg-white"
