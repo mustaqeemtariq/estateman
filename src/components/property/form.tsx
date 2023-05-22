@@ -171,8 +171,6 @@ const PropertyForm = ({
 			is: FormSteps.PROPERTYDETAILS,
 			then: schema =>
 				schema.test('gasType', 'Invalid gas type', function (value) {
-					console.log(value)
-
 					if (!value) return true
 					if (value.toLowerCase() === 'yes' || value.toLocaleLowerCase() === 'no') return true
 
@@ -473,7 +471,15 @@ const PropertyForm = ({
 			OccupancyStatus: data.OccupancyStatus,
 			LeaseExpiringOn: data.LeaseExpiringOn,
 			AddDetails: data.AddDetails,
-			CallType: data.CallType
+			Calltype: data.Calltype
+		}
+
+		data.AddCommission = {
+			Amount: data.Amount,
+			Branch: data.Branch,
+			BankDetails: data.BankDetails,
+			Cheque: data.Cheque,
+			AccountNumber: data.AccountNumber
 		}
 
 		Object.values(data?.SentCallDetails || {}).map((item, index) => {
@@ -526,10 +532,15 @@ const PropertyForm = ({
 	})
 
 	const handleCommissionReset = () => {
-		reset({
-			AddCommission: undefined
-		})
+		setValue('Amount', '')
+		setValue('Cheque', '')
+		setValue('BankDetails', '')
+		setValue('AccountNumber', '')
+		setValue('Branch', '')
 	}
+
+	const amount = watch('Amount')
+	console.log('sa', amount)
 
 	return (
 		<div className="px-4 sm:px-4 lg:px-4">
@@ -1311,7 +1322,7 @@ const AddHistoryForm = ({
 		setLeaseDate?.(value)
 	}
 
-	const callRecord = watch?.('CallType')
+	const callRecord = watch?.('Calltype')
 	const occupancy = watch?.('OccupancyStatus')
 
 	return (
@@ -1435,7 +1446,7 @@ const AddHistoryForm = ({
 					/>
 					{role !== 'surveyor' && (
 						<Controller
-							name={'CallType'}
+							name={'Calltype'}
 							control={control}
 							render={({ field: { onChange, value } }) => (
 								<div className="flex space-x-6">
