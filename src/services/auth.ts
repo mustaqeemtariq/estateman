@@ -2,11 +2,12 @@ import axios from 'axios'
 import { apiHost } from 'src/utils/host'
 import { indexedStorageDB } from 'src/utils/local-forage'
 
-const login = (Username: string, Password: string) => {
+const login = (Username: string, Password: string, Role: string) => {
 	return axios
 		.post(`${apiHost}/users/login`, {
 			Username,
-			Password
+			Password,
+			Role
 		})
 		.then(response => {
 			return response.data

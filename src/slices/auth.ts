@@ -6,7 +6,9 @@ export const login = createAsyncThunk(
 	'auth/login',
 	async (user: { Username: string; Password: string; Role: string }, thunkAPI) => {
 		try {
-			const response = await authService.login(user.Username, user.Password)
+			const response = await authService.login(user.Username, user.Password, user.Role)
+			console.log(response);
+			
 			if (response.success) {
 				return thunkAPI.fulfillWithValue({ ...response.data, ...user })
 			}
