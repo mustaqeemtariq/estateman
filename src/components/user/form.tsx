@@ -81,7 +81,7 @@ const UserForm = ({ isNew, title, data }: UserFormProps) => {
 			toast.success('User added successfully')
 			router.push('/user/list')
 		} else {
-			toast.error('Error adding User')
+			toast.error(`${response.message}`)
 			setUpdating(false)
 		}
 	}
@@ -318,7 +318,10 @@ const UserForm = ({ isNew, title, data }: UserFormProps) => {
 												name="view"
 												onChange={handleCheckboxChange}
 												value={UserRightTypes.VIEW}
-												checked={selectedRights.includes(UserRightTypes.VIEW)}
+												checked={
+													selectedRights.includes(UserRightTypes.VIEW) ||
+													selectedRights.includes(UserRightTypes.EDIT)
+												}
 											/>
 										</div>
 									)
