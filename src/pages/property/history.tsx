@@ -76,7 +76,7 @@ const PropertyHistory = ({ propertiesHistory }: PropertyHistoryProps) => {
 							<td></td>
 							<td className="space-x-2 flex items-center mt-2">
 								<div className="border-4 border-blue-400 h-3 w-3 rounded-full text-medium text-medium"></div>
-								<p className="text-medium">{item.AddHistory.CallType}</p>
+								<p className="text-medium">{item.AddHistory.Calltype}</p>
 							</td>
 							<td></td>
 							<td></td>
@@ -199,7 +199,7 @@ const PropertyHistory = ({ propertiesHistory }: PropertyHistoryProps) => {
 	)
 }
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
 	const response = await propertyService.getHistory()
 	return {
 		props: {
