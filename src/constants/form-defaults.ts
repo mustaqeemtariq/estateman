@@ -32,7 +32,7 @@ export const AddHistoryFormValues = (data: Property | undefined) => ({
 	images: data?.AddHistory?.imagePath,
 	AddPricingHistory: data?.AddHistory?.AddPricingHistory,
 	LeaseExpiringOn: data?.AddHistory?.LeaseExpiringOn,
-	CallType: data?.AddHistory?.CallType,
+	Calltype: data?.AddHistory?.Calltype,
 	CallDetails: data?.AddHistory?.CallDetails,
 	OccupancyStatus: data?.AddHistory?.OccupancyStatus
 })
