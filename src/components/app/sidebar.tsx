@@ -11,15 +11,25 @@ import { BsBuildingFillLock, BsBuildingFillUp, BsFillBuildingFill } from 'react-
 import { ImUsers } from 'react-icons/im'
 import Logo from 'src/assets/logo/em-logo.png'
 import { useAppSelector } from 'src/hooks/rtk'
+import { UserRightTypes } from 'src/constants/constants'
 
 interface SidebarProps {
 	children: React.ReactNode
 }
 
+interface Children {
+	name: string
+	href: string
+}
+
 export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
-	const { role } = useAppSelector(state => state.auth)
+	const { username, role } = useAppSelector(state => state.auth)
+	const users = useAppSelector(state => state.db.users)
+	const user = Object.values(users).filter(user => user.Username === username)
+	const rights = user[0].rights
+	
 	let navigation
-	if (role === 'surveyor') {
+	if (rights.includes(UserRightTypes.VIEW)) {
 		navigation = [
 			{ name: 'Home', icon: AiFillHome, current: true, href: '/' },
 			{
@@ -28,14 +38,30 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 				href: '/property',
 				current: false,
 				children: [
-					{ name: 'View All Properties', href: '/property/list' },
+					{ name: 'View All Properties', href: '/property/list'},
 					{ name: 'Lease (Rental)', href: '/property/lease' },
 					{ name: 'On Sale', href: '/property/sold' },
-					{ name: 'Add Property', href: '/property/new' }
 				]
 			}
 		]
-	} else {
+	} else if (rights.includes(UserRightTypes.ADD)) {
+			navigation = [
+				{ name: 'Home', icon: AiFillHome, current: true, href: '/' },
+				{
+					name: 'Property Listing',
+					icon: BsFillBuildingFill,
+					href: '/property',
+					current: false,
+					children: [
+						{ name: 'View All Properties', href: '/property/list' },
+						{ name: 'Lease (Rental)', href: '/property/lease' },
+						{ name: 'On Sale', href: '/property/sold' },
+						{ name: 'Add Property', href: '/property/new' }
+					]
+				}
+			]
+	}
+	 else {
 		navigation = [
 			{ name: 'Home', icon: AiFillHome, current: true, href: '/' },
 			{

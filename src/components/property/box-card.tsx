@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { useAppSelector } from 'src/hooks/rtk'
 import { dateDifference } from 'src/utils/date'
 import Alert from '../app/alert'
+import { UserRightTypes } from 'src/constants/constants'
 
 interface BoxCardProps {
 	id: string
@@ -33,7 +34,10 @@ const PropertyBoxCard = ({
 		type = 'warning'
 	}
 
-	const { role } = useAppSelector(state => state.auth)
+	const { username, role } = useAppSelector(state => state.auth)
+	const users = useAppSelector(state => state.db.users)
+	const user = Object.values(users).filter(user => user.Username === username)
+	const rights = user[0].rights
 
 	return (
 		<div className="rounded-md border border-gray-300 hover:bg-[#0D0C18]/[85%] hover:shadow-lg relative">
@@ -72,12 +76,12 @@ const PropertyBoxCard = ({
 			</div>
 
 			<div className="absolute hover:bg-[#0D0C18]/[85%] z-20 top-0 right-0 flex flex-col space-y-3 items-center justify-center h-full w-full opacity-0 hover:opacity-100 transition-opacity">
-				<Link href={`/property/view/${title}`}>
+				{rights.includes(UserRightTypes.VIEW) && <Link href={`/property/view/${title}`}>
 					<button className="mx-2 text-black bg-[#FCFDFF] rounded-md px-9 py-2 uppercase">
 						View
 					</button>
-				</Link>
-				{role !== 'surveyor' && (
+				</Link>}
+				{rights.includes(UserRightTypes.EDIT) && (
 					<Link href={`/property/edit/${title}`}>
 						<button className="mx-2 text-white bg-[#DC4200] rounded-md px-10 py-2 uppercase">
 							Edit

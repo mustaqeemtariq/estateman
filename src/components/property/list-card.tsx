@@ -8,6 +8,7 @@ import imageService from 'src/services/images'
 import { ImagePath, Property } from 'src/types/typings'
 import { dateDifference } from 'src/utils/date'
 import { Table } from '../app/table'
+import { UserRightTypes } from 'src/constants/constants'
 
 interface ListCardProps {
 	data: Property[]
@@ -25,7 +26,10 @@ export const PropertyListCard = ({ data }: ListCardProps) => {
 			getImages()
 		}, [])
 
-		const { role } = useAppSelector(state => state.auth)
+		const { username, role } = useAppSelector(state => state.auth)
+		const users = useAppSelector(state => state.db.users)
+		const user = Object.values(users).filter(user => user.Username === username)
+		const rights = user[0].rights
 
 		return (
 			<tbody className="bg-white">
@@ -78,12 +82,12 @@ export const PropertyListCard = ({ data }: ListCardProps) => {
 						</td>
 						<td className="z-20 absolute left-0 w-full ">
 							<div className="z-20 opacity-0 h-36 hover:opacity-100 transition-opacity w-full  absolute flex justify-center items-center">
-								<Link href={`/property/view/${item.Title}`}>
+								{rights.includes(UserRightTypes.VIEW) && <Link href={`/property/view/${item.Title}`}>
 									<button className="mx-2 text-black bg-[#FCFDFF] rounded-md px-9 py-2 uppercase">
 										View
 									</button>
-								</Link>
-								{role !== 'surveyor' && (
+								</Link>}
+								{rights.includes(UserRightTypes.EDIT) && (
 									<Link href={`/property/edit/${item.Title}`}>
 										<button className="mx-2 text-white bg-[#DC4200] rounded-md px-10 py-2 uppercase">
 											Edit
