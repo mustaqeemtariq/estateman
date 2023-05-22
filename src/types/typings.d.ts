@@ -115,7 +115,7 @@ type AddHistoryForm = {
 	LeaseExpiringOn?: string
 	AddDetails?: string
 	sentHistoryImages?: File[]
-	CallType?: string
+	Calltype?: string
 	SentCallDetails?: CallRecordForm
 	CallDetails?: {
 		To: string
