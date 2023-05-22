@@ -16,8 +16,6 @@ interface UpdatePropertyProps {
 const UpdateProperty = ({ propertyData }: UpdatePropertyProps) => {
 	const router = useRouter()
 	const { tab } = router.query
-	console.log('ssssssssss', tab)
-
 	const [state, setState] = useState((tab as string) ?? 'Add Property')
 	const [active, setActive] = useState({
 		propertyDetails: true,
