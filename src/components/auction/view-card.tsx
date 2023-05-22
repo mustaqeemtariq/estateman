@@ -53,8 +53,8 @@ const ViewAuctionCard = ({ data }: ViewAuctionCardProps) => {
 						<BiCurrentLocation className="h-4 w-4" />
 						<p className="text-[#0057FF] uppercase">View Map</p>
 					</div>
-					<MapComponent show={showMap} setShow={setShowMap} />
 				</div>
+				<MapComponent show={showMap} setShow={setShowMap} />
 				<div className="flex items-center space-x-1 text-base">
 					<Image src={Area} alt="area" />
 					<p>{data[0].LandArea}</p>
@@ -62,7 +62,7 @@ const ViewAuctionCard = ({ data }: ViewAuctionCardProps) => {
 				<div className="flex items-center space-x-1 text-base">
 					<CalendarIcon className="h-4 w-4 fill-[#DC4200]" aria-hidden="true" />
 					<p>
-						Auction On:
+						Auction On:{' '}
 						<span className="text-[#DC4200]">
 							{moment(data[0].AuctionDateandTime).format('MMMM DD, YYYY h:mm A')}
 						</span>
