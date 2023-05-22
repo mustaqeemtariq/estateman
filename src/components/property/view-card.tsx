@@ -78,12 +78,12 @@ const ViewPropertyCard = ({ data }: ViewPropertyCardProps) => {
 								<BiCurrentLocation className="h-4 w-4" />
 								<p className="text-[#0057FF] uppercase">View Map</p>
 							</div>
-							<MapComponent show={showMap} setShow={setShowMap} />
 						</div>
+						<MapComponent show={showMap} setShow={setShowMap} />
 						<div className="flex items-center space-x-1 text-sm">
 							<ExclamationTriangleIcon className="h-4 w-4 fill-[#DC4200]" aria-hidden="true" />
 							<p>
-								Lease Expiring on:
+								Lease Expiring on:{' '}
 								<span className="text-[#DC4200]">
 									{moment(data?.AddHistory?.LeaseExpiringOn).format('DD MMMM, YYYY')}
 								</span>
