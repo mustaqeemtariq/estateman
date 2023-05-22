@@ -9,6 +9,7 @@ interface MapComponentProps {
 	show: boolean
 	lat?: number
 	lng?: number
+	isDisabled?: boolean
 }
 
 interface MarkerProps {
@@ -20,7 +21,14 @@ const Marker = ({ lat, lng }: MarkerProps) => (
 	<MapPinIcon className="h-5 w-5 fill-red-500" aria-hidden="true" />
 )
 
-export const MapComponent = ({ show, setShow, onChange, lat, lng }: MapComponentProps) => {
+export const MapComponent = ({
+	isDisabled = true,
+	show,
+	setShow,
+	onChange,
+	lat,
+	lng
+}: MapComponentProps) => {
 	const [location, setLocation] = useState({ lat: 0, lng: 0 })
 
 	const handleMapClick = (event: any) => {
@@ -36,7 +44,7 @@ export const MapComponent = ({ show, setShow, onChange, lat, lng }: MapComponent
 				bootstrapURLKeys={{ key: 'AIzaSyCbOobz-eShsFo7BaB4BkwOafME7TC2vCc' }}
 				yesIWantToUseGoogleMapApiInternals
 				defaultCenter={{ lat: lat ?? 33.6844, lng: lng ?? 73.0479 }}
-				defaultZoom={6}
+				defaultZoom={10}
 				onClick={handleMapClick}>
 				<Marker lat={location.lat} lng={location.lng} />
 			</GoogleMapReact>
