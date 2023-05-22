@@ -27,8 +27,6 @@ const updateProperty = (
 	AddHistory: Property,
 	AddCommission: Property
 ) => {
-	console.log('s', PropertyDetails, OwnerDetails, AddHistory, AddCommission)
-
 	return axios
 		.put(`${apiHost}/UpdateProperty?id=${id}`, {
 			PropertyDetails,
