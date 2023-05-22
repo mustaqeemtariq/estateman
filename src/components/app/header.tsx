@@ -42,9 +42,9 @@ export const AppHeader = () => {
 	}
 
 	const handleLogout = () => {
-		router.push('/')
 		dispatch(logOut())
 		toast.success('Successfully Logout')
+		router.push('/')
 	}
 
 	const { username, role } = useAppSelector(state => state.auth)

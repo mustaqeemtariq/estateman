@@ -5,7 +5,6 @@ const initialState: DbState = {
 	users: {},
 	properties: {},
 	auctions: {},
-	// images: {},
 	connected: false,
 	lastSyncedOn: new Date().getTime()
 }

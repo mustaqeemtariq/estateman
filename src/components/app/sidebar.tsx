@@ -26,7 +26,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 	const { username, role } = useAppSelector(state => state.auth)
 	const users = useAppSelector(state => state.db.users)
 	const user = Object.values(users).filter(user => user.Username === username)
-	const rights = user[0].rights
+	let rights = [] as any
+	if (role === 'surveyor' && user) {
+		rights = user[0].rights
+	}
 	
 	let navigation
 	if (rights.includes(UserRightTypes.VIEW)) {
