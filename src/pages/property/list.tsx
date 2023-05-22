@@ -116,7 +116,7 @@ const BoxView = ({ data }: ViewProps) => {
 
 const ListView = ({ data }: ViewProps) => <PropertyListCard data={data} />
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
 	const response = await propertyService.getAllProperties()
 
 	return {

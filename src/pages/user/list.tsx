@@ -22,8 +22,6 @@ const ListUsers = ({ usersData }: UserProps) => {
 	const users = useAppSelector(state => state.db.users)
 	const deleteUser = async (id: string) => {
 		const response = await userService.deleteUser(id)
-		console.log('ASa', response)
-
 		if (response.success) {
 			toast.success('User deleted successfully')
 		}
@@ -118,10 +116,8 @@ const ListUsers = ({ usersData }: UserProps) => {
 	)
 }
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
 	const response = await userService.getAllUsers()
-	console.log('list', response)
-
 	return {
 		props: {
 			usersData: response
