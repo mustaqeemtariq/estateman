@@ -14,6 +14,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 	controllerError?: FieldError | undefined
 	renderLabel?: boolean
 	required?: boolean
+
 	year?: boolean
 	currency?: boolean
 	onChange?: React.ChangeEventHandler<HTMLInputElement>

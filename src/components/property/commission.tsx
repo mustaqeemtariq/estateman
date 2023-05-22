@@ -28,14 +28,14 @@ const Commission = ({ show, control, register, errors }: CommissionProps) => {
 		<div className={clsx('grid grid-col-2 gap-x-8 gap-y-8', !show && 'hidden')}>
 			<div className="space-y-6">
 				<Controller
-					name={'AddCommission.Amount'}
+					name={'Amount'}
 					control={control}
 					render={({ field: { onChange, value } }) => (
 						<InputNumber
 							id="commissionprice"
 							labelText="Amount(Pkr)"
 							autoComplete="commissionprice"
-							name="AddCommission.Amount"
+							name="Amount"
 							error={errors}
 							currency={true}
 							placeholder="Enter Price"
@@ -45,14 +45,14 @@ const Commission = ({ show, control, register, errors }: CommissionProps) => {
 					)}
 				/>
 				<Controller
-					name={'AddCommission.AccountNumber'}
+					name={'AccountNumber'}
 					control={control}
 					render={({ field: { onChange, value } }) => (
 						<InputNumber
 							id="accountnumber"
 							labelText="Account Number"
 							autoComplete="accountnumber"
-							name="AddCommission.AccountNumber"
+							name="AccountNumber"
 							error={errors}
 							placeholder="Enter account number"
 							onChange={onChange}
@@ -63,16 +63,15 @@ const Commission = ({ show, control, register, errors }: CommissionProps) => {
 			</div>
 			<div className="space-y-6">
 				<Controller
-					name={'AddCommission.Cheque'}
+					name={'Cheque'}
 					control={control}
 					render={({ field: { onChange, value } }) => (
 						<InputNumber
 							id="chequenumber"
 							labelText="Cheque #"
 							autoComplete="chequenumber"
-							name="AddCommission.Cheque"
+							name="Cheque"
 							error={errors}
-							currency={true}
 							placeholder="Enter cheque number"
 							onChange={onChange}
 							value={value}
@@ -84,7 +83,7 @@ const Commission = ({ show, control, register, errors }: CommissionProps) => {
 					autoComplete="branch"
 					labelText="Branch"
 					register={register}
-					name="AddCommission.Branch"
+					name="Branch"
 					error={errors}
 					autoCapitalize="false"
 					placeholder="Enter branch"
@@ -96,7 +95,7 @@ const Commission = ({ show, control, register, errors }: CommissionProps) => {
 					autoComplete="bankdetails"
 					labelText="Bank Details"
 					register={register}
-					name="AddCommission.BankDetails"
+					name="BankDetails"
 					error={errors}
 					autoCapitalize="false"
 					placeholder="Enter bank details"
