@@ -32,6 +32,7 @@ const AuctionList = ({ auctionsData }: AuctionListProps) => {
 	}, [filterParams])
 
 	const [images, setImages] = useState<string[]>()
+	const router = useRouter()
 
 	useEffect(() => {
 		const getImages = async () => {
@@ -40,8 +41,6 @@ const AuctionList = ({ auctionsData }: AuctionListProps) => {
 		}
 		getImages()
 	}, [])
-
-	const router = useRouter()
 
 	const renderPeopleTBody = (data: Auction[]) => {
 		return (
@@ -106,7 +105,7 @@ const AuctionList = ({ auctionsData }: AuctionListProps) => {
 	)
 }
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
 	const response = await auctionService.getAllAuctions()
 	return {
 		props: {
