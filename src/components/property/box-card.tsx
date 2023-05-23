@@ -34,10 +34,13 @@ const PropertyBoxCard = ({
 		type = 'warning'
 	}
 
-	const { username, role } = useAppSelector(state => state.auth)
+	const { username, Roles } = useAppSelector(state => state.auth)
 	const users = useAppSelector(state => state.db.users)
 	const user = Object.values(users).filter(user => user.Username === username)
-	const rights = user[0].rights
+	let rights = [UserRightTypes.ADD, UserRightTypes.EDIT, UserRightTypes.VIEW]
+	if (Roles === 'surveyor' && user.length > 0) {
+		rights = user[0].rights
+	}
 
 	return (
 		<div className="rounded-md border border-gray-300 hover:bg-[#0D0C18]/[85%] hover:shadow-lg relative">

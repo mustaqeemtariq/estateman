@@ -13,6 +13,7 @@ import { PlusIcon, XMarkIcon } from '@heroicons/react/20/solid'
 import { Dispatch, SetStateAction } from 'react'
 import { DateInput } from '../app/date'
 import { HistoryDate } from './form'
+import { toast } from 'react-hot-toast'
 
 interface PricingHistoryProps {
 	isFirst: boolean
@@ -55,15 +56,20 @@ const PricingHistory = ({
 	}
 
 	const handleRemove = () => {
-		setPriceCount?.(prev => prev - 1)
-		setPriceDate?.(prevData => ({
-			...prevData,
-			[index]: {
-				date: undefined
-			}
-		}))
-		setValue?.(`SentPricingHistory.${index}.year`, '')
-		setValue?.(`SentPricingHistory.${index}.price`, '')
+		if (priceCount - 1 > index ) {
+			toast.error('Please remove last record first')
+		}
+		else {
+			setPriceCount?.(prev => prev - 1)
+			setPriceDate?.(prevData => ({
+				...prevData,
+				[index]: {
+					date: undefined
+				}
+			}))
+			setValue?.(`SentPricingHistory.${index}.year`, '')
+			setValue?.(`SentPricingHistory.${index}.price`, '')
+		}
 	}
 
 	const prevValue = priceDate?.[index]?.date || ''

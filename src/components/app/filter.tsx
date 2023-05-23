@@ -26,15 +26,15 @@ export const AppFilter = ({
 		setFilterData(prev => ({ ...prev, [name]: value }))
 	}
 
-	const { role } = useAppSelector(state => state.auth)
+	const { Roles } = useAppSelector(state => state.auth)
 	const auctions = useAppSelector(state => state.db.auctions)
 
 	return (
 		<div className={clsx(!auction && 'flex space-x-2 my-4')}>
 			{!auction && (
 				<div
-					className={clsx(role === 'surveyor' ? 'flex items-center space-x-5 w-full' : 'contents')}>
-					<div className={clsx(role !== 'surveyor' && 'hidden', 'space-x-1 flex text-[#717B9D]')}>
+					className={clsx(Roles === 'surveyor' ? 'flex items-center space-x-5 w-full' : 'contents')}>
+					<div className={clsx(Roles !== 'surveyor' && 'hidden', 'space-x-1 flex text-[#717B9D]')}>
 						<h3>{count}</h3>
 						<h3>Properties</h3>
 					</div>

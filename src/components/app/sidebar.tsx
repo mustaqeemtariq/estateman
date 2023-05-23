@@ -23,11 +23,11 @@ interface Children {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
-	const { username, role } = useAppSelector(state => state.auth)
+	const { username, Roles } = useAppSelector(state => state.auth)
 	const users = useAppSelector(state => state.db.users)
 	const user = Object.values(users).filter(user => user.Username === username)
 	let rights = [] as any
-	if (role === 'surveyor' && user) {
+	if (Roles === 'surveyor' && user.length > 0) {
 		rights = user[0].rights
 	}
 	

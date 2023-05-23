@@ -953,6 +953,7 @@ const PropertyDetailsForm = ({
 	register,
 	errors,
 	control,
+	editData,
 	category,
 	setValue,
 	propertyImages,
@@ -980,6 +981,7 @@ const PropertyDetailsForm = ({
 							required={true}
 							className="bg-[#E8E8E8]                                                "
 							autoCapitalize="false">
+							{editData?.PropertyDetails.City && <option value={editData.PropertyDetails.City}>{editData.PropertyDetails.City}</option>}
 							<option value="">Select a City</option>
 							{Object.values(CityNames).map(unit => (
 								<option key={unit} value={unit}>
@@ -1293,6 +1295,7 @@ const AddHistoryForm = ({
 	priceDate,
 	setPriceDate,
 	historyDate,
+	editData,
 	setHistoryDate,
 	watch,
 	setValue,
@@ -1304,7 +1307,7 @@ const AddHistoryForm = ({
 	priceCount = 1,
 	setPriceCount
 }: FormProps) => {
-	const { role } = useAppSelector(state => state.auth)
+	const { Roles } = useAppSelector(state => state.auth)
 	const handleUpload = (files: File[]) => {
 		if (historyImages) {
 			setHistoryImages?.([...historyImages, ...files])
@@ -1331,6 +1334,7 @@ const AddHistoryForm = ({
 				<DateInput
 					labelText="Date"
 					type="date"
+					value={editData?.AddHistory.Date}
 					id="historydate"
 					prevValue={historyDate}
 					autoComplete="historydate"
@@ -1385,6 +1389,7 @@ const AddHistoryForm = ({
 					render={({ field: { onChange, value } }) => (
 						<DateInput
 							register={register}
+							value={editData?.AddHistory.LeaseExpiringOn}
 							onCalendarClick={handleDate}
 							error={errors}
 							prevValue={LeaseDate}
@@ -1399,7 +1404,7 @@ const AddHistoryForm = ({
 					)}
 				/>
 
-				{role !== 'surveyor' && (
+				{Roles !== 'surveyor' && (
 					<div
 						className={clsx(
 							'bg-[#0D0C18] text-white py-2 px-2 justify-center space-x-4 font-semibold rounded-md flex items-center cursor-pointer'
@@ -1427,7 +1432,7 @@ const AddHistoryForm = ({
 										onChange={onChange}
 										placeholder="Enter Details"
 										value={value ?? ''}
-										rows={role === 'surveyor' ? 6 : 2}
+										rows={Roles === 'surveyor' ? 6 : 2}
 										className="block placeholder-gray-500 w-full appearance-none bg-[#E6E6E6] rounded-md border border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
 									/>
 									{error && <span className="text-xs text-red-600">{error.message}</span>}
@@ -1444,7 +1449,7 @@ const AddHistoryForm = ({
 						id="historyimage"
 						placeholder="Select upto 10 files, File Type: jpg, png, gif, pdf"
 					/>
-					{role !== 'surveyor' && (
+					{Roles !== 'surveyor' && (
 						<Controller
 							name={'Calltype'}
 							control={control}
@@ -1468,7 +1473,7 @@ const AddHistoryForm = ({
 							)}
 						/>
 					)}
-					{role !== 'surveyor' &&
+					{Roles !== 'surveyor' &&
 						callRecord &&
 						Array.from({ length: recordCount }, (_, index) => (
 							<CallRecord
@@ -1486,7 +1491,7 @@ const AddHistoryForm = ({
 								index={index}
 							/>
 						))}
-					{role !== 'surveyor' &&
+					{Roles !== 'surveyor' &&
 						Array.from({ length: priceCount }, (_, index) => (
 							<PricingHistory
 								key={index}
@@ -1505,7 +1510,7 @@ const AddHistoryForm = ({
 						))}
 				</div>
 			</div>
-			{role !== 'surveyor' && (
+			{Roles !== 'surveyor' && (
 				<div className="col-span-4">
 					<Commission
 						show={showCommission ?? false}

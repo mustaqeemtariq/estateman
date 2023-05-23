@@ -17,7 +17,7 @@ interface ListHeaderProps {
 }
 
 export const ListHeader = ({ title, heading, count, setView, viewButtons }: ListHeaderProps) => {
-	const { role } = useAppSelector(state => state.auth)
+	const { Roles } = useAppSelector(state => state.auth)
 
 	const [showTab, setShowTab] = useState(heading)
 	const router = useRouter()
@@ -40,7 +40,7 @@ export const ListHeader = ({ title, heading, count, setView, viewButtons }: List
 			/>
 			{!viewButtons ? (
 				<div className="text-[#717B9D] flex space-x-8 text-lg items-center ">
-					<div className={clsx('space-x-1 flex', role === 'surveyor' && 'hidden')}>
+					<div className={clsx('space-x-1 flex', Roles === 'surveyor' && 'hidden')}>
 						<h3>{count}</h3>
 						<h3>Properties</h3>
 					</div>

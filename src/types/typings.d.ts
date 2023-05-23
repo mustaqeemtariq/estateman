@@ -16,7 +16,7 @@ interface User {
 interface Auth {
 	username: string
 	accessToken: string
-	role: string
+	Roles: string
 }
 
 interface RootReducerState {

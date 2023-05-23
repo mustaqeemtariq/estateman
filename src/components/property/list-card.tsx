@@ -26,11 +26,13 @@ export const PropertyListCard = ({ data }: ListCardProps) => {
 			getImages()
 		}, [])
 
-		const { username, role } = useAppSelector(state => state.auth)
+		const { username, Roles } = useAppSelector(state => state.auth)
 		const users = useAppSelector(state => state.db.users)
 		const user = Object.values(users).filter(user => user.Username === username)
-		const rights = user[0].rights
-
+		let rights = [UserRightTypes.ADD, UserRightTypes.EDIT, UserRightTypes.VIEW]
+		if (Roles === 'surveyor' && user.length > 0) {
+			rights = user[0].rights
+		}
 		return (
 			<tbody className="bg-white">
 				{data.map((item, index) => (

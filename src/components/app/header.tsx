@@ -47,7 +47,7 @@ export const AppHeader = () => {
 		router.push('/')
 	}
 
-	const { username, role } = useAppSelector(state => state.auth)
+	const { username, Roles } = useAppSelector(state => state.auth)
 
 	return (
 		<header>
@@ -64,15 +64,15 @@ export const AppHeader = () => {
 			<nav
 				className={clsx(
 					'grid ',
-					role === 'surveyor' ? 'grid-cols-4 gap-x-4' : 'grid-cols-5 gap-x-3'
+					Roles === 'surveyor' ? 'grid-cols-4 gap-x-4' : 'grid-cols-5 gap-x-3'
 				)}>
-				<div className={clsx(role === 'surveyor' ? 'col-span-3' : 'col-span-2')}>
+				<div className={clsx(Roles === 'surveyor' ? 'col-span-3' : 'col-span-2')}>
 					<form onSubmit={handleSubmit(handleSearch)}>
 						<Search
 							name="title"
 							register={register}
 							placeholder="Search Property"
-							className={clsx('py-2', role === 'surveyor' && 'sm:w-full')}
+							className={clsx('py-2', Roles === 'surveyor' && 'sm:w-full')}
 						/>
 					</form>
 				</div>
@@ -81,13 +81,13 @@ export const AppHeader = () => {
 					<p className="uppercase">Lease Due</p>
 					<span className="text-[#DC4200]">{totalLease}</span>
 				</div>
-				{role !== 'surveyor' && (
+				{Roles !== 'surveyor' && (
 					<div className="flex w-full items-center space-x-2 bg-white px-2 font-bold rounded-md border border-slate-300">
 						<BanknotesIcon className="text-[#0038FF] h-5 w-5" />
 						<span className="uppercase">Total Sales</span>
 					</div>
 				)}
-				{role !== 'surveyor' && (
+				{Roles !== 'surveyor' && (
 					<div className="w-full flex items-center text-white bg-[#0038FF] rounded-md px-2 border border-slate-300">
 						<Link href={'/user/new'} className="flex items-center space-x-4">
 							<PlusIcon className="h-5 w-5" />

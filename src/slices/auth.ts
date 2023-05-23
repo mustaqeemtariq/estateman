@@ -30,11 +30,11 @@ const authSlice = createSlice({
 	},
 	extraReducers: builder => {
 		builder.addCase(login.fulfilled, (state: Auth, action: PayloadAction<any>) => {
-			const { username, accessToken, role } = action.payload
+			const { username, accessToken, Roles } = action.payload
 			return {
 				username,
 				accessToken,
-				role
+				Roles
 			}
 		}),
 			builder.addCase(login.rejected, (state: Auth, action: PayloadAction<any>) => {

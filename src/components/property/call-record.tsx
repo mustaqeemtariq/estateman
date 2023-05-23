@@ -14,6 +14,7 @@ import { PlusIcon, XMarkIcon } from '@heroicons/react/20/solid'
 import { Dispatch, SetStateAction } from 'react'
 import { DateInput } from '../app/date'
 import { HistoryDate } from './form'
+import { toast } from 'react-hot-toast'
 
 interface CallRecordProps {
 	isFirst: boolean
@@ -57,17 +58,22 @@ const CallRecord = ({
 	}
 
 	const handleRemove = () => {
-		setRecordCount?.(prev => prev - 1)
-		setCallDate?.(prevData => ({
-			...prevData,
-			[index]: {
-				date: undefined
-			}
-		}))
-		setValue?.(`SentCallDetails.${index}.Date`, '')
-		setValue?.(`SentCallDetails.${index}.From`, '')
-		setValue?.(`SentCallDetails.${index}.To`, '')
-		setValue?.(`SentCallDetails.${index}.Name`, '')
+		if (recordCount - 1 > index ) {
+			toast.error('Please remove last record first')
+		}
+		else {
+			setRecordCount?.(prev => prev - 1)
+			setCallDate?.(prevData => ({
+				...prevData,
+				[index]: {
+					date: undefined
+				}
+			}))
+			setValue?.(`SentCallDetails.${index}.Date`, '')
+			setValue?.(`SentCallDetails.${index}.From`, '')
+			setValue?.(`SentCallDetails.${index}.To`, '')
+			setValue?.(`SentCallDetails.${index}.Name`, '')
+		}
 	}
 
 	const prevValue = callDate?.[index]?.date || ''
