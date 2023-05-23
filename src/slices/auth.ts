@@ -4,12 +4,12 @@ import { Auth } from 'src/types/typings'
 
 export const login = createAsyncThunk(
 	'auth/login',
-	async (user: { Username: string; Password: string; Role: string }, thunkAPI) => {
+	async (user: { Username: string; Password: string; Roles: string }, thunkAPI) => {
 		try {
-			const response = await authService.login(user.Username, user.Password, user.Role)
+			const response = await authService.login(user.Username, user.Password, user.Roles)
 			console.log(response);
 			
-			if (response.success) {
+			if (response.success) {	
 				return thunkAPI.fulfillWithValue({ ...response.data, ...user })
 			}
 		} catch (error: any) {

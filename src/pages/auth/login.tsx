@@ -42,7 +42,7 @@ const Login = () => {
 	const router = useRouter()
 	const [isLoading, setLoading] = useState(false)
 	const [togglePassword, setTogglePassword] = useState(false)
-	const [role, setRole] = useState('admin')
+	const [Roles, setRole] = useState('admin')
 	const dispatch = useAppDispatch()
 
 	const loginUser = async (user: User) => {
@@ -55,7 +55,7 @@ const Login = () => {
 	}
 
 	const handleFormSubmit = (data: any) => {
-		loginUser({ ...data, role })
+		loginUser({ ...data, Roles })
 		setLoading(true)
 	}
 
@@ -64,7 +64,7 @@ const Login = () => {
 	}
 
 	const handleRoleChange = () => {
-		if (role === 'admin') setRole('surveyor')
+		if (Roles === 'admin') setRole('surveyor')
 		else setRole('admin')
 	}
 
@@ -141,7 +141,7 @@ const Login = () => {
 								Forgot Password
 							</span>
 							<span className="cursor-pointer" onClick={handleRoleChange}>
-								{role === 'admin' ? 'Surveyor Login' : 'Admin Login'}
+								{Roles === 'admin' ? 'Surveyor Login' : 'Admin Login'}
 							</span>
 						</div>
 					</form>

@@ -4,7 +4,7 @@ interface User {
 	id: string
 	Username: string
 	Email: string
-	Role: string
+	Roles: string
 	Password: string
 	ConfirmPassword: string
 	Address: string
