@@ -60,7 +60,7 @@ const Home = ({ leaseDue, rent, sale, users }: HomeProps) => {
 	)
 }
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
 	const leaseResponse = await propertyService.leaseDue()
 	const rentResponse = await propertyService.getPropertyByContract('Rent')
 	const saleResponse = await propertyService.getPropertyByContract('Sale')
