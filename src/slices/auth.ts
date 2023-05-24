@@ -5,9 +5,18 @@ import { Auth } from 'src/types/typings'
 export const login = createAsyncThunk(
 	'auth/login',
 	async (user: { Username: string; Password: string; Roles: string }, thunkAPI) => {
+		console.log(user.Roles);
+		
 		try {
-			const response = await authService.login(user.Username, user.Password)
-			console.log(response);
+			let response
+			if (user.Roles === 'admin') {
+				response = await authService.login(user.Username, user.Password)
+				console.log(response)
+			}
+			else {
+				response = await authService.loginSurveyor(user.Username, user.Password)
+				console.log(response)
+			}
 			
 			if (response.success) {	
 				return thunkAPI.fulfillWithValue({ ...response.data, ...user })

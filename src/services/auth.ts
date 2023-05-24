@@ -16,6 +16,19 @@ const login = (Username: string, Password: string) => {
 		})
 }
 
+const loginSurveyor = (Username: string, Password: string) => {
+	return axios.post(`${apiHost}/loginSurveyor`, {
+		Username,
+		Password
+	})
+	.then(response => {
+		return response.data
+	})
+	.catch(err => {
+		return err.response.data
+	})
+}
+
 const logout = () => {
 	indexedStorageDB.clear(() => console.log('store clear'))
 }
@@ -27,6 +40,6 @@ const forgotPassword = (Username: string) => {
 	.catch(err => err.response.data)
 }
 
-const authService = { login, logout, forgotPassword }
+const authService = { login, loginSurveyor, logout, forgotPassword }
 
 export default authService
