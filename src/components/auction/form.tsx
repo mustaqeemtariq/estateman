@@ -53,7 +53,7 @@ const AuctionForm = () => {
 		const response = await auctionService.addAuction(data)
 		if (response.success) {
 			toast.success('Auction addded successfully')
-			router.push('/auction/list')
+			window.location.href = '/auction/list'
 			setUpdating(false)
 		} else {
 			toast.error('Something went wrong')
