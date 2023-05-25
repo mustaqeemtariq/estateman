@@ -23,7 +23,8 @@ export default function App({ Component, pageProps, router }: AppProps) {
 							width: '340px'
 						},
 						className: 'text-base',
-						duration: 3000
+						duration: 3000,
+						error: {icon: '⚠️'}
 					}}
 				/>
 				<Protection Component={Component} pageProps={pageProps} router={router} />
