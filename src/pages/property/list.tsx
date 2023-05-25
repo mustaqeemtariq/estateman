@@ -7,11 +7,10 @@ import { AppLayout } from 'src/components/app/layout'
 import PropertyBoxCard from 'src/components/property/box-card'
 import { PropertyListCard } from 'src/components/property/list-card'
 import { ListHeader } from 'src/components/property/list-header'
-import imageService from 'src/services/images'
 import propertyService from 'src/services/property'
 import { FilterParameter, ImagePath, Property } from 'src/types/typings'
 import { ApplyPropertyFilter } from 'src/utils/filter'
-import emptyImage from 'src/assets/card/emptyImage.png'
+import emptyImage from 'src/assets/card/building.jpg'
 
 const listData = [
 	{
@@ -72,7 +71,7 @@ const PropertyList = ({ propertiesData }: PropertyListProps) => {
 
 	return (
 		<AppLayout>
-			<AppHeader />
+			<AppHeader setProperty={setData} />
 			<Container>
 				<ListHeader heading="All Properties" count={data.length} setView={setView} />
 				<AppFilter count={data.length} showContract={true} setFilterData={setFilterParams} />
@@ -93,7 +92,7 @@ const BoxView = ({ data }: ViewProps) => {
 				<PropertyBoxCard
 					key={item.Title + index}
 					id={item._id}
-					image={item.PropertyDetails.imagePath.length > 0 ? item.PropertyDetails.imagePath[0] : emptyImage}
+					image={item.PropertyDetails.imagePath?.[0] ?? emptyImage}
 					contract={item.ContractType}
 					title={item.Title}
 					location={item.Location}
