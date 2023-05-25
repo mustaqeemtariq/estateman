@@ -15,13 +15,13 @@ export const ApplyPropertyFilter = (filterData: FilterParameter, originalData: P
 
 	if (filterData.city !== '') {
 		filteredData = filteredData.filter(item => {
-			return item.Location === filterData.city
+			return item.PropertyDetails.City === filterData.city
 		})
 	}
 
 	if (filterData.type !== '') {
 		filteredData = filteredData.filter(item => {
-			return item.PropertyCategory === filterData.type
+			return item.PropertyType === filterData.type
 		})
 	}
 
