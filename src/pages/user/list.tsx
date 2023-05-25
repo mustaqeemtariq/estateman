@@ -18,24 +18,28 @@ interface UserProps {
 
 const ListUsers = ({ usersData }: UserProps) => {
 	const [searchText, setSearchText] = useState('')
+	const [hiddenRows, setHiddenRows] = useState<string[]>([])
 
 	const users = useAppSelector(state => state.db.users)
 	const deleteUser = async (id: string) => {
 		const response = await userService.deleteUser(id)
 		if (response.success) {
 			toast.success('User deleted successfully')
+			setHiddenRows((prevHiddenRows) => [...prevHiddenRows, id]);
 		}
 	}
-
+	
 	const { filteredUsers } = useMemo(() => {
+		
 		const { filteredUsers } = usersData.reduce(
 			(prev, curr) => {
 				if (searchText) {
 					if (
-						curr.Username.toLowerCase().includes(searchText.toLowerCase()) ||
-						curr.Email.toLowerCase().includes(searchText.toLowerCase()) ||
-						curr.Contact.includes(searchText)
+						curr.Username?.toLowerCase().includes(searchText.toLowerCase()) ||
+						curr.Email?.toLowerCase().includes(searchText.toLowerCase()) ||
+						curr.Contact?.includes(searchText)
 					) {
+						
 						return { filteredUsers: [...prev.filteredUsers, curr] }
 					}
 				} else {
@@ -55,7 +59,7 @@ const ListUsers = ({ usersData }: UserProps) => {
 		return (
 			<tbody className="bg-white">
 				{userData.map((user, index) => (
-					<tr key={user.Username + index} className={clsx(index % 2 === 0 && 'bg-gray-100')}>
+					<tr key={user.Username + index} className={clsx(index % 2 === 0 && 'bg-gray-100', hiddenRows.includes(user.id) && 'hidden')}>
 						<td className="tw-table-td hidden">{user.id}</td>
 						<td className="tw-table-td">{user.Username}</td>
 						<td className="tw-table-td text-blue-500 hover:underline">{user.Email}</td>
