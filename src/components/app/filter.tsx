@@ -62,8 +62,9 @@ export const AppFilter = ({
 							onChange={handleData}
 							className="mt-1 block w-full rounded-md border-0 py-3 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 sm:text-sm sm:leading-6 outline-none">
 							<option value="">Type</option>
-							<option value="residential">Residential</option>
-							<option value="commercial">Commercial</option>
+							<option value="Residential">Residential</option>
+							<option value="Commercial">Commercial</option>
+							<option value="Special Commercial">Special Commercial</option>
 						</select>
 						<select
 							name="category"
