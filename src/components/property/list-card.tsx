@@ -35,7 +35,7 @@ export const PropertyListCard = ({ data }: ListCardProps) => {
 		}
 		return (
 			<tbody className="bg-white">
-				{data.map((item, index) => (
+				{data.reverse().map((item, index) => (
 					<tr
 						key={item.Title + index}
 						className={clsx('relative hover:bg-[#0D0C18]/[85%]', index % 2 === 0 && 'bg-gray-100')}>

@@ -52,6 +52,7 @@ interface PropertyListProps {
 }
 
 const PropertyList = ({ propertiesData }: PropertyListProps) => {
+	
 	const [filterParams, setFilterParams] = useState<FilterParameter>({
 		period: 'newest',
 		city: '',
@@ -97,7 +98,7 @@ const BoxView = ({ data }: ViewProps) => {
 
 	return (
 		<div className="grid grid-cols-3 gap-x-4 gap-y-3">
-			{data.map((item, index) => (
+			{data.reverse().map((item, index) => (
 				<PropertyBoxCard
 					key={item.Title + index}
 					id={item._id}

@@ -47,7 +47,7 @@ const PropertyHistory = ({ propertiesHistory }: PropertyHistoryProps) => {
 
 		return (
 			<tbody className="bg-gray-100">
-				{data.map((item, index) => (
+				{data.reverse().map((item, index) => (
 					<>
 						<tr
 							onClick={() => setExpand(prev => ({ ...prev, [index]: !prev[index] }))}
