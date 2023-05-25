@@ -374,19 +374,21 @@ const PropertyForm = ({
 
 	const [isUpdating, setUpdating] = useState(false)
 	const router = useRouter()
-	const historyFormData = new FormData()
-	const propertyFormData = new FormData()
+	const formData = new FormData()
 
 	const addProperty = async (
 		data: any,
 		PropertyDetails: any,
 		OwnerDetails: any,
 		AddHistory: any,
-		AddCommission: any
+		AddCommission: any,
+		formData: any
 	) => {
 		const response = await propertyService.addProperty(data)
 		if (response.success) {
-			updateProperty(response.data._id, PropertyDetails, OwnerDetails, AddHistory, AddCommission)
+
+			await updateProperty(response.data._id, PropertyDetails, OwnerDetails, AddHistory, AddCommission)
+			await addImage(formData, response.data._id)
 		} else {
 			toast.error('Property not saved')
 			console.log(response.message)
@@ -419,8 +421,8 @@ const PropertyForm = ({
 		}
 	}
 
-	const addImage = async (data: { propertyDetails: FormData; addHistory: FormData }) => {
-		const response = await imageService.uploadPropertyImages(data)
+	const addImage = async (data: FormData, id: string ) => {
+		const response = await imageService.uploadPropertyImages(data, id)
 
 		if (response.success) {
 			toast.success('Images added successfully')
@@ -430,15 +432,16 @@ const PropertyForm = ({
 	}
 
 	const onSubmit = handleSubmit(data => {
+		
 		if (data.sentHistoryImages) {
 			data.sentHistoryImages.forEach((image, index) => {
-				historyFormData.append(`imagePath`, image)
+				formData.append(`imagePath`, image)
 			})
 		}
 
 		if (data.sentPropertyImages) {
 			data.sentPropertyImages.forEach((image, index) => {
-				propertyFormData.append(`imagePath`, image)
+				formData.append(`imagePath`, image)
 			})
 		}
 
@@ -519,15 +522,15 @@ const PropertyForm = ({
 			YearBuilt: data.YearBuilt,
 			Title: data.Title
 		}
-		const images = { propertyDetails: propertyFormData, addHistory: historyFormData }
+		
 		addProperty(
 			addPropertyData,
 			data.PropertyDetails,
 			data.OwnerDetails,
 			data.AddHistory,
-			data.AddCommission
+			data.AddCommission, 
+			formData,
 		)
-		addImage(images)
 		setUpdating(true)
 	})
 

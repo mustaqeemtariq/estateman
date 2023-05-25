@@ -11,6 +11,7 @@ import imageService from 'src/services/images'
 import propertyService from 'src/services/property'
 import { FilterParameter, ImagePath, Property } from 'src/types/typings'
 import { ApplyPropertyFilter } from 'src/utils/filter'
+import emptyImage from 'src/assets/card/emptyImage.png'
 
 const listData = [
 	{
@@ -86,23 +87,13 @@ interface ViewProps {
 }
 
 const BoxView = ({ data }: ViewProps) => {
-	const [images, setImages] = useState<ImagePath>()
-
-	useEffect(() => {
-		const getImages = async () => {
-			const response = await imageService.getPropertyImages('64649dcec2f9388d7c103db6')
-			setImages(response)
-		}
-		getImages()
-	}, [])
-
 	return (
 		<div className="grid grid-cols-3 gap-x-4 gap-y-3">
 			{data.reverse().map((item, index) => (
 				<PropertyBoxCard
 					key={item.Title + index}
 					id={item._id}
-					image={images?.propertyDetails?.[index]}
+					image={item.PropertyDetails.imagePath.length > 0 ? item.PropertyDetails.imagePath[0] : emptyImage}
 					contract={item.ContractType}
 					title={item.Title}
 					location={item.Location}

@@ -19,9 +19,9 @@ const uploadAuctionImages = (data: FormData) => {
 		.catch(error => error.response.data)
 }
 
-const uploadPropertyImages = (data: { propertyDetails: FormData; addHistory: FormData }) => {
+const uploadPropertyImages = (data: FormData, id: string ) => {
 	return axios
-		.post(`${apiHost}/UploadPropertyImages`, data)
+		.put(`${apiHost}/UploadPropertyImages?id=${id}`, data)
 		.then(response => response.data)
 		.catch(error => error.response.data)
 }

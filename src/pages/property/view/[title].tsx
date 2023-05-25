@@ -6,18 +6,21 @@ import { ListHeader } from 'src/components/property/list-header'
 import ViewPropertyCard from 'src/components/property/view-card'
 import propertyService from 'src/services/property'
 import { Property } from 'src/types/typings'
+import { useSearchParams } from 'next/navigation';
 
 interface ViewPropertyProps {
 	propertyData: Property
 }
 
 const ViewProperty = ({ propertyData }: ViewPropertyProps) => {
+
+	const searchParam = useSearchParams()
 	return (
 		<AppLayout>
 			<AppHeader />
 			<Container>
 				<ListHeader title={propertyData.Title} heading="View Property" viewButtons={true} />
-				<ViewPropertyCard data={propertyData} />
+				<ViewPropertyCard data={propertyData} propertyId={searchParam.get('propertyId')}/>
 			</Container>
 		</AppLayout>
 	)

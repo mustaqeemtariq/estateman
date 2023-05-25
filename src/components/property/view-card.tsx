@@ -20,10 +20,11 @@ import { ImageSlider } from '../app/image-slider'
 import { MapComponent } from '../app/map'
 
 interface ViewPropertyCardProps {
-	data: Property
+	data: Property,
+	propertyId: string,
 }
 
-const ViewPropertyCard = ({ data }: ViewPropertyCardProps) => {
+const ViewPropertyCard = ({ data, propertyId }: ViewPropertyCardProps) => {
 	const details = [
 		{ value: data.PropertyDetails?.Bed, image: Bed },
 		{ value: data.PropertyDetails?.Bath, image: Shower },
@@ -37,8 +38,8 @@ const ViewPropertyCard = ({ data }: ViewPropertyCardProps) => {
 
 	useEffect(() => {
 		const getImages = async () => {
-			const response = await imageService.getPropertyImages('64649dcec2f9388d7c103db6')
-			setImages(response)
+			const response = await imageService.getPropertyImages(propertyId)
+			setImages(response.propertyDetails)
 		}
 		getImages()
 	}, [])
