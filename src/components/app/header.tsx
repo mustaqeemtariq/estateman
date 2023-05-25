@@ -3,15 +3,20 @@ import { BanknotesIcon, PlusIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import { useAppDispatch, useAppSelector } from 'src/hooks/rtk'
 import propertyService from 'src/services/property'
 import { logOut } from 'src/slices/auth'
 import { Search } from './search-input'
+import { Property } from 'src/types/typings'
 
-export const AppHeader = () => {
+interface AppHeaderProps {
+	setProperty?: Dispatch<SetStateAction<Property[]>>
+}
+
+export const AppHeader = ({setProperty}: AppHeaderProps) => {
 	const { register, handleSubmit } = useForm()
 
 	const dispatch = useAppDispatch()
@@ -32,7 +37,7 @@ export const AppHeader = () => {
 		if (response.success == 'false') {
 			toast.error('Property not found')
 		} else {
-			router.push(`/property/view/${title}`)
+			setProperty?.(response)
 		}
 	}
 
