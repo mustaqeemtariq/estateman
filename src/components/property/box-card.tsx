@@ -4,11 +4,11 @@ import { useAppSelector } from 'src/hooks/rtk'
 import { dateDifference } from 'src/utils/date'
 import Alert from '../app/alert'
 import { UserRightTypes } from 'src/constants/constants'
-import Image from 'next/image'
+import Image, { StaticImageData } from 'next/image'
 
 interface BoxCardProps {
 	id: string
-	image: string | undefined
+	image: string | StaticImageData
 	contract: string
 	title: string
 	location: string
