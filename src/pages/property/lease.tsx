@@ -11,6 +11,8 @@ import imageService from 'src/services/images'
 import propertyService from 'src/services/property'
 import { FilterParameter, ImagePath, Property } from 'src/types/typings'
 import { ApplyPropertyFilter } from 'src/utils/filter'
+import EmptyImage from 'src/assets/card/building.jpg'
+import { useRouter } from 'next/router'
 
 const listData = [
 	{
@@ -61,7 +63,14 @@ const LeasePropertyList = ({ leasePropertiesData }: PropertyListProps) => {
 	})
 
 	const [view, setView] = useState('box')
-	const [data, setData] = useState(leasePropertiesData)
+	const [data, setData] = useState(leasePropertiesData.reverse())
+
+	const router = useRouter()
+	const {search} = router.query
+
+	if (typeof search === 'string') {
+		leasePropertiesData = leasePropertiesData.filter(data => data.Title?.includes(search))
+	}
 
 	useEffect(() => {
 		const filteredData = ApplyPropertyFilter(filterParams, leasePropertiesData)
@@ -100,7 +109,7 @@ const BoxView = ({ data }: ViewProps) => {
 				<PropertyBoxCard
 					id={item._id}
 					key={item.Title + index}
-					image={images?.propertyDetails?.[index]}
+					image={images?.propertyDetails?.[index] ?? EmptyImage}
 					contract={item.ContractType}
 					title={item.Title}
 					location={item.Location}

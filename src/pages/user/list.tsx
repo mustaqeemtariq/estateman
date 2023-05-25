@@ -29,8 +29,7 @@ const ListUsers = ({ usersData }: UserProps) => {
 		}
 	}
 	
-	const { filteredUsers } = useMemo(() => {
-		
+	const { filteredUsers } = useMemo(() => {		
 		const { filteredUsers } = usersData.reduce(
 			(prev, curr) => {
 				if (searchText) {

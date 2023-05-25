@@ -11,6 +11,7 @@ import propertyService from 'src/services/property'
 import { FilterParameter, ImagePath, Property } from 'src/types/typings'
 import { ApplyPropertyFilter } from 'src/utils/filter'
 import emptyImage from 'src/assets/card/building.jpg'
+import { useRouter } from 'next/router'
 
 const listData = [
 	{
@@ -52,7 +53,10 @@ interface PropertyListProps {
 }
 
 const PropertyList = ({ propertiesData }: PropertyListProps) => {
-	
+
+	const router = useRouter()
+	const {search} = router.query
+
 	const [filterParams, setFilterParams] = useState<FilterParameter>({
 		period: 'newest',
 		city: '',
@@ -61,8 +65,12 @@ const PropertyList = ({ propertiesData }: PropertyListProps) => {
 		contract: ''
 	})
 
+	if (typeof search === 'string') {
+		propertiesData = propertiesData.filter(data => data.Title?.includes(search))
+	}
+
 	const [view, setView] = useState('box')
-	const [data, setData] = useState(propertiesData)
+	const [data, setData] = useState(propertiesData.reverse())	
 
 	useEffect(() => {
 		const filteredData = ApplyPropertyFilter(filterParams, propertiesData)
@@ -71,7 +79,7 @@ const PropertyList = ({ propertiesData }: PropertyListProps) => {
 
 	return (
 		<AppLayout>
-			<AppHeader setProperty={setData} />
+			<AppHeader />
 			<Container>
 				<ListHeader heading="All Properties" count={data.length} setView={setView} />
 				<AppFilter count={data.length} showContract={true} setFilterData={setFilterParams} />
@@ -88,7 +96,7 @@ interface ViewProps {
 const BoxView = ({ data }: ViewProps) => {
 	return (
 		<div className="grid grid-cols-3 gap-x-4 gap-y-3">
-			{data.reverse().map((item, index) => (
+			{data.map((item, index) => (
 				<PropertyBoxCard
 					key={item.Title + index}
 					id={item._id}

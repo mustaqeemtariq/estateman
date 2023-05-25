@@ -10,13 +10,9 @@ import { useAppDispatch, useAppSelector } from 'src/hooks/rtk'
 import propertyService from 'src/services/property'
 import { logOut } from 'src/slices/auth'
 import { Search } from './search-input'
-import { Property } from 'src/types/typings'
+import { Auction, Property } from 'src/types/typings'
 
-interface AppHeaderProps {
-	setProperty?: Dispatch<SetStateAction<Property[]>>
-}
-
-export const AppHeader = ({setProperty}: AppHeaderProps) => {
+export const AppHeader = () => {
 	const { register, handleSubmit } = useForm()
 
 	const dispatch = useAppDispatch()
@@ -37,7 +33,7 @@ export const AppHeader = ({setProperty}: AppHeaderProps) => {
 		if (response.success == 'false') {
 			toast.error('Property not found')
 		} else {
-			setProperty?.(response)
+			window.location.href = `/property/list?search=${title}`
 		}
 	}
 

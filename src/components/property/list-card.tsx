@@ -33,9 +33,10 @@ export const PropertyListCard = ({ data }: ListCardProps) => {
 		if (Roles === 'surveyor' && user.length > 0) {
 			rights = user[0].rights
 		}
+
 		return (
 			<tbody className="bg-white">
-				{data.reverse().map((item, index) => (
+				{data.map((item, index) => (
 					<tr
 						key={item.Title + index}
 						className={clsx('relative hover:bg-[#0D0C18]/[85%]', index % 2 === 0 && 'bg-gray-100')}>
