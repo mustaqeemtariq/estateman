@@ -4,7 +4,7 @@ import { Property } from 'src/types/typings'
 import { apiHost } from 'src/utils/host'
 
 const getAllProperties = () => {
-	return axios.get(`${apiHost}/ALLProperties`).then(response => response.data.data.filter(({Title}) => Title))
+	return axios.get(`${apiHost}/ALLProperties`).then(response => response.data.data)
 }
 
 const getLeaseProperties = () => {
