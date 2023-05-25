@@ -25,12 +25,12 @@ export const PropertyDetailsFormValues = (data: Property | undefined) => ({
 	Streetno: data?.PropertyDetails?.Streetno,
 	images: data?.PropertyDetails?.imagePath,
 	Name: data?.OwnerDetails?.Name,
-	Address: data?.OwnerDetails.Address,
-	ContactNumber: data?.OwnerDetails.ContactNumber,
-	AlternateNumber: data?.OwnerDetails.AlternateNumber,
-	CNIC: data?.OwnerDetails.CNIC,
-	Ligitation: data?.OwnerDetails.Ligitation,
-	OwnerDescription: data?.OwnerDetails.OwnerDescription
+	Address: data?.OwnerDetails?.Address,
+	ContactNumber: data?.OwnerDetails?.ContactNumber,
+	AlternateNumber: data?.OwnerDetails?.AlternateNumber,
+	CNIC: data?.OwnerDetails?.CNIC,
+	Ligitation: data?.OwnerDetails?.Ligitation,
+	OwnerDescription: data?.OwnerDetails?.OwnerDescription
 })
 
 export const AddHistoryFormValues = (data: Property | undefined) => ({
