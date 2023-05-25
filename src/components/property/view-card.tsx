@@ -34,7 +34,7 @@ const ViewPropertyCard = ({ data, propertyId }: ViewPropertyCardProps) => {
 		{ value: data.PropertyDetails?.places, image: Places }
 	]
 
-	const [images, setImages] = useState<ImagePath>()
+	const [images, setImages] = useState<string[]>([])
 
 	useEffect(() => {
 		const getImages = async () => {
@@ -43,6 +43,9 @@ const ViewPropertyCard = ({ data, propertyId }: ViewPropertyCardProps) => {
 		}
 		getImages()
 	}, [])
+
+	console.log(images);
+	
 
 	const [showMap, setShowMap] = useState(false)
 	return (
@@ -107,7 +110,7 @@ const ViewPropertyCard = ({ data, propertyId }: ViewPropertyCardProps) => {
 				</div>
 			</div>
 			<div>
-				<ImageSlider type="slider" images={images?.propertyDetails} />
+				<ImageSlider type="slider" images={images} />
 				<div className="flex flex-col mt-4 space-y-2">
 					<div className="flex justify-between pr-16">
 						<div className="flex flex-col space-y-2">
