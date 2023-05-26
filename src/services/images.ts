@@ -12,9 +12,9 @@ const getAuctionImages = (id: string) => {
 	return axios.get(`${apiHost}/getauctionimageurl?id=${id}`).then(response => response.data.data)
 }
 
-const uploadAuctionImages = (data: FormData) => {
+const uploadAuctionImages = (data: FormData, id:string) => {
 	return axios
-		.post(`${apiHost}/UploadImages`, data)
+		.post(`${apiHost}/UploadImages?id=${id}`, data)
 		.then(response => response.data)
 		.catch(error => error.response.data)
 }
