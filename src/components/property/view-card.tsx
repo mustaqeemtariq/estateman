@@ -88,7 +88,7 @@ const ViewPropertyCard = ({ data, propertyId }: ViewPropertyCardProps) => {
 								<p className="text-[#0057FF] uppercase">View Map</p>
 							</div>
 						</div>
-						<MapComponent show={showMap} setShow={setShowMap} />
+						{showMap && <MapComponent show={showMap} setShow={setShowMap} />}
 						<div className="flex items-center space-x-1 text-sm">
 							<ExclamationTriangleIcon className="h-4 w-4 fill-[#DC4200]" aria-hidden="true" />
 							{dateDifference(data[0]?.AddHistory?.LeaseExpiringOn ?? '') < 0 ?

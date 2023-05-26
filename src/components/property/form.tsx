@@ -766,7 +766,7 @@ const AddPropertyForm = ({
 								aria-hidden="true"
 							/>
 						</div>
-						{<MapComponent onChange={handleMapData} show={showMap} setShow={setShowMap} />}
+						{showMap && <MapComponent onChange={handleMapData} show={showMap} setShow={setShowMap} />}
 						<div className="flex space-x-8">
 							<Controller
 								name={'LandArea'}

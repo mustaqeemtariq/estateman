@@ -54,7 +54,7 @@ const ViewAuctionCard = ({ data }: ViewAuctionCardProps) => {
 						<p className="text-[#0057FF] uppercase">View Map</p>
 					</div>
 				</div>
-				<MapComponent show={showMap} setShow={setShowMap} />
+				{showMap && <MapComponent show={showMap} setShow={setShowMap} />}
 				<div className="flex items-center space-x-1 text-base">
 					<Image src={Area} alt="area" />
 					<p>{data[0].LandArea}</p>
