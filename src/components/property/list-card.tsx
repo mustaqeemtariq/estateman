@@ -73,12 +73,12 @@ export const PropertyListCard = ({ data }: ListCardProps) => {
 								{dateDifference(item.AddHistory.LeaseExpiringOn ?? '') < 0 ? (
 									<div className="flex flex-col items-center text-[#FF0000]">
 										<ExclamationTriangleIcon className="text-[#FF0000] h-5 w-5" />
-										{moment(item?.LeaseExpiringOn).format('DD MMM, YYYY')}
+										{moment(item?.AddHistory.LeaseExpiringOn).format('DD MMM, YYYY')}
 									</div>
 								) : dateDifference(item.AddHistory.LeaseExpiringOn ?? '') <= 1 ? (
 									<div className="flex flex-col items-center text-[#DC4200]">
 										<ExclamationTriangleIcon className="text-[#DC4200] h-5 w-5" />
-										{moment(item?.LeaseExpiringOn).format('DD MMM, YYYY')}
+										{moment(item?.AddHistory.LeaseExpiringOn).format('DD MMM, YYYY')}
 									</div>
 								) : null}
 							</div>

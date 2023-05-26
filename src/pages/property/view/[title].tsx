@@ -9,7 +9,7 @@ import { Property } from 'src/types/typings'
 import { useSearchParams } from 'next/navigation';
 
 interface ViewPropertyProps {
-	propertyData: Property
+	propertyData: Property[]
 }
 
 const ViewProperty = ({ propertyData }: ViewPropertyProps) => {
@@ -19,7 +19,7 @@ const ViewProperty = ({ propertyData }: ViewPropertyProps) => {
 		<AppLayout>
 			<AppHeader />
 			<Container>
-				<ListHeader title={propertyData.Title} heading="View Property" viewButtons={true} />
+				<ListHeader title={propertyData[0].Title} heading="View Property" viewButtons={true} />
 				<ViewPropertyCard data={propertyData} propertyId={searchParam.get('propertyId')}/>
 			</Container>
 		</AppLayout>

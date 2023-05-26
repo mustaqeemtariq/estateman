@@ -18,27 +18,31 @@ import imageService from 'src/services/images'
 import { ImagePath, Property } from 'src/types/typings'
 import { ImageSlider } from '../app/image-slider'
 import { MapComponent } from '../app/map'
+import { dateDifference } from 'src/utils/date'
 
 interface ViewPropertyCardProps {
-	data: Property,
-	propertyId: string,
+	data: Property[],
+	propertyId: string | null,
 }
 
+
+
 const ViewPropertyCard = ({ data, propertyId }: ViewPropertyCardProps) => {
+	console.log(data);
 	const details = [
-		{ value: data.PropertyDetails?.Bed, image: Bed },
-		{ value: data.PropertyDetails?.Bath, image: Shower },
-		{ value: data.PropertyDetails?.Kitchen, image: Kitchen },
-		{ value: data.PropertyDetails?.Gas, image: Gas },
-		{ value: data.PropertyDetails?.Electricity, image: Electricity },
-		{ value: data.PropertyDetails?.places, image: Places }
+		{ value: data[0].PropertyDetails?.Bed, image: Bed },
+		{ value: data[0].PropertyDetails?.Bath, image: Shower },
+		{ value: data[0].PropertyDetails?.Kitchen, image: Kitchen },
+		{ value: data[0].PropertyDetails?.Gas, image: Gas },
+		{ value: data[0].PropertyDetails?.Electricity, image: Electricity },
+		{ value: data[0].PropertyDetails?.places, image: Places }
 	]
 
 	const [images, setImages] = useState<string[]>([])
 
 	useEffect(() => {
 		const getImages = async () => {
-			const response = await imageService.getPropertyImages(propertyId)
+			const response = await imageService.getPropertyImages(propertyId ?? '')
 			setImages(response.propertyDetails)
 		}
 		getImages()
@@ -48,6 +52,7 @@ const ViewPropertyCard = ({ data, propertyId }: ViewPropertyCardProps) => {
 	
 
 	const [showMap, setShowMap] = useState(false)
+
 	return (
 		<div className="grid grid-cols-2 gap-x-6 gap-y-3">
 			<div>
@@ -56,25 +61,25 @@ const ViewPropertyCard = ({ data, propertyId }: ViewPropertyCardProps) => {
 						<div className="grid grid-cols-4 gap-x-2">
 							<div className="space-y-1">
 								<p className="text-xs text-[#CED1DC]">Title</p>
-								<p>{data.Title}</p>
+								<p>{data[0].Title}</p>
 							</div>
 							<div className="space-y-1">
 								<p className="text-xs text-[#CED1DC]">Type</p>
-								<p className="text-[#0038FF]">{data.PropertyType}</p>
+								<p className="text-[#0038FF]">{data[0].PropertyType}</p>
 							</div>
 							<div className="space-y-1">
 								<p className="text-xs text-[#CED1DC]">Category</p>
-								<p className="text-[#0038FF]">{data.PropertyCategory}</p>
+								<p className="text-[#0038FF]">{data[0].PropertyCategory}</p>
 							</div>
 							<div className="space-y-1">
 								<p className="text-xs text-[#CED1DC]">Contract Type</p>
-								<p className="text-[#0038FF]">{data.ContractType}</p>
+								<p className="text-[#0038FF]">{data[0].ContractType}</p>
 							</div>
 						</div>
 						<div className="flex justify-between">
 							<div className="flex items-center space-x-1 text-base">
 								<MapPinIcon className="h-4 w-4 fill-[#131128]" aria-hidden="true" />
-								<p className="text-[#0D0C18]">{data.Location}</p>
+								<p className="text-[#0D0C18]">{data[0].Location}</p>
 							</div>
 							<div
 								className="flex items-center space-x-1 text-base cursor-pointer pr-2"
@@ -86,12 +91,21 @@ const ViewPropertyCard = ({ data, propertyId }: ViewPropertyCardProps) => {
 						<MapComponent show={showMap} setShow={setShowMap} />
 						<div className="flex items-center space-x-1 text-sm">
 							<ExclamationTriangleIcon className="h-4 w-4 fill-[#DC4200]" aria-hidden="true" />
+							{dateDifference(data[0].AddHistory.LeaseExpiringOn ?? '') < 0 ?
 							<p>
-								Lease Expiring on:{' '}
-								<span className="text-[#DC4200]">
-									{moment(data?.AddHistory?.LeaseExpiringOn).format('DD MMMM, YYYY')}
+							Lease Expired on:
+								<span className="text-[#FF0000]">
+									{moment(data[0]?.AddHistory?.LeaseExpiringOn).format('DD MMMM, YYYY')}
 								</span>
 							</p>
+							:
+							<p>
+								Lease Expiring on:
+								<span className="text-[#DC4200]">
+									{moment(data[0]?.AddHistory?.LeaseExpiringOn).format('DD MMMM, YYYY')}
+								</span>
+							</p>
+						}
 						</div>
 					</div>
 
@@ -106,7 +120,7 @@ const ViewPropertyCard = ({ data, propertyId }: ViewPropertyCardProps) => {
 				</div>
 				<div className="space-y-1 pt-4">
 					<p className="text-[#717B9D] uppercase">Description</p>
-					<p className="text-sm">{data?.AddHistory?.AddDetails}</p>
+					<p className="text-sm">{data[0]?.AddHistory?.AddDetails}</p>
 				</div>
 			</div>
 			<div>
@@ -117,34 +131,34 @@ const ViewPropertyCard = ({ data, propertyId }: ViewPropertyCardProps) => {
 							<p className="text-[#717B9D] uppercase">Owner:</p>
 							<div className="flex items-center space-x-1">
 								<Image src={Contact} alt="contact" />
-								<p>{data?.OwnerDetails?.Name}</p>
+								<p>{data[0]?.OwnerDetails?.Name}</p>
 							</div>
 						</div>
 						<div className="flex flex-col space-y-2">
 							<p className="text-[#717B9D] uppercase">Area:</p>
 							<div className="flex items-center space-x-1">
 								<Image src={Area} alt="area" />
-								<p>{data?.LandArea}</p>
+								<p>{data[0]?.LandArea}</p>
 							</div>
 						</div>
 					</div>
 					<div>
 						<div className="flex items-center space-x-1">
 							<Image src={Phone} alt="phone" />
-							<p className="text-[#0078FF]">{data.OwnerDetails?.ContactNumber}</p>
+							<p className="text-[#0078FF]">{data[0].OwnerDetails?.ContactNumber}</p>
 						</div>
 					</div>
 					<div>
 						<div className="flex justify-between items-center pr-8">
 							<div className="flex items-center space-x-1">
 								<Image src={Location} alt="location" />
-								<p className="text-sm">{data.OwnerDetails?.Address}</p>
+								<p className="text-sm">{data[0].OwnerDetails?.Address}</p>
 							</div>
 							<div className="flex flex-col space-y-2">
 								<p className="text-[#717B9D] uppercase">Price (Pkr)</p>
 								<div className="flex items-center space-x-1">
 									<Image src={Money} alt="money" />
-									<p>{data?.Price}</p>
+									<p>{data[0]?.Price}</p>
 								</div>
 							</div>
 						</div>
