@@ -33,18 +33,9 @@ const PropertyHistory = ({ propertiesHistory }: PropertyHistoryProps) => {
 			router.push(`/property/edit/?tab=${state}`)
 		}
 	}, [state])
+	
 
 	const renderPeopleTBody = (data: Property[]) => {
-		const [images, setImages] = useState<ImagePath>()
-
-		useEffect(() => {
-			const getImages = async () => {
-				const response = await imageService.getPropertyImages('64649dcec2f9388d7c103db6')
-				setImages(response)
-			}
-			getImages()
-		}, [])
-
 		return (
 			<tbody className="bg-gray-100">
 				{data.reverse().map((item, index) => (
@@ -54,7 +45,7 @@ const PropertyHistory = ({ propertiesHistory }: PropertyHistoryProps) => {
 							key={index}
 							className={clsx('cursor-pointer', !expand[index] && 'border-b-8 border-white')}>
 							<td className="tw-table-td col-span-2">
-								{moment(item.AddHistory.Date).format('DD MMM, YYYY')}
+								{item?.AddHistory?.Date ? moment(item.AddHistory.Date).format('DD MMM, YYYY') : ""}
 							</td>
 							<td className="tw-table-td w-7/12 pl-0">{item.AddHistory.AddDetails}</td>
 							<td className="tw-table-td">{item.AddHistory.OccupancyStatus}</td>
@@ -67,7 +58,7 @@ const PropertyHistory = ({ propertiesHistory }: PropertyHistoryProps) => {
 						<tr className={clsx(!expand[index] && 'hidden')}>
 							<td></td>
 							<td>
-								<ImageSlider images={images?.addHistory} type="arrow" />
+								<ImageSlider images={item?.AddHistory?.imagePath} type="arrow" />
 							</td>
 							<td></td>
 							<td></td>
@@ -76,7 +67,7 @@ const PropertyHistory = ({ propertiesHistory }: PropertyHistoryProps) => {
 							<td></td>
 							<td className="space-x-2 flex items-center mt-2">
 								<div className="border-4 border-blue-400 h-3 w-3 rounded-full text-medium text-medium"></div>
-								<p className="text-medium">{item.AddHistory.Calltype}</p>
+								<p className="text-medium">{item?.AddHistory?.Calltype}</p>
 							</td>
 							<td></td>
 							<td></td>

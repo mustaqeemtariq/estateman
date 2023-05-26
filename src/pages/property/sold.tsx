@@ -110,7 +110,7 @@ const BoxView = ({ data }: ViewProps) => {
 				<PropertyBoxCard
 					id={item._id}
 					key={item.Title + index}
-					image={images?.propertyDetails?.[index] ?? EmptyImage}
+					image={item?.PropertyDetails?.imagePath?.[0] ?? EmptyImage}
 					contract={item.ContractType}
 					title={item.Title}
 					location={item.Location}

@@ -982,7 +982,7 @@ const PropertyDetailsForm = ({
 							required={true}
 							className="bg-[#E8E8E8]                                                "
 							autoCapitalize="false">
-							{editData?.PropertyDetails.City && <option value={editData.PropertyDetails.City}>{editData.PropertyDetails.City}</option>}
+							{editData?.PropertyDetails?.City && <option value={editData.PropertyDetails.City}>{editData.PropertyDetails.City}</option>}
 							<option value="">Select a City</option>
 							{Object.values(CityNames).map(unit => (
 								<option key={unit} value={unit}>
@@ -1335,7 +1335,7 @@ const AddHistoryForm = ({
 				<DateInput
 					labelText="Date"
 					type="date"
-					value={editData?.AddHistory.Date}
+					value={editData?.AddHistory?.Date}
 					id="historydate"
 					prevValue={historyDate}
 					autoComplete="historydate"
@@ -1390,7 +1390,7 @@ const AddHistoryForm = ({
 					render={({ field: { onChange, value } }) => (
 						<DateInput
 							register={register}
-							value={editData?.AddHistory.LeaseExpiringOn}
+							value={editData?.AddHistory?.LeaseExpiringOn}
 							onCalendarClick={handleDate}
 							error={errors}
 							prevValue={LeaseDate}

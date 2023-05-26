@@ -109,7 +109,7 @@ const BoxView = ({ data }: ViewProps) => {
 				<PropertyBoxCard
 					id={item._id}
 					key={item.Title + index}
-					image={images?.propertyDetails?.[index] ?? EmptyImage}
+					image={item?.PropertyDetails?.imagePath?.[0] ?? EmptyImage}
 					contract={item.ContractType}
 					title={item.Title}
 					location={item.Location}
@@ -125,7 +125,7 @@ const BoxView = ({ data }: ViewProps) => {
 const ListView = ({ data }: ViewProps) => <PropertyListCard data={data} />
 
 export const getServerSideProps = async () => {
-	const response = await propertyService.getLeaseProperties()
+	const response = await propertyService.getPropertyByContract('Rent')
 
 	return {
 		props: {

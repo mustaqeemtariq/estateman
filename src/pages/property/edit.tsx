@@ -10,11 +10,12 @@ import propertyService from 'src/services/property'
 import { Property } from 'src/types/typings'
 
 interface UpdatePropertyProps {
-	propertyData: Property
+	propertyData: Property[]
 }
 
 const UpdateProperty = ({ propertyData }: UpdatePropertyProps) => {
 	const router = useRouter()
+	const editData = propertyData[0]
 	const { tab } = router.query
 	const [state, setState] = useState((tab as string) ?? 'Add Property')
 	const [active, setActive] = useState({
@@ -29,7 +30,7 @@ const UpdateProperty = ({ propertyData }: UpdatePropertyProps) => {
 			<Container>
 				<PropertyHeader showHistory={true} setState={setState} active={active} state={state} />
 				<PropertyForm
-					editData={propertyData}
+					editData={editData}
 					isNew={false}
 					currentTab={state}
 					setCurrentTab={setState}
@@ -42,7 +43,7 @@ const UpdateProperty = ({ propertyData }: UpdatePropertyProps) => {
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 	const { title } = ctx.query
-
+	
 	const response = await propertyService.searchProperty(typeof title == 'string' ? title : '')
 	return {
 		props: {

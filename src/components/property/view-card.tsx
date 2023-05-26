@@ -61,25 +61,25 @@ const ViewPropertyCard = ({ data, propertyId }: ViewPropertyCardProps) => {
 						<div className="grid grid-cols-4 gap-x-2">
 							<div className="space-y-1">
 								<p className="text-xs text-[#CED1DC]">Title</p>
-								<p>{data[0].Title}</p>
+								<p>{data[0]?.Title}</p>
 							</div>
 							<div className="space-y-1">
 								<p className="text-xs text-[#CED1DC]">Type</p>
-								<p className="text-[#0038FF]">{data[0].PropertyType}</p>
+								<p className="text-[#0038FF]">{data[0]?.PropertyType}</p>
 							</div>
 							<div className="space-y-1">
 								<p className="text-xs text-[#CED1DC]">Category</p>
-								<p className="text-[#0038FF]">{data[0].PropertyCategory}</p>
+								<p className="text-[#0038FF]">{data[0]?.PropertyCategory}</p>
 							</div>
 							<div className="space-y-1">
 								<p className="text-xs text-[#CED1DC]">Contract Type</p>
-								<p className="text-[#0038FF]">{data[0].ContractType}</p>
+								<p className="text-[#0038FF]">{data[0]?.ContractType}</p>
 							</div>
 						</div>
 						<div className="flex justify-between">
 							<div className="flex items-center space-x-1 text-base">
 								<MapPinIcon className="h-4 w-4 fill-[#131128]" aria-hidden="true" />
-								<p className="text-[#0D0C18]">{data[0].Location}</p>
+								<p className="text-[#0D0C18]">{data[0]?.Location}</p>
 							</div>
 							<div
 								className="flex items-center space-x-1 text-base cursor-pointer pr-2"
@@ -91,18 +91,18 @@ const ViewPropertyCard = ({ data, propertyId }: ViewPropertyCardProps) => {
 						<MapComponent show={showMap} setShow={setShowMap} />
 						<div className="flex items-center space-x-1 text-sm">
 							<ExclamationTriangleIcon className="h-4 w-4 fill-[#DC4200]" aria-hidden="true" />
-							{dateDifference(data[0].AddHistory.LeaseExpiringOn ?? '') < 0 ?
+							{dateDifference(data[0]?.AddHistory?.LeaseExpiringOn ?? '') < 0 ?
 							<p>
 							Lease Expired on:
 								<span className="text-[#FF0000]">
-									{moment(data[0]?.AddHistory?.LeaseExpiringOn).format('DD MMMM, YYYY')}
+								{data[0]?.AddHistory?.LeaseExpiringOn ? moment(data[0]?.AddHistory?.LeaseExpiringOn).format('DD MMMM, YYYY') : ''}
 								</span>
 							</p>
 							:
 							<p>
 								Lease Expiring on:
 								<span className="text-[#DC4200]">
-									{moment(data[0]?.AddHistory?.LeaseExpiringOn).format('DD MMMM, YYYY')}
+									{data[0]?.AddHistory?.LeaseExpiringOn ? moment(data[0]?.AddHistory?.LeaseExpiringOn).format('DD MMMM, YYYY') : ''}
 								</span>
 							</p>
 						}

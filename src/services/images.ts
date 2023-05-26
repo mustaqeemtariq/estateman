@@ -9,7 +9,7 @@ const getPropertyImages = (id: string) => {
 }
 
 const getAuctionImages = (id: string) => {
-	return axios.get(`${apiHost}/getauctionimageurl?id=${id}`).then(response => response.data.data)
+	return axios.get(`${apiHost}/getauctionimageurl?id=${id}`).then(response => response.data.data).catch(error => error.response.data)
 }
 
 const uploadAuctionImages = (data: FormData, id:string) => {

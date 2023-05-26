@@ -53,6 +53,7 @@ const AuctionForm = () => {
 		const response = await auctionService.addAuction(data)
 		if (response.success) {
 			toast.success('Auction addded successfully')
+			postImages(response.data._id, auctionFormData)
 			window.location.href = '/auction/list'
 			setUpdating(false)
 		} else {
@@ -85,7 +86,6 @@ const AuctionForm = () => {
 
 		setUpdating(true)
 		postData(data)
-		postImages(data._id, auctionFormData)
 	}
 
 	const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
