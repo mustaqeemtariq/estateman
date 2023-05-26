@@ -109,7 +109,7 @@ export const getServerSideProps = async () => {
 	const response = await auctionService.getAllAuctions()
 	return {
 		props: {
-			auctionsData: response
+			auctionsData: response || []
 		}
 	}
 }
