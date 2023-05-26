@@ -60,7 +60,7 @@ const leaseDue = () => {
 }
 
 const getPropertyByContract = (type: string) => {
-	return axios.get(`${apiHost}/UnitsSold?ContractType=${type}`).then(response => response.data.data)
+	return axios.get(`${apiHost}/UnitsSold?ContractType=${type}`).then(response => response.data.data).catch(err => err.data)
 }
 
 const propertyService = {

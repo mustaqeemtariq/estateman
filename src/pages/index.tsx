@@ -65,12 +65,13 @@ export const getServerSideProps = async () => {
 	const rentResponse = await propertyService.getPropertyByContract('Rent')
 	const saleResponse = await propertyService.getPropertyByContract('Sale')
 	const userResponse = await userService.getAllUsers()
+	
 	return {
 		props: {
-			leaseDue: leaseResponse,
-			rent: rentResponse,
-			sale: saleResponse,
-			users: userResponse
+			leaseDue: leaseResponse || [],
+			rent: rentResponse || [],
+			sale: saleResponse || [],
+			users: userResponse || []
 		}
 	}
 }

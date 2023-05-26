@@ -54,6 +54,7 @@ interface PropertyListProps {
 }
 
 const SoldPropertyList = ({ soldPropertiesData }: PropertyListProps) => {
+	
 	const [filterParams, setFilterParams] = useState<FilterParameter>({
 		period: 'newest',
 		city: '',
@@ -129,7 +130,7 @@ export const getServerSideProps = async () => {
 
 	return {
 		props: {
-			soldPropertiesData: response
+			soldPropertiesData: response || []
 		}
 	}
 }

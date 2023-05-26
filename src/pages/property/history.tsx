@@ -203,7 +203,7 @@ export const getServerSideProps = async () => {
 	const response = await propertyService.getHistory()
 	return {
 		props: {
-			propertiesHistory: response
+			propertiesHistory: response || []
 		}
 	}
 }

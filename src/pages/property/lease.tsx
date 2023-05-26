@@ -129,7 +129,7 @@ export const getServerSideProps = async () => {
 
 	return {
 		props: {
-			leasePropertiesData: response
+			leasePropertiesData: response || []
 		}
 	}
 }

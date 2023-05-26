@@ -11,7 +11,7 @@ interface ProtectionProps {
 	pageProps: AppProps
 }
 
-const Protection = ({ Component, pageProps }: ProtectionProps) => {
+const Protection = ({ Component, pageProps, router }: ProtectionProps) => {
 	const isLoggedIn = useAppSelector(state => state.auth.accessToken)
 	const [loggedIn, setLoggedIn] = useState(true)
 	useSyncWithServer()
