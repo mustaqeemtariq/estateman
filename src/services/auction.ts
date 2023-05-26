@@ -6,7 +6,6 @@ const getAllAuctions = () => {
 	return axios
 		.get(`${apiHost}/viewAllAuction`)
 		.then(response => response.data.data)
-		.catch(error => error.response.data)
 }
 
 const addAuction = (data: Auction) => {
