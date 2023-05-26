@@ -439,6 +439,7 @@ const PropertyForm = ({
 			})
 		}
 
+
 		if (data.sentPropertyImages) {
 			data.sentPropertyImages.forEach((image, index) => {
 				formData.append(`imagePath`, image)
@@ -541,9 +542,6 @@ const PropertyForm = ({
 		setValue('AccountNumber', '')
 		setValue('Branch', '')
 	}
-
-	const amount = watch('Amount')
-	console.log('sa', amount)
 
 	return (
 		<div className="px-4 sm:px-4 lg:px-4">
