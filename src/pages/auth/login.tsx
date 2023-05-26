@@ -80,6 +80,7 @@ const Login = () => {
 				</div>
 
 				<div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+					{<h1 className='text-lg capitalize text-center mb-3 text-blue-600'>Login as {Roles}</h1>}
 					<form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-5">
 						<Input
 							autoComplete="true"
