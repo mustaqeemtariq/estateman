@@ -63,8 +63,8 @@ const AuctionForm = () => {
 		}
 	}
 
-	const postImages = async (data: FormData) => {
-		const response = await imageService.uploadAuctionImages(data)
+	const postImages = async (id: string, data: FormData) => {
+		const response = await imageService.uploadAuctionImages(data, id)
 		if (response.success) {
 			toast.success(`Images uploaded successfully`)
 		} else {
@@ -78,14 +78,14 @@ const AuctionForm = () => {
 
 	const handleFormSubmit = (data: Auction) => {
 		if (data.images) {
-			data.images.forEach((imageData, index) => {
+			data.images.forEach((imageData) => {
 				auctionFormData.append(`imagePath`, imageData)
 			})
 		}
 
 		setUpdating(true)
 		postData(data)
-		postImages(auctionFormData)
+		postImages(data._id, auctionFormData)
 	}
 
 	const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
