@@ -313,16 +313,6 @@ const UserForm = ({ isNew, title, data }: UserFormProps) => {
 												value={UserRightTypes.EDIT}
 												checked={selectedRights.includes(UserRightTypes.EDIT)}
 											/>
-											<Checkbox
-												labelText="View Property"
-												name="view"
-												onChange={handleCheckboxChange}
-												value={UserRightTypes.VIEW}
-												checked={
-													selectedRights.includes(UserRightTypes.VIEW) ||
-													selectedRights.includes(UserRightTypes.EDIT)
-												}
-											/>
 										</div>
 									)
 								}}
