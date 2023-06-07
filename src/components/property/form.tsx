@@ -41,6 +41,7 @@ import { Select } from '../app/select'
 import CallRecord from './call-record'
 import Commission from './commission'
 import PricingHistory from './pricing-history'
+import ImportButton from './import-button'
 
 interface PropertyFormProps {
 	currentTab: string
@@ -434,14 +435,14 @@ const PropertyForm = ({
 	const onSubmit = handleSubmit(data => {
 		
 		if (data.sentHistoryImages) {
-			data.sentHistoryImages.forEach((image, index) => {
+			data.sentHistoryImages.forEach((image) => {
 				formData.append(`imagePath`, image)
 			})
 		}
 
 
 		if (data.sentPropertyImages) {
-			data.sentPropertyImages.forEach((image, index) => {
+			data.sentPropertyImages.forEach((image) => {
 				formData.append(`imagePath`, image)
 			})
 		}
@@ -543,6 +544,24 @@ const PropertyForm = ({
 		setValue('Branch', '')
 	}
 
+	const uploadFile = async(data: FormData) => {
+		const response = await propertyService.uploadFile(data)
+		if (response.success) {
+			toast.success("File Uploaded Successfully")
+			router.push('/property/history')
+		}
+		else {
+			toast.error(response.message)
+		}
+	}
+
+	const handleFileUpload = (file: File) => {
+		if (file){
+		formData.append('file', file)
+		uploadFile(formData)
+		}
+	}
+
 	return (
 		<div className="px-4 sm:px-4 lg:px-4">
 			<form
@@ -577,6 +596,7 @@ const PropertyForm = ({
 								</button>
 							</>
 						)}
+						<ImportButton onUpload={handleFileUpload} />
 						<Button
 							type="submit"
 							disabled={isUpdating}
@@ -594,6 +614,11 @@ const PropertyForm = ({
 						</Button>
 					</div>
 				</div>
+				<div className='text-right text-green-500 mr-28'>
+					<a className="whitespace-nowrap" href='/sample/Sample.xlsx' target="_blank" download>
+						View Sample Sheet
+					</a> 
+	  			</div>
 				<>{renderComponent}</>
 			</form>
 		</div>
