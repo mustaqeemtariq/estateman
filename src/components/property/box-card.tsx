@@ -38,7 +38,7 @@ const PropertyBoxCard = ({
 	const { username, Roles } = useAppSelector(state => state.auth)
 	const users = useAppSelector(state => state.db.users)
 	const user = Object.values(users).filter(user => user.Username === username)
-	let rights = [UserRightTypes.ADD, UserRightTypes.EDIT, UserRightTypes.VIEW]
+	let rights = [UserRightTypes.ADD, UserRightTypes.EDIT]
 	if (Roles === 'surveyor' && user.length > 0) {
 		rights = user[0].rights
 	}
@@ -81,11 +81,11 @@ const PropertyBoxCard = ({
 			</div>
 
 			<div className="absolute hover:bg-[#0D0C18]/[85%] z-20 top-0 right-0 flex flex-col space-y-3 items-center justify-center h-full w-full opacity-0 hover:opacity-100 transition-opacity">
-				{rights.includes(UserRightTypes.VIEW) && <Link href={`/property/view/${title}?propertyId=${id}`}>
+				<Link href={`/property/view/${title}?propertyId=${id}`}>
 					<button className="mx-2 text-black bg-[#FCFDFF] rounded-md px-9 py-2 uppercase">
 						View
 					</button>
-				</Link>}
+				</Link>
 				{rights.includes(UserRightTypes.EDIT) && (
 					<Link href={`/property/edit?title=${title}`}>
 						<button className="mx-2 text-white bg-[#DC4200] rounded-md px-10 py-2 uppercase">

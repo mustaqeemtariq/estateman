@@ -29,7 +29,7 @@ export const PropertyListCard = ({ data }: ListCardProps) => {
 		const { username, Roles } = useAppSelector(state => state.auth)
 		const users = useAppSelector(state => state.db.users)
 		const user = Object.values(users).filter(user => user.Username === username)
-		let rights = [UserRightTypes.ADD, UserRightTypes.EDIT, UserRightTypes.VIEW]
+		let rights = [UserRightTypes.ADD, UserRightTypes.EDIT]
 		if (Roles === 'surveyor' && user.length > 0) {
 			rights = user[0].rights
 		}
@@ -85,11 +85,11 @@ export const PropertyListCard = ({ data }: ListCardProps) => {
 						</td>
 						<td className="z-20 absolute left-0 w-full ">
 							<div className="z-20 opacity-0 h-36 hover:opacity-100 transition-opacity w-full  absolute flex justify-center items-center">
-								{rights.includes(UserRightTypes.VIEW) && <Link href={`/property/view/${item.Title}`}>
+								<Link href={`/property/view/${item.Title}`}>
 									<button className="mx-2 text-black bg-[#FCFDFF] rounded-md px-9 py-2 uppercase">
 										View
 									</button>
-								</Link>}
+								</Link>
 								{rights.includes(UserRightTypes.EDIT) && (
 									<Link href={`/property/edit/${item.Title}`}>
 										<button className="mx-2 text-white bg-[#DC4200] rounded-md px-10 py-2 uppercase">
