@@ -32,22 +32,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 	}
 	
 	let navigation
-	if (rights.includes(UserRightTypes.VIEW)) {
-		navigation = [
-			{ name: 'Home', icon: AiFillHome, current: true, href: '/' },
-			{
-				name: 'Property Listing',
-				icon: BsFillBuildingFill,
-				href: '/property',
-				current: false,
-				children: [
-					{ name: 'View All Properties', href: '/property/list'},
-					{ name: 'Lease (Rental)', href: '/property/lease' },
-					{ name: 'On Sale', href: '/property/sold' },
-				]
-			}
-		]
-	} else if (rights.includes(UserRightTypes.ADD)) {
+	if (rights.includes(UserRightTypes.ADD)) {
 			navigation = [
 				{ name: 'Home', icon: AiFillHome, current: true, href: '/' },
 				{
