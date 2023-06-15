@@ -58,10 +58,14 @@ const searchProperty = (value: string) => {
 }
 
 const uploadFile = (data: FormData) => {
-	console.log("DATA",data.get('file'));
 	return axios.post(`${apiHost}/UploadExcelData`, data).then(response => response.data)
 	.catch(err => err.response.data)
 }
+
+const uploadHistoryFile = (data: FormData, id: string) => {
+	return axios.post(`${apiHost}/AddExcelHistory?id=${id}`, data).then(response => response.data)
+	.catch(err => err.response.data)
+} 
 
 const leaseDue = () => {
 	const currentDate = moment(new Date()).format('YYYY-MM-DD')
@@ -84,6 +88,7 @@ const propertyService = {
 	searchProperty,
 	leaseDue,
 	uploadFile,
+	uploadHistoryFile,
 	getPropertyByContract
 }
 
