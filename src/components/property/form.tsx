@@ -397,6 +397,26 @@ const PropertyForm = ({
 		}
 	}
 
+	const editProperty = async (
+		id: string,
+		data: any,
+		PropertyDetails: any,
+		OwnerDetails: any,
+		AddHistory: any,
+		AddCommission: any,
+		formData: any
+	) => {
+		const response = await propertyService.editProperty(data, id)
+		if (response.success) {
+			await updateProperty(id, PropertyDetails, OwnerDetails, AddHistory, AddCommission)
+			await addImage(formData, id)
+		} else {
+			toast.error('Property not saved')
+			console.log(response.message)
+			setUpdating(false)
+		}
+	}
+
 	const updateProperty = async (
 		id: string,
 		PropertyDetails: any,
@@ -525,14 +545,23 @@ const PropertyForm = ({
 			Title: data.Title
 		}
 		
-		addProperty(
-			addPropertyData,
-			data.PropertyDetails,
-			data.OwnerDetails,
-			data.AddHistory,
-			data.AddCommission, 
-			formData,
-		)
+		if (editData && editData._id) {
+			editProperty(editData._id, addPropertyData, data.PropertyDetails,
+				data.OwnerDetails,
+				data.AddHistory,
+				data.AddCommission, 
+				formData)
+		}
+		else {
+			addProperty(
+				addPropertyData,
+				data.PropertyDetails,
+				data.OwnerDetails,
+				data.AddHistory,
+				data.AddCommission, 
+				formData,
+			)
+		}
 		setUpdating(true)
 	})
 
