@@ -20,6 +20,11 @@ const addProperty = (data: Property) => {
 		.catch(err => err.response.data)
 }
 
+const editProperty = (data: Property, id: string) => {
+	return axios.post(`${apiHost}/EditProperty?id=${id}`, data)
+	.then(response => response.data).catch(err => err.response.data)
+}
+
 const updateProperty = (
 	id: string,
 	PropertyDetails: Property,
@@ -73,6 +78,7 @@ const propertyService = {
 	getAllProperties,
 	getLeaseProperties,
 	addProperty,
+	editProperty,
 	updateProperty,
 	getHistory,
 	searchProperty,
