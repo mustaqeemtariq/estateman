@@ -42,6 +42,7 @@ import CallRecord from './call-record'
 import Commission from './commission'
 import PricingHistory from './pricing-history'
 import ImportButton from './import-button'
+import ImportHistoryButton from './import-history-button'
 
 interface PropertyFormProps {
 	currentTab: string
@@ -387,8 +388,13 @@ const PropertyForm = ({
 	) => {
 		const response = await propertyService.addProperty(data)
 		if (response.success) {
-
-			await updateProperty(response.data._id, PropertyDetails, OwnerDetails, AddHistory, AddCommission)
+			await updateProperty(
+				response.data._id,
+				PropertyDetails,
+				OwnerDetails,
+				AddHistory,
+				AddCommission
+			)
 			await addImage(formData, response.data._id)
 		} else {
 			toast.error('Property not saved')
@@ -442,7 +448,7 @@ const PropertyForm = ({
 		}
 	}
 
-	const addImage = async (data: FormData, id: string ) => {
+	const addImage = async (data: FormData, id: string) => {
 		const response = await imageService.uploadPropertyImages(data, id)
 
 		if (response.success) {
@@ -453,16 +459,14 @@ const PropertyForm = ({
 	}
 
 	const onSubmit = handleSubmit(data => {
-		
 		if (data.sentHistoryImages) {
-			data.sentHistoryImages.forEach((image) => {
+			data.sentHistoryImages.forEach(image => {
 				formData.append(`imagePath`, image)
 			})
 		}
 
-
 		if (data.sentPropertyImages) {
-			data.sentPropertyImages.forEach((image) => {
+			data.sentPropertyImages.forEach(image => {
 				formData.append(`imagePath`, image)
 			})
 		}
@@ -544,22 +548,25 @@ const PropertyForm = ({
 			YearBuilt: data.YearBuilt,
 			Title: data.Title
 		}
-		
+
 		if (editData && editData._id) {
-			editProperty(editData._id, addPropertyData, data.PropertyDetails,
+			editProperty(
+				editData._id,
+				addPropertyData,
+				data.PropertyDetails,
 				data.OwnerDetails,
 				data.AddHistory,
-				data.AddCommission, 
-				formData)
-		}
-		else {
+				data.AddCommission,
+				formData
+			)
+		} else {
 			addProperty(
 				addPropertyData,
 				data.PropertyDetails,
 				data.OwnerDetails,
 				data.AddHistory,
-				data.AddCommission, 
-				formData,
+				data.AddCommission,
+				formData
 			)
 		}
 		setUpdating(true)
@@ -573,22 +580,42 @@ const PropertyForm = ({
 		setValue('Branch', '')
 	}
 
-	const uploadFile = async(data: FormData) => {
-		const response = await propertyService.uploadFile(data)
+	const uploadFile = async (propertyData: FormData) => {
+		const response = await propertyService.uploadFile(propertyData)
 		if (response.success) {
-			toast.success("File Uploaded Successfully")
-			router.push('/property/history')
-		}
-		else {
+			toast.success('Property File Uploaded Successfully')
+			return response
+		} else {
 			toast.error(response.message)
 		}
 	}
 
-	const handleFileUpload = (file: File) => {
-		if (file){
-		formData.append('file', file)
-		uploadFile(formData)
+	const uploadHistoryFile = async (historyData: FormData, id: string) => {
+		const response = await propertyService.uploadHistoryFile(historyData, id)
+		if (response.success) {
+			toast.success('History File Uploaded Successfully')
+			router.push('/property/history')
+		} else {
+			toast.error(response.message)
 		}
+	}
+
+	const [disabled, setDisabled] = useState(true)
+	const [excelId, setExcelId] = useState('')
+
+	const handleFileUpload = async (file: File) => {
+		const propertyFormData = new FormData()
+		propertyFormData.append('file', file)
+		console.log(propertyFormData.get('file'));
+		const response = await uploadFile(propertyFormData)
+		setExcelId(response.data[0]._id)
+		setDisabled(false)
+	}
+
+	const handleHistoryUpload = (file: File) => {
+		const historyFormData = new FormData()	
+		historyFormData.append('history', file)	
+		uploadHistoryFile(historyFormData, excelId)
 	}
 
 	return (
@@ -625,7 +652,13 @@ const PropertyForm = ({
 								</button>
 							</>
 						)}
-						<ImportButton onUpload={handleFileUpload} />
+						<div className="flex gap-x-40">
+							<ImportButton onUpload={handleFileUpload} />
+							<ImportHistoryButton
+							disabled={disabled}
+								onHistoryUpload={handleHistoryUpload}
+							/>
+						</div>
 						<Button
 							type="submit"
 							disabled={isUpdating}
@@ -643,11 +676,18 @@ const PropertyForm = ({
 						</Button>
 					</div>
 				</div>
-				<div className='text-right text-green-500 mr-28'>
-					<a className="whitespace-nowrap" href='/sample/Sample.xlsx' target="_blank" download>
-						View Sample Sheet
-					</a> 
-	  			</div>
+				<div className='flex space-x-6 justify-end mr-[102px]'>
+				<div className="text-right text-green-500">
+					<a className="whitespace-nowrap" href="/sample/Property.xlsx" target="_blank" download>
+						View Property Sheet
+					</a>
+				</div>
+				<div className="text-right text-green-500">
+					<a className="whitespace-nowrap" href="/sample/History.xlsx" target="_blank" download>
+						View History Sheet
+					</a>
+				</div>
+				</div>
 				<>{renderComponent}</>
 			</form>
 		</div>
@@ -820,7 +860,9 @@ const AddPropertyForm = ({
 								aria-hidden="true"
 							/>
 						</div>
-						{showMap && <MapComponent onChange={handleMapData} show={showMap} setShow={setShowMap} />}
+						{showMap && (
+							<MapComponent onChange={handleMapData} show={showMap} setShow={setShowMap} />
+						)}
 						<div className="flex space-x-8">
 							<Controller
 								name={'LandArea'}
@@ -1036,7 +1078,11 @@ const PropertyDetailsForm = ({
 							required={true}
 							className="bg-[#E8E8E8]                                                "
 							autoCapitalize="false">
-							{editData?.PropertyDetails?.City && <option value={editData?.PropertyDetails?.City}>{editData?.PropertyDetails?.City}</option>}
+							{editData?.PropertyDetails?.City && (
+								<option value={editData?.PropertyDetails?.City}>
+									{editData?.PropertyDetails?.City}
+								</option>
+							)}
 							<option value="">Select a City</option>
 							{Object.values(CityNames).map(unit => (
 								<option key={unit} value={unit}>
