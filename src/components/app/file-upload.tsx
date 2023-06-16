@@ -56,6 +56,7 @@ const FileUpload = ({
 					className="hidden w-full appearance-none"
 					accept=".jpg,.jpeg,.png,.gif,.pdf"
 					title="Upload image file"
+					name="image-upload"
 					multiple
 					onChange={handleInputChange}
 				/>
@@ -68,7 +69,7 @@ const FileUpload = ({
 					type="button"
 					className="bg-[#717B9D] absolute right-1 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded capitalize"
 					onClick={() => {
-						const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement
+						const fileInput = document.querySelector('[name="image-upload"]') as HTMLInputElement
 						fileInput.click()
 					}}>
 					Upload
