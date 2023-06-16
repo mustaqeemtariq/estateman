@@ -14,7 +14,7 @@ import propertyService from 'src/services/property'
 interface ListHeaderProps {
 	count?: number
 	title?: string
-	id: string
+	id?: string
 	heading: string
 	setView?: Dispatch<SetStateAction<string>>
 	viewButtons?: boolean
@@ -55,7 +55,7 @@ export const ListHeader = ({
 		historyFormData.append('history', file)
 		console.log('ID', id)
 
-		uploadHistoryFile(historyFormData, id)
+		uploadHistoryFile(historyFormData, id ?? '')
 	}
 
 	return (
