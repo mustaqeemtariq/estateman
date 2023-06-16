@@ -19,7 +19,7 @@ const ViewProperty = ({ propertyData }: ViewPropertyProps) => {
 		<AppLayout>
 			<AppHeader />
 			<Container>
-				<ListHeader title={propertyData[0].Title} heading="View Property" viewButtons={true} />
+				<ListHeader id={propertyData[0]._id} title={propertyData[0].Title} heading="View Property" viewButtons={true} />
 				<ViewPropertyCard data={propertyData} propertyId={searchParam.get('propertyId')}/>
 			</Container>
 		</AppLayout>

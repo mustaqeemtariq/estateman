@@ -7,16 +7,27 @@ import { BiCheckbox } from 'react-icons/bi'
 import { useAppSelector } from 'src/hooks/rtk'
 import { Button } from '../app/button'
 import { Tabs } from '../app/tabs'
+import ImportHistoryButton from './import-history-button'
+import { toast } from 'react-hot-toast'
+import propertyService from 'src/services/property'
 
 interface ListHeaderProps {
 	count?: number
 	title?: string
+	id: string
 	heading: string
 	setView?: Dispatch<SetStateAction<string>>
 	viewButtons?: boolean
 }
 
-export const ListHeader = ({ title, heading, count, setView, viewButtons }: ListHeaderProps) => {
+export const ListHeader = ({
+	id,
+	title,
+	heading,
+	count,
+	setView,
+	viewButtons
+}: ListHeaderProps) => {
 	const { Roles } = useAppSelector(state => state.auth)
 
 	const [showTab, setShowTab] = useState(heading)
@@ -28,6 +39,24 @@ export const ListHeader = ({ title, heading, count, setView, viewButtons }: List
 			current: showTab == heading ? true : false
 		}
 	]
+
+	const uploadHistoryFile = async (historyData: FormData, id: string) => {
+		const response = await propertyService.uploadHistoryFile(historyData, id)
+		if (response.success) {
+			toast.success('History File Uploaded Successfully')
+			router.push('/property/history')
+		} else {
+			toast.error(response.message)
+		}
+	}
+
+	const handleHistoryUpload = (file: File) => {
+		const historyFormData = new FormData()
+		historyFormData.append('history', file)
+		console.log('ID', id)
+
+		uploadHistoryFile(historyFormData, id)
+	}
 
 	return (
 		<div className="flex justify-between items-center mb-4 border-b border-gray-400">
@@ -58,15 +87,18 @@ export const ListHeader = ({ title, heading, count, setView, viewButtons }: List
 					</div>
 				</div>
 			) : (
-				<div className="flex space-x-5">
+				<div className="relative flex space-x-5">
+					<div className='flex flex-col space-y-12 mr-2'>
+						
 					{heading !== 'Auction Details' && (
-						<Button
-							className="bg-black text-white uppercase flex items-center space-x-2"
-							onClick={() => router.push(`/property/edit/?title=${title}&tab=Add History`)}>
-							<PlusIcon className="h-5 w-5" aria-hidden="true" />
-							<span className="whitespace-nowrap">Add History</span>
-						</Button>
+						<ImportHistoryButton onHistoryUpload={handleHistoryUpload} />
 					)}
+					</div>
+					<div className="absolute right-[122px] -top-6 text-right text-green-500 mb-4">
+					<a className="whitespace-nowrap" href="/sample/History.xlsx" target="_blank" download>
+						View History Sheet
+					</a>
+				</div>
 					<Button
 						onClick={() => router.back()}
 						className="bg-black text-white uppercase flex items-center space-x-1">
