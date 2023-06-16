@@ -5,11 +5,10 @@ import * as XLSX from 'xlsx';
 
 
 interface ImportButtonProps {
-	disabled?: boolean
 	onHistoryUpload?: (file: File) => void
 }
 
-const ImportHistoryButton = ({ onHistoryUpload, disabled }: ImportButtonProps) => {
+const ImportHistoryButton = ({ onHistoryUpload }: ImportButtonProps) => {
 
 	const requiredHeaders = [
         'Amount',
@@ -62,14 +61,14 @@ const ImportHistoryButton = ({ onHistoryUpload, disabled }: ImportButtonProps) =
 			/>
 			<button
 				type="button"
-                disabled={disabled}
-				className={clsx("absolute right-1 whitespace-nowrap text-white font-bold py-3 px-4 rounded capitalize", disabled ? 'bg-gray-300' : 'bg-green-500 hover:bg-green-600')}
+				className={clsx("absolute right-1 whitespace-nowrap text-white font-bold py-3 px-4 rounded capitalize bg-green-500 hover:bg-green-600")}
 				onClick={() => {
 					const fileInput = document.querySelector('input[name="upload-history"]') as HTMLInputElement
 					fileInput.click()
 				}}>
-				Upload History
+				Add History
 			</button>
+			
 		</div>
 	)
 }

@@ -590,32 +590,10 @@ const PropertyForm = ({
 		}
 	}
 
-	const uploadHistoryFile = async (historyData: FormData, id: string) => {
-		const response = await propertyService.uploadHistoryFile(historyData, id)
-		if (response.success) {
-			toast.success('History File Uploaded Successfully')
-			router.push('/property/history')
-		} else {
-			toast.error(response.message)
-		}
-	}
-
-	const [disabled, setDisabled] = useState(true)
-	const [excelId, setExcelId] = useState('')
-
-	const handleFileUpload = async (file: File) => {
+	const handleFileUpload = (file: File) => {
 		const propertyFormData = new FormData()
 		propertyFormData.append('file', file)
-		console.log(propertyFormData.get('file'));
-		const response = await uploadFile(propertyFormData)
-		setExcelId(response.data[0]._id)
-		setDisabled(false)
-	}
-
-	const handleHistoryUpload = (file: File) => {
-		const historyFormData = new FormData()	
-		historyFormData.append('history', file)	
-		uploadHistoryFile(historyFormData, excelId)
+		uploadFile(propertyFormData)
 	}
 
 	return (
@@ -654,10 +632,6 @@ const PropertyForm = ({
 						)}
 						<div className="flex gap-x-40">
 							<ImportButton onUpload={handleFileUpload} />
-							<ImportHistoryButton
-							disabled={disabled}
-								onHistoryUpload={handleHistoryUpload}
-							/>
 						</div>
 						<Button
 							type="submit"
@@ -676,18 +650,13 @@ const PropertyForm = ({
 						</Button>
 					</div>
 				</div>
-				<div className='flex space-x-6 justify-end mr-[102px]'>
-				<div className="text-right text-green-500">
+			
+				<div className="text-right text-green-500 mr-24">
 					<a className="whitespace-nowrap" href="/sample/Property.xlsx" target="_blank" download>
 						View Property Sheet
 					</a>
 				</div>
-				<div className="text-right text-green-500">
-					<a className="whitespace-nowrap" href="/sample/History.xlsx" target="_blank" download>
-						View History Sheet
-					</a>
-				</div>
-				</div>
+			
 				<>{renderComponent}</>
 			</form>
 		</div>
