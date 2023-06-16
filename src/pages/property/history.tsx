@@ -45,7 +45,7 @@ const PropertyHistory = ({ propertiesHistory }: PropertyHistoryProps) => {
 							key={index}
 							className={clsx('cursor-pointer', !expand[index] && 'border-b-8 border-white')}>
 							<td className="tw-table-td col-span-2">
-								{item?.AddHistory?.Date ? moment(item.AddHistory.Date).format('DD MMM, YYYY') : ""}
+								{item?.AddHistory?.Date ? moment(item.AddHistory.Date, "DD MMM, YYYY").format('DD MMM, YYYY') : ""}
 							</td>
 							<td className="tw-table-td w-7/12 pl-0">{item.AddHistory.AddDetails}</td>
 							<td className="tw-table-td">{item.AddHistory.OccupancyStatus}</td>
