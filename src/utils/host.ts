@@ -1,4 +1,4 @@
-let fallbackHost: string | undefined = 'localhost:3000'
+let fallbackHost: string | undefined = 'es-be.symcloud.net'
 let host = fallbackHost
 
 let schemeForHttp = 'https://'
