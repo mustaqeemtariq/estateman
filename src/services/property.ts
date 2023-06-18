@@ -38,7 +38,7 @@ const addPropertyHistoryImages = (data: FormData, id: string) => {
 	.catch(err => err.response.data)
 }
 
-const editProperty = (data: Property, id: string) => {
+const editProperty = (data: AddPropertyForm, id: string) => {
 	return axios.post(`${apiHost}/EditProperty?id=${id}`, data)
 	.then(response => response.data).catch(err => err.response.data)
 }
