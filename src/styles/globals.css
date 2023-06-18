@@ -15,4 +15,9 @@
 	input[type='date']::-webkit-calendar-picker-indicator {
 		@apply absolute inset-0 w-full h-full cursor-pointer z-50;
 	}
+        input[type='number']::-webkit-outer-spin-button,
+        input[type='number']::-webkit-inner-spin-button,
+        input[type='number'] {
+          -webkit-appearance: none;
+	}
 }
