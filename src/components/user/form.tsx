@@ -222,43 +222,29 @@ const UserForm = ({ isNew, title, data }: UserFormProps) => {
 						</div>
 					</div>
 					<div className="flex sm:space-x-8 max-sm:flex-col">
-						<Controller
-							name={'CNIC'}
-							control={control}
-							render={({ field: { onChange, value } }) => (
-								<InputNumber
-									labelText="CNIC"
-									id="cnic"
-									autoComplete="cnic"
-									name="CNIC"
-									onChange={onChange}
-									value={value}
-									error={errors}
-									required={true}
-									maxLength={13}
-									autoCapitalize="false"
-									placeholder="Enter CNIC"
-								/>
-							)}
+						<InputNumber
+							labelText="CNIC"
+							id="cnic"
+							autoComplete="cnic"
+							name="CNIC"
+							register={register}
+							error={errors}
+							required={true}
+							maxLength={13}
+							autoCapitalize="false"
+							placeholder="Enter CNIC"
 						/>
-						<Controller
-							name={'Contact'}
-							control={control}
-							render={({ field: { onChange, value } }) => (
-								<InputNumber
-									labelText="Contact Number"
-									id="phone"
-									onChange={onChange}
-									value={value}
-									autoComplete="phone"
-									name="Contact"
-									error={errors}
-									required={true}
-									maxLength={11}
-									autoCapitalize="false"
-									placeholder="Enter Contact Number"
-								/>
-							)}
+						<InputNumber
+							labelText="Contact Number"
+							id="phone"
+							register={register}
+							autoComplete="phone"
+							name="Contact"
+							error={errors}
+							required={true}
+							maxLength={11}
+							autoCapitalize="false"
+							placeholder="Enter Contact Number"
 						/>
 					</div>
 					<div className="col-span-full">
