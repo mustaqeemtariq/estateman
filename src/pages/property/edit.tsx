@@ -4,8 +4,10 @@ import { useState } from 'react'
 import { Container } from 'src/components/app/container'
 import { AppHeader } from 'src/components/app/header'
 import { AppLayout } from 'src/components/app/layout'
-import PropertyForm from 'src/components/property/form'
+import AddHistoryForm from 'src/components/property/add-history'
+import AddPropertyForm from 'src/components/property/add-property'
 import { PropertyHeader } from 'src/components/property/header'
+import PropertyDetailsForm from 'src/components/property/property-details'
 import propertyService from 'src/services/property'
 import { Property } from 'src/types/typings'
 
@@ -16,27 +18,21 @@ interface UpdatePropertyProps {
 const UpdateProperty = ({ propertyData }: UpdatePropertyProps) => {
 	const router = useRouter()
 	const editData = propertyData[0]
+	console.log("edit", editData);
+	
 
 	const { tab } = router.query
 	const [state, setState] = useState((tab as string) ?? 'Add Property')
-	const [active, setActive] = useState({
-		propertyDetails: true,
-		addHistory: true,
-		allHistory: true
-	})
+	const [category, setCategory] = useState<string>('')
 
 	return (
 		<AppLayout>
 			<AppHeader />
 			<Container>
-				<PropertyHeader showHistory={true} setState={setState} active={active} state={state} />
-				<PropertyForm
-					editData={editData}
-					isNew={false}
-					currentTab={state}
-					setCurrentTab={setState}
-					setActive={setActive}
-				/>
+				<PropertyHeader showHistory={true} setState={setState} isNew={false} state={state} />
+				{state === 'Add Property' && <AddPropertyForm editData={editData} setCategory={setCategory} isNew={true} setCurrentTab={setState} />}
+				{state === 'Property Details' && <PropertyDetailsForm editData={editData} category={category} isNew={true} setCurrentTab={setState} />}
+				{state === 'Add History' && <AddHistoryForm editData={editData} isNew={true} />}
 			</Container>
 		</AppLayout>
 	)
