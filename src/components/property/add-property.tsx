@@ -19,11 +19,10 @@ import { Select } from '../app/select'
 import ImportButton from './import-button'
 
 interface AddPropertyFormProps {
-	setId: Dispatch<SetStateAction<string>>
+	setId?: Dispatch<SetStateAction<string>>
 	setCurrentTab: Dispatch<SetStateAction<string>>
 	setCategory: Dispatch<SetStateAction<string>>
 	editData?: Property
-	isNew?: boolean
 }
 
 const AddPropertyForm = ({ editData, setCurrentTab, setId, setCategory }: AddPropertyFormProps) => {
@@ -72,7 +71,7 @@ const AddPropertyForm = ({ editData, setCurrentTab, setId, setCategory }: AddPro
 	const addProperty = async (data: AddPropertyForm) => {
 		const response = await propertyService.addProperty(data)
 		if (response.success) {
-			setId(response.data._id)
+			setId?.(response.data._id)
 			toast.success('Property added successfully')
 			setUpdating(false)
 			setCurrentTab('Property Details')
@@ -82,9 +81,22 @@ const AddPropertyForm = ({ editData, setCurrentTab, setId, setCategory }: AddPro
 		}
 	}
 
+	const updateProperty = async (data: AddPropertyForm, id: string) => {
+		const response = await propertyService.editProperty(data, id)
+		if (response.success) {
+			setId?.(response.data._id)
+			toast.success('Property updated successfully')
+			setUpdating(false)
+			setCurrentTab('Property Details')
+		} else {
+			toast.error('Property not updated')
+			setUpdating(false)
+		}
+	}
+
 	const onFormSubmit = (data: AddPropertyForm) => {
 		setUpdating(true)
-		addProperty(data)
+		editData ?  updateProperty(data, editData._id) : addProperty(data) 
 	}
 
 	const handleDate = (value: string) => {
