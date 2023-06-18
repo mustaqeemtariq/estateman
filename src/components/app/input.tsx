@@ -1,8 +1,6 @@
 import clsx from 'clsx'
 import { InputHTMLAttributes, useState } from 'react'
 import { FieldError, FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form'
-import { formatCurrency } from 'src/utils/currency'
-import { containsOnlyDigits } from 'src/utils/string'
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 	labelText?: string
@@ -14,7 +12,6 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 	controllerError?: FieldError | undefined
 	renderLabel?: boolean
 	required?: boolean
-
 	year?: boolean
 	currency?: boolean
 	onChange?: React.ChangeEventHandler<HTMLInputElement>
@@ -71,29 +68,14 @@ export const InputNumber = ({
 	renderLabel = true,
 	currency,
 	onChange,
+	register,
 	className,
 	value,
 	required,
 	...props
 }: InputProps) => {
-	const [input, setInput] = useState<string>(value?.toString() ?? '')
 
 	const errorText = error?.[name]?.message as string
-
-	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const { value } = event.target
-		if (currency) {
-			const formattedValue = formatCurrency(value)
-			setInput(formattedValue ?? '')
-			onChange?.(event)
-		} else if (
-			value === '' ||
-			(containsOnlyDigits(value) && (maxLength ? value.length <= maxLength : true))
-		) {
-			setInput(value)
-			onChange?.(event)
-		}
-	}
 
 	return (
 		<div className="w-full">
@@ -105,9 +87,8 @@ export const InputNumber = ({
 			<div className="mt-1">
 				<input
 					{...props}
-					onChange={handleInputChange}
-					value={input}
-					type="text"
+					{...(register?.(name) ?? {})}
+					type="number"
 					id={index}
 					className={clsx(
 						'block placeholder-gray-500 w-full appearance-none bg-[#E6E6E6] rounded-md border border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm'
