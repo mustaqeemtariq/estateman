@@ -16,8 +16,7 @@ import { toast } from 'react-hot-toast'
 interface PropertyDetailsFormProps {
 	setCurrentTab: Dispatch<SetStateAction<string>>
 	editData?: Property
-	propertyId: string
-	isNew?: boolean
+	propertyId?: string
 	category: string
 }
 
@@ -25,8 +24,7 @@ const PropertyDetailsForm = ({
 	setCurrentTab,
 	category,
 	propertyId,
-	editData,
-	isNew
+	editData
 }: PropertyDetailsFormProps) => {
 	const schema = yup.object<PropertyDetailsForm>().shape({
 		City: yup.string().required('City is required'),
@@ -90,12 +88,12 @@ const PropertyDetailsForm = ({
 	const [propertyImages, setPropertyImages] = useState<File[]>([])
 
 	const addPropertyDetails = async (data: PropertyDetailsForm, images: FormData) => {
-		const response = await propertyService.addPropertyDetails(data, propertyId)
+		const response = await propertyService.addPropertyDetails(data, propertyId ?? '')
 		console.log(response)
 
 		if (response.success) {
 			toast.success('Property details added successfully')
-			const response = await propertyService.addPropertyDetailsImages(images, propertyId)
+			const response = await propertyService.addPropertyDetailsImages(images, propertyId ?? '')
 			if (response.success) {
 				toast.success('Property details images added successfully')
 				setUpdating(false)

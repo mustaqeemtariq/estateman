@@ -24,14 +24,14 @@ import { PlusIcon, XMarkIcon } from '@heroicons/react/20/solid'
 import FileUpload from 'src/components/app/file-upload'
 import { Input, InputNumber } from 'src/components/app/input'
 import propertyService from 'src/services/property'
+import moment from 'moment'
 
 interface AddHistoryFormProps {
 	editData?: Property
-	propertyId: string
-	isNew?: boolean
+	propertyId?: string
 }
 
-function AddHistoryForm({ editData, isNew, propertyId }: AddHistoryFormProps) {
+function AddHistoryForm({ editData, propertyId }: AddHistoryFormProps) {
 	const schema = yup.object<AddHistoryForm>().shape({
 		CallDetails: yup.array().of(
 			yup.object().shape({
@@ -94,12 +94,12 @@ function AddHistoryForm({ editData, isNew, propertyId }: AddHistoryFormProps) {
 	const occupancy = watch?.('OccupancyStatus')
 
 	const addHistoryDetails = async (data: AddHistoryForm, images: FormData) => {
-		const response = await propertyService.addPropertyHistory(data, propertyId)
+		const response = await propertyService.addPropertyHistory(data, propertyId ?? '')
 		console.log(response)
 
 		if (response.success) {
 			toast.success('Property history added successfully')
-			const response = await propertyService.addPropertyHistoryImages(images, propertyId)
+			const response = await propertyService.addPropertyHistoryImages(images, propertyId ?? '')
 			if (response.success) {
 				toast.success('Property history images added successfully')
 				setUpdating(false)
@@ -239,6 +239,7 @@ function AddHistoryForm({ editData, isNew, propertyId }: AddHistoryFormProps) {
 									error={errors}
 									labelText="Lease Expiring on"
 									id="leaseexpiry"
+									prevValue={moment(editData?.AddHistory[0].LeaseExpiringOn).format('DD MMM, YYYY')}
 									autoComplete="leaseexpiry"
 									name="LeaseexpiringOn"
 									disabled={occupancy !== 'Occupied'}
@@ -322,12 +323,14 @@ function AddHistoryForm({ editData, isNew, propertyId }: AddHistoryFormProps) {
 										register={register}
 										errors={errors}
 										setValue={setValue}
+										editData={editData}
 									/>
 									<PricingHistoryForm
 										control={control}
 										register={register}
 										errors={errors}
 										setValue={setValue}
+										editData={editData}
 									/>
 								</>
 							)}
@@ -411,7 +414,7 @@ const CommissionForm = ({ control, register, show }: FormProps & { show?: boolea
 	)
 }
 
-const CallDetailsForm = ({ control, register, setValue, errors }: FormProps) => {
+const CallDetailsForm = ({ control, register, setValue, errors, editData }: FormProps & {editData?: Property}) => {
 	const { fields, append, remove } = useFieldArray({ name: 'CallDetails', control })
 	useEffect(() => {
 		if (fields.length === 0) {
@@ -431,6 +434,7 @@ const CallDetailsForm = ({ control, register, setValue, errors }: FormProps) => 
 							placeholder="Date"
 							autoComplete="date"
 							name={`CallDetails.${index}.Date`}
+							prevValue={moment(editData?.AddHistory[0].CallDetails?.[index].Date).format('DD MMM, YYYY')}
 							required={true}
 							autoCapitalize="false"
 							onCalendarClick={handleDate}
@@ -489,7 +493,7 @@ const CallDetailsForm = ({ control, register, setValue, errors }: FormProps) => 
 	)
 }
 
-const PricingHistoryForm = ({ control, register, setValue, errors }: FormProps) => {
+const PricingHistoryForm = ({ control, register, setValue, errors, editData }: FormProps & {editData?: Property}) => {
 	const { fields, append, remove } = useFieldArray({ name: 'AddPricingHistory', control })
 	useEffect(() => {
 		if (fields.length === 0) {
@@ -524,6 +528,7 @@ const PricingHistoryForm = ({ control, register, setValue, errors }: FormProps) 
 							placeholder="Year"
 							autoComplete="date"
 							register={register}
+							prevValue={editData?.AddHistory[0].AddPricingHistory?.[index].year}
 							onCalendarClick={handleDate}
 							name={`AddPricingHistory.${index}.year`}
 							required={true}
