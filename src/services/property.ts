@@ -1,6 +1,6 @@
 import axios from 'axios'
 import moment from 'moment'
-import { Property } from 'src/types/typings'
+import { AddHistoryForm, AddPropertyForm, Property, PropertyDetailsForm } from 'src/types/typings'
 import { apiHost } from 'src/utils/host'
 
 const getAllProperties = () => {
@@ -11,13 +11,31 @@ const getLeaseProperties = () => {
 	return axios.get(`${apiHost}/AllLease`).then(response => response.data.data)
 }
 
-const addProperty = (data: Property) => {
+const addProperty = (data: AddPropertyForm) => {
 	return axios
-		.post(`${apiHost}/ADDProperty`, {
-			...data
-		})
+		.post(`${apiHost}/ADDProperty`, data)
 		.then(response => response.data)
 		.catch(err => err.response.data)
+}
+
+const addPropertyDetails = (data: PropertyDetailsForm, id: string) => {
+	return axios.post(`${apiHost}/AddPropertyDetails?id=${id}`, {PropertyDetails: data}).then(response => response.data)
+	.catch(err => err.response.data)
+}
+
+const addPropertyDetailsImages = (data: FormData, id: string) => {
+	return axios.post(`${apiHost}/PropertyDetailsImages?id=${id}`, data).then(response => response.data)
+	.catch(err => err.response.data)
+}
+
+const addPropertyHistory = (data: AddHistoryForm, id: string) => {
+	return axios.post(`${apiHost}/AddHistory?id=${id}`, {AddHistory: [data], AddCommission: data.AddCommission}).then(response => response.data)
+	.catch(err => err.response.data)
+}
+
+const addPropertyHistoryImages = (data: FormData, id: string) => {
+	return axios.post(`${apiHost}/AddHistoryImages?id=${id}`, data).then(response => response.data)
+	.catch(err => err.response.data)
 }
 
 const editProperty = (data: Property, id: string) => {
@@ -82,6 +100,10 @@ const propertyService = {
 	getAllProperties,
 	getLeaseProperties,
 	addProperty,
+	addPropertyDetails,
+	addPropertyDetailsImages,
+	addPropertyHistory,
+	addPropertyHistoryImages,
 	editProperty,
 	updateProperty,
 	getHistory,
