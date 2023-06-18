@@ -45,10 +45,10 @@ const PropertyHistory = ({ propertiesHistory }: PropertyHistoryProps) => {
 							key={index}
 							className={clsx('cursor-pointer', !expand[index] && 'border-b-8 border-white')}>
 							<td className="tw-table-td col-span-2">
-								{item?.AddHistory?.Date ? moment(item.AddHistory.Date, "DD MMM, YYYY").format('DD MMM, YYYY') : ""}
+								{item?.AddHistory[0]?.Date ? moment(item.AddHistory[0].Date, "DD MMM, YYYY").format('DD MMM, YYYY') : ""}
 							</td>
-							<td className="tw-table-td w-7/12 pl-0">{item.AddHistory.AddDetails}</td>
-							<td className="tw-table-td">{item.AddHistory.OccupancyStatus}</td>
+							<td className="tw-table-td w-7/12 pl-0">{item.AddHistory[0]?.AddDetails}</td>
+							<td className="tw-table-td">{item.AddHistory[0]?.OccupancyStatus}</td>
 							<td className="tw-table-td">
 								<ChevronDownIcon
 									className={clsx('h-7 w-7 text-[#717B9D]', expand[index] && 'rotate-180')}
@@ -58,7 +58,7 @@ const PropertyHistory = ({ propertiesHistory }: PropertyHistoryProps) => {
 						<tr className={clsx(!expand[index] && 'hidden')}>
 							<td></td>
 							<td>
-								<ImageSlider images={item?.AddHistory?.imagePath} type="arrow" />
+								<ImageSlider images={item?.AddHistory[0]?.imagePath} type="arrow" />
 							</td>
 							<td></td>
 							<td></td>
@@ -67,7 +67,7 @@ const PropertyHistory = ({ propertiesHistory }: PropertyHistoryProps) => {
 							<td></td>
 							<td className="space-x-2 flex items-center mt-2">
 								<div className="border-4 border-blue-400 h-3 w-3 rounded-full text-medium text-medium"></div>
-								<p className="text-medium">{item?.AddHistory?.Calltype}</p>
+								<p className="text-medium">{item?.AddHistory[0]?.Calltype}</p>
 							</td>
 							<td></td>
 							<td></td>
@@ -82,7 +82,7 @@ const PropertyHistory = ({ propertiesHistory }: PropertyHistoryProps) => {
 										<p>On:</p>
 									</div>
 									<div className="grid max-sm:grid-cols-4 gap-x-1 mb-6 gap-y-3 mt-3 sm:grid-rows-4 sm:grid-flow-col sm:mt-0 sm:mb-3">
-										{item?.AddHistory.CallDetails?.map((detail, index) => {
+										{item?.AddHistory[0]?.CallDetails?.map((detail, index) => {
 											return (
 												<>
 													<p className="text-medium text-black">{detail.Name}</p>
@@ -117,7 +117,7 @@ const PropertyHistory = ({ propertiesHistory }: PropertyHistoryProps) => {
 									<p>Price(Pkr):</p>
 								</div>
 								<div className="flex flex-col mb-6 px-2 space-y-2 mt-3">
-									{item?.AddHistory.AddPricingHistory?.map(detail => {
+									{item?.AddHistory[0]?.AddPricingHistory?.map(detail => {
 										return (
 											<div className="flex justify-between">
 												<p className="text-medium text-black">{detail.year}</p>
