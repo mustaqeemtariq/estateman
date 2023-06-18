@@ -24,30 +24,32 @@ export const PropertyDetailsFormValues = (data: Property | undefined) => ({
 	Sector: data?.PropertyDetails?.Sector,
 	Streetno: data?.PropertyDetails?.Streetno,
 	images: data?.PropertyDetails?.imagePath,
-	Name: data?.OwnerDetails?.Name,
-	Address: data?.OwnerDetails?.Address,
-	ContactNumber: data?.OwnerDetails?.ContactNumber,
-	AlternateNumber: data?.OwnerDetails?.AlternateNumber,
-	CNIC: data?.OwnerDetails?.CNIC,
-	Ligitation: data?.OwnerDetails?.Ligitation,
-	OwnerDescription: data?.OwnerDetails?.OwnerDescription
+	OwnerDetails: {
+		Name: data?.OwnerDetails?.Name,
+		Address: data?.OwnerDetails?.Address,
+		ContactNumber: data?.OwnerDetails?.ContactNumber,
+		AlternateNumber: data?.OwnerDetails?.AlternateNumber,
+		CNIC: data?.OwnerDetails?.CNIC,
+		Ligitation: data?.OwnerDetails?.Ligitation,
+		OwnerDescription: data?.OwnerDetails?.OwnerDescription
+	}
 })
 
 export const AddHistoryFormValues = (data: Property | undefined) => ({
-	Date: data?.AddHistory?.Date,
-	AddDetails: data?.AddHistory?.AddDetails,
-	images: data?.AddHistory?.imagePath,
-	AddPricingHistory: data?.AddHistory?.AddPricingHistory,
-	LeaseExpiringOn: data?.AddHistory?.LeaseExpiringOn,
-	Calltype: data?.AddHistory?.Calltype,
-	CallDetails: data?.AddHistory?.CallDetails,
-	OccupancyStatus: data?.AddHistory?.OccupancyStatus
+	Date: data?.AddHistory[0]?.Date,
+	AddDetails: data?.AddHistory[0]?.AddDetails,
+	images: data?.AddHistory[0]?.imagePath,
+	AddPricingHistory: data?.AddHistory[0]?.AddPricingHistory,
+	LeaseExpiringOn: data?.AddHistory[0]?.LeaseExpiringOn,
+	Calltype: data?.AddHistory[0]?.Calltype,
+	CallDetails: data?.AddHistory[0]?.CallDetails,
+	OccupancyStatus: data?.AddHistory[0]?.OccupancyStatus,
+	AddCommission: {
+		Amount: data?.AddCommission?.Amount,
+		Cheque: data?.AddCommission?.Cheque,
+		AccountNumber: data?.AddCommission?.AccountNumber,
+		Branch: data?.AddCommission?.Branch,
+		BankDetails: data?.AddCommission?.BankDetails
+	}
 })
 
-export const CommissionFormValues = (data: Property | undefined) => ({
-	Amount: data?.AddCommission?.Amount,
-	Cheque: data?.AddCommission?.Cheque,
-	AccountNumber: data?.AddCommission?.AccountNumber,
-	Branch: data?.AddCommission?.Branch,
-	BankDetails: data?.AddCommission?.BankDetails
-})
