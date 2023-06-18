@@ -2,11 +2,7 @@ import { Dispatch, SetStateAction } from 'react'
 import { Tab, Tabs } from '../app/tabs'
 
 interface PropertyHeaderProps {
-	active: {
-		propertyDetails: boolean
-		addHistory: boolean
-		allHistory: boolean
-	}
+	isNew: boolean
 	setState: Dispatch<SetStateAction<string>>
 	state: string
 	showHistory?: boolean
@@ -15,7 +11,7 @@ interface PropertyHeaderProps {
 export const PropertyHeader = ({
 	state,
 	setState,
-	active,
+	isNew,
 	showHistory = false
 }: PropertyHeaderProps) => {
 	const tabs = [
@@ -43,7 +39,7 @@ export const PropertyHeader = ({
 				labelText="Property"
 				name="property"
 				value="property"
-				active={active}
+				isNew={isNew}
 				setShowTab={setState}
 				tabs={tabs}
 			/>
