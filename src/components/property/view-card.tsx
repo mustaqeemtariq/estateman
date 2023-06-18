@@ -48,9 +48,6 @@ const ViewPropertyCard = ({ data, propertyId }: ViewPropertyCardProps) => {
 		getImages()
 	}, [])
 
-	console.log(images);
-	
-
 	const [showMap, setShowMap] = useState(false)
 
 	return (
@@ -91,18 +88,18 @@ const ViewPropertyCard = ({ data, propertyId }: ViewPropertyCardProps) => {
 						{showMap && <MapComponent show={showMap} setShow={setShowMap} />}
 						<div className="flex items-center space-x-1 text-sm">
 							<ExclamationTriangleIcon className="h-4 w-4 fill-[#DC4200]" aria-hidden="true" />
-							{dateDifference(data[0]?.AddHistory?.LeaseExpiringOn ?? '') < 0 ?
+							{dateDifference(data[0]?.AddHistory[0]?.LeaseExpiringOn ?? '') < 0 ?
 							<p>
 							Lease Expired on:
 								<span className="text-[#FF0000]">
-								{data[0]?.AddHistory?.LeaseExpiringOn ? moment(data[0]?.AddHistory?.LeaseExpiringOn).format('DD MMMM, YYYY') : ''}
+								{data[0]?.AddHistory[0]?.LeaseExpiringOn ? moment(data[0]?.AddHistory[0]?.LeaseExpiringOn).format('DD MMMM, YYYY') : ''}
 								</span>
 							</p>
 							:
 							<p>
 								Lease Expiring on:
 								<span className="text-[#DC4200]">
-									{data[0]?.AddHistory?.LeaseExpiringOn ? moment(data[0]?.AddHistory?.LeaseExpiringOn).format('DD MMMM, YYYY') : ''}
+									{data[0]?.AddHistory[0]?.LeaseExpiringOn ? moment(data[0]?.AddHistory[0]?.LeaseExpiringOn).format('DD MMMM, YYYY') : ''}
 								</span>
 							</p>
 						}
@@ -120,7 +117,7 @@ const ViewPropertyCard = ({ data, propertyId }: ViewPropertyCardProps) => {
 				</div>
 				<div className="space-y-1 pt-4">
 					<p className="text-[#717B9D] uppercase">Description</p>
-					<p className="text-sm">{data[0]?.AddHistory?.AddDetails}</p>
+					<p className="text-sm">{data[0]?.AddHistory[0]?.AddDetails}</p>
 				</div>
 			</div>
 			<div>
