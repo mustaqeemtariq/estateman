@@ -105,8 +105,9 @@ type PropertyDetailsForm = {
 	Kitchen?: string
 	Gas?: string
 	Electricity?: string
+	OwnerDetails?: OwnerDetails
 	imagePath?: string[]
-	sentPropertyImages?: File[]
+	propertyImages: File[]
 }
 
 type AddHistoryForm = {
@@ -114,37 +115,20 @@ type AddHistoryForm = {
 	OccupancyStatus?: string
 	LeaseExpiringOn?: string
 	AddDetails?: string
-	sentHistoryImages?: File[]
+	historyImages?: File[]
+	AddCommission: CommissionForm
 	Calltype?: string
-	SentCallDetails?: CallRecordForm
 	CallDetails?: {
-		To: string
-		Name: string
 		Date?: string
 		From?: string
+		Name: string
+		To: string
 	}[]
-	SentPricingHistory?: PricingHistoryForm
 	AddPricingHistory?: {
-		year?: string
 		price?: string
+		year?: string
 	}[]
 	imagePath?: string[]
-}
-
-type CallRecordForm = {
-	[index: string]: {
-		To: string
-		Name: string
-		Date?: string
-		From?: string
-	}
-}
-
-type PricingHistoryForm = {
-	[index: string]: {
-		price?: string
-		year?: string
-	}
 }
 
 type CommissionForm = {
@@ -155,13 +139,9 @@ type CommissionForm = {
 	BankDetails?: string
 }
 
-type Property = AddPropertyForm &
-	OwnerDetails &
-	PropertyDetailsForm &
-	AddHistoryForm &
-	CommissionForm & {
+type Property = AddPropertyForm & {
 		PropertyDetails: PropertyDetailsForm
-		AddHistory: AddHistoryForm
+		AddHistory: AddHistoryForm[]
 		OwnerDetails: OwnerDetails
 		AddCommission: CommissionForm
 	}
