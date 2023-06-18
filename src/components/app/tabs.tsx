@@ -12,22 +12,18 @@ interface TabsProps {
 	value: string
 	setShowTab: Dispatch<SetStateAction<string>>
 	tabs: Tab[]
+	isNew: boolean
 	className?: string
-	active?: {
-		propertyDetails: boolean
-		addHistory: boolean
-		allHistory: boolean
-	}
 }
 
 export const Tabs = ({
 	labelText,
 	name,
 	value,
+	isNew,
 	tabs,
 	setShowTab,
 	className,
-	active
 }: TabsProps) => {
 	return (
 		<div className="w-full">
@@ -47,10 +43,7 @@ export const Tabs = ({
 						{tabs.map((tab, index) => (
 							<button
 								onClick={() => {
-									index == 0 && setShowTab(tab.name)
-									index == 1 && active?.propertyDetails && setShowTab(tab.name)
-									index == 2 && active?.addHistory && setShowTab(tab.name)
-									index == 3 && active?.allHistory && setShowTab(tab.name)
+									{!isNew && setShowTab(tab.name)}
 								}}
 								key={tab.name}
 								className={clsx(
