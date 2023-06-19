@@ -23,6 +23,7 @@ const UpdateProperty = ({ propertyData }: UpdatePropertyProps) => {
 
 	const { tab } = router.query
 	const [state, setState] = useState((tab as string) ?? 'Add Property')
+	const [propertyId, setPropertyId] = useState('')
 	const [category, setCategory] = useState<string>('')
 
 	return (
@@ -30,9 +31,9 @@ const UpdateProperty = ({ propertyData }: UpdatePropertyProps) => {
 			<AppHeader />
 			<Container>
 				<PropertyHeader showHistory={true} setState={setState} isNew={false} state={state} />
-				{state === 'Add Property' && <AddPropertyForm editData={editData} setCategory={setCategory} isNew={true} setCurrentTab={setState} />}
-				{state === 'Property Details' && <PropertyDetailsForm editData={editData} category={category} isNew={true} setCurrentTab={setState} />}
-				{state === 'Add History' && <AddHistoryForm editData={editData} isNew={true} />}
+				{state === 'Add Property' && <AddPropertyForm setId={setPropertyId} editData={editData} setCategory={setCategory} setCurrentTab={setState} />}
+				{state === 'Property Details' && <PropertyDetailsForm propertyId={propertyId} editData={editData} category={category} setCurrentTab={setState} />}
+				{state === 'Add History' && <AddHistoryForm editData={editData} propertyId={propertyId} />}
 			</Container>
 		</AppLayout>
 	)

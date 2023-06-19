@@ -16,7 +16,7 @@ import { toast } from 'react-hot-toast'
 interface PropertyDetailsFormProps {
 	setCurrentTab: Dispatch<SetStateAction<string>>
 	editData?: Property
-	propertyId?: string
+	propertyId: string
 	category: string
 }
 
@@ -31,10 +31,10 @@ const PropertyDetailsForm = ({
 		Housenumber: yup.string().required(`${category} number is required`),
 		Gas: yup.string().test('gasType', 'Gas is required', function (value) {
 			if (!value) return false
-			if (value.toLowerCase() === 'yes' || value.toLocaleLowerCase() === 'no') return true
+			if (value === 'yes' || value === 'no') return true
 
 			throw this.createError({
-				message: 'Gas must be either "yes" or "no" or empty',
+				message: 'Gas must be either "yes" or "no"',
 				path: 'Gas'
 			})
 		}),
@@ -43,7 +43,7 @@ const PropertyDetailsForm = ({
 			if (value.toLowerCase() === 'yes' || value.toLocaleLowerCase() === 'no') return true
 
 			throw this.createError({
-				message: 'Electricity must be either "yes" or "no" or empty',
+				message: 'Electricity must be either "yes" or "no"',
 				path: 'Electricity'
 			})
 		}),
@@ -88,12 +88,12 @@ const PropertyDetailsForm = ({
 	const [propertyImages, setPropertyImages] = useState<File[]>([])
 
 	const addPropertyDetails = async (data: PropertyDetailsForm, images: FormData) => {
-		const response = await propertyService.addPropertyDetails(data, propertyId ?? '')
+		const response = await propertyService.addPropertyDetails(data, editData ? editData._id : propertyId)
 		console.log(response)
 
 		if (response.success) {
 			toast.success('Property details added successfully')
-			const response = await propertyService.addPropertyDetailsImages(images, propertyId ?? '')
+			const response = await propertyService.addPropertyDetailsImages(images, editData ? editData._id : propertyId)
 			if (response.success) {
 				toast.success('Property details images added successfully')
 				setUpdating(false)

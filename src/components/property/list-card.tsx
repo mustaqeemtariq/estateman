@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useAppSelector } from 'src/hooks/rtk'
 import imageService from 'src/services/images'
+import emptyImage from 'src/assets/card/building.jpg'
 import { ImagePath, Property } from 'src/types/typings'
 import { dateDifference } from 'src/utils/date'
 import { Table } from '../app/table'
@@ -16,15 +17,15 @@ interface ListCardProps {
 
 export const PropertyListCard = ({ data }: ListCardProps) => {
 	const renderPeopleTBody = (data: Property[]) => {
-		const [images, setImages] = useState<ImagePath>()
+		// const [images, setImages] = useState<ImagePath>()
 
-		useEffect(() => {
-			const getImages = async () => {
-				const response = await imageService.getPropertyImages('64649dcec2f9388d7c103db6')
-				setImages(response)
-			}
-			getImages()
-		}, [])
+		// useEffect(() => {
+		// 	const getImages = async () => {
+		// 		const response = await imageService.getPropertyImages('64649dcec2f9388d7c103db6')
+		// 		setImages(response)
+		// 	}
+		// 	getImages()
+		// }, [])
 
 		const { username, Roles } = useAppSelector(state => state.auth)
 		const users = useAppSelector(state => state.db.users)
@@ -42,7 +43,7 @@ export const PropertyListCard = ({ data }: ListCardProps) => {
 						className={clsx('relative hover:bg-[#0D0C18]/[85%]', index % 2 === 0 && 'bg-gray-100')}>
 						<td className="tw-table-td pr-0 col-span-2">
 							<img
-								src={images?.propertyDetails?.[index]}
+								src={item?.PropertyDetails?.imagePath?.[0]}
 								width={30}
 								height={30}
 								alt="propertyImage"
@@ -52,33 +53,33 @@ export const PropertyListCard = ({ data }: ListCardProps) => {
 						<td className="tw-table-td">
 							<div className="flex flex-col">
 								{item.Title}
-								<span className="text-blue-500">{item.Address} 22</span>
+								<span className="text-blue-500">{item.OwnerDetails?.Address} 22</span>
 							</div>
 						</td>
-						<td className="tw-table-td">{item.City}</td>
-						<td className="tw-table-td">{item.PropertyCategory}</td>
+						<td className="tw-table-td">{item.PropertyDetails?.City}</td>
+						<td className="tw-table-td">{item?.PropertyCategory}</td>
 						<td
 							className={clsx(
 								'tw-table-td font-semibold',
-								item.OccupancyStatus === 'Not Sold' && 'text-[#058019]',
-								item.OccupancyStatus === 'Sold' && 'text-[#0B124D]',
-								item.OccupancyStatus === 'Vacant' && 'text-[#DC4200]',
-								item.OccupancyStatus === 'Occupied' && 'text-[#000000]'
+								item.AddHistory[0]?.OccupancyStatus === 'Not Sold' && 'text-[#058019]',
+								item.AddHistory[0]?.OccupancyStatus === 'Sold' && 'text-[#0B124D]',
+								item.AddHistory[0]?.OccupancyStatus === 'Vacant' && 'text-[#DC4200]',
+								item.AddHistory[0]?.OccupancyStatus === 'Occupied' && 'text-[#000000]'
 							)}>
-							{item.OccupancyStatus}
+							{item.AddHistory[0]?.OccupancyStatus}
 						</td>
 						<td className="tw-table-td">{item.ContractType}</td>
 						<td className="tw-table-td">
 							<div>
-								{dateDifference(item.AddHistory.LeaseExpiringOn ?? '') < 0 ? (
+								{dateDifference(item.AddHistory[0]?.LeaseExpiringOn ?? '') < 0 ? (
 									<div className="flex flex-col items-center text-[#FF0000]">
 										<ExclamationTriangleIcon className="text-[#FF0000] h-5 w-5" />
-										{moment(item?.AddHistory.LeaseExpiringOn).format('DD MMM, YYYY')}
+										{moment(item?.AddHistory[0]?.LeaseExpiringOn).format('DD MMM, YYYY')}
 									</div>
-								) : dateDifference(item.AddHistory.LeaseExpiringOn ?? '') <= 1 ? (
+								) : dateDifference(item.AddHistory[0]?.LeaseExpiringOn ?? '') <= 1 ? (
 									<div className="flex flex-col items-center text-[#DC4200]">
 										<ExclamationTriangleIcon className="text-[#DC4200] h-5 w-5" />
-										{moment(item?.AddHistory.LeaseExpiringOn).format('DD MMM, YYYY')}
+										{moment(item?.AddHistory[0]?.LeaseExpiringOn).format('DD MMM, YYYY')}
 									</div>
 								) : null}
 							</div>

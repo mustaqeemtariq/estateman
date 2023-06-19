@@ -28,7 +28,7 @@ import moment from 'moment'
 
 interface AddHistoryFormProps {
 	editData?: Property
-	propertyId?: string
+	propertyId: string
 }
 
 function AddHistoryForm({ editData, propertyId }: AddHistoryFormProps) {
@@ -94,12 +94,12 @@ function AddHistoryForm({ editData, propertyId }: AddHistoryFormProps) {
 	const occupancy = watch?.('OccupancyStatus')
 
 	const addHistoryDetails = async (data: AddHistoryForm, images: FormData) => {
-		const response = await propertyService.addPropertyHistory(data, propertyId ?? '')
+		const response = await propertyService.addPropertyHistory(data, editData ? editData._id : propertyId)
 		console.log(response)
 
 		if (response.success) {
 			toast.success('Property history added successfully')
-			const response = await propertyService.addPropertyHistoryImages(images, propertyId ?? '')
+			const response = await propertyService.addPropertyHistoryImages(images, editData ? editData._id : propertyId)
 			if (response.success) {
 				toast.success('Property history images added successfully')
 				setUpdating(false)

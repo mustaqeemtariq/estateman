@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from 'react'
 import { Tab, Tabs } from '../app/tabs'
 
 interface PropertyHeaderProps {
-	isNew: boolean
+	isNew?: boolean
 	setState: Dispatch<SetStateAction<string>>
 	state: string
 	showHistory?: boolean

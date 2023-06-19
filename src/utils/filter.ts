@@ -39,7 +39,7 @@ export const ApplyPropertyFilter = (filterData: FilterParameter, originalData: P
 
 	if (filterData.status !== '') {
 		filteredData = filteredData.filter(item => {
-			return item.OccupancyStatus === filterData.status
+			return item.AddHistory[0].OccupancyStatus === filterData.status
 		})
 	}
 

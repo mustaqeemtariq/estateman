@@ -12,7 +12,7 @@ interface TabsProps {
 	value: string
 	setShowTab: Dispatch<SetStateAction<string>>
 	tabs: Tab[]
-	isNew: boolean
+	isNew?: boolean
 	className?: string
 }
 

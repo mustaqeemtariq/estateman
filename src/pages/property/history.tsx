@@ -20,11 +20,6 @@ interface PropertyHistoryProps {
 const PropertyHistory = ({ propertiesHistory }: PropertyHistoryProps) => {
 	const [expand, setExpand] = useState<{ [key: string]: boolean }>({})
 	const [state, setState] = useState('All History')
-	const [active, setActive] = useState({
-		propertyDetails: true,
-		addHistory: true,
-		allHistory: true
-	})
 
 	const router = useRouter()
 
@@ -171,7 +166,7 @@ const PropertyHistory = ({ propertiesHistory }: PropertyHistoryProps) => {
 		<AppLayout>
 			<AppHeader />
 			<Container>
-				<PropertyHeader showHistory={true} active={active} state={state} setState={setState} />
+				<PropertyHeader showHistory={true} state={state} setState={setState} />
 				<div className="mt-6 flow-root overflow-hidden rounded-lg">
 					<div className="-my-2 -mx-4 overflow-x-auto  sm:-mx-6 lg:-mx-8">
 						<div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">

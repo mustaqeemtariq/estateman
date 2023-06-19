@@ -115,8 +115,8 @@ const BoxView = ({ data }: ViewProps) => {
 					title={item.Title}
 					location={item.Location}
 					category={item.PropertyCategory}
-					occupancy={item.AddHistory?.OccupancyStatus}
-					expiryDate={item.AddHistory?.LeaseExpiringOn}
+					occupancy={item.AddHistory[0]?.OccupancyStatus}
+					expiryDate={item.AddHistory[0]?.LeaseExpiringOn}
 				/>
 			))}
 		</div>

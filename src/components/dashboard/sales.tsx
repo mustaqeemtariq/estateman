@@ -29,7 +29,7 @@ interface ChartData {
 
 export const Sales = ({ data, filterData }: SalesProps) => {
 	const groupedData = data.reduce((acc: ChartData, curr) => {
-		const year = moment(curr.AddHistory.Date).format('YYYY')
+		const year = moment(curr.AddHistory[0].Date).format('YYYY')
 		if (year) {
 			if (!acc[year]) {
 				acc[year] = { year, sales: 0 }
